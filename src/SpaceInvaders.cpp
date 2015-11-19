@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
 {
 	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
 
-	si::model::PathEntity entity([=](si::model::time_delta t) 
+	si::model::PathEntity entity(si::model::PhysicsProperties(5, 5), [=](si::duration_t t)
 	{ 
-		return sf::Vector2<double>(std::cos(t * 2.0), std::sin(t * 2.0)); 
+		return sf::Vector2<double>(std::cos(t.count() * 2.0), std::sin(t.count() * 2.0)); 
 	});
 
 	(void)si::Stopwatch::instance.delta();
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 		}
 		w.clear(sf::Color::Black);
 
-		entity.updateTime(si::Stopwatch::instance.delta().count());
+		entity.updateTime(si::Stopwatch::instance.delta());
 
 		/*for (size_t i = 0; i < 200; i++)
 		{
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 			w.draw(circle);
 		}*/
 
-		sf::CircleShape circle{ 5.0f };
+		sf::CircleShape circle{ (float)entity.getPhysicsProperties().radius };
 		circle.setFillColor(sf::Color::Cyan);
 		auto pos = 0.95 * entity.getPosition();
 		auto screenSize = 0.5f * sf::Vector2f(w.getSize());

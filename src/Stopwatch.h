@@ -1,13 +1,12 @@
 #pragma once
 #include <chrono>
+#include "Common.h"
 
 namespace si
 {
 	class Stopwatch
 	{
 	public:
-		typedef std::chrono::duration<double> duration_t;
-
 		Stopwatch(const Stopwatch&) = delete;
 
 		static Stopwatch instance;

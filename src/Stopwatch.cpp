@@ -10,7 +10,7 @@ Stopwatch::Stopwatch()
 
 Stopwatch Stopwatch::instance{};
 
-Stopwatch::duration_t Stopwatch::delta()
+duration_t Stopwatch::delta()
 {
 	time_point_t newTime = std::chrono::high_resolution_clock::now();
 	duration_t diff = newTime - prev;
