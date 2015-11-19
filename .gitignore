@@ -41,3 +41,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Visual studio files
+*.suo
+*.sdf
+*.opensdf
+
+Release/
+Debug/
+x64/
