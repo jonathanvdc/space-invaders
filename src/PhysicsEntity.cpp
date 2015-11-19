@@ -36,8 +36,8 @@ void PhysicsEntity::setVelocity(Vector2d value)
 bool PhysicsEntity::overlaps(const PhysicsEntity& other) const
 {
 	double distSquared = vecLengthSqr(this->getPosition() - other.getPosition());
-	double maxRadius = std::max(this->getPhysicsProperties().radius, other.getPhysicsProperties().radius);
-	return distSquared < maxRadius * maxRadius;
+	double totalRadius = this->getPhysicsProperties().radius + other.getPhysicsProperties().radius;
+	return distSquared < totalRadius * totalRadius;
 }
 
 void PhysicsEntity::updateTime(duration_t delta)
