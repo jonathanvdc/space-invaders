@@ -156,12 +156,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="PathEntity.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Stopwatch.h" />
   </ItemGroup>

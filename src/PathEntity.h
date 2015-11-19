@@ -8,6 +8,7 @@ namespace si
 	namespace model
 	{
 		typedef double time_delta;
+		typedef std::function<sf::Vector2<double>(time_delta)> PathFunction;
 
 		/// Defines a type of entity whose position is defined
 		/// by a path function.
@@ -15,7 +16,7 @@ namespace si
 		{
 		public:
 			/// Creates a new path entity from the given path.
-			PathEntity(std::function<sf::Vector2<double>(time_delta)> path);
+			PathEntity(PathFunction path);
 
 			/// Gets this path entity's position.
 			virtual sf::Vector2<double> getPosition() const override;
@@ -24,7 +25,7 @@ namespace si
 			void updateTime(time_delta delta);
 		private:
 			time_delta elapsed;
-			std::function<sf::Vector2<double>(time_delta)> path;
+			PathFunction path;
 		};
 	}
 }

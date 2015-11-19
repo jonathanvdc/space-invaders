@@ -6,7 +6,7 @@
 
 using namespace si::model;
 
-PathEntity::PathEntity(std::function<sf::Vector2<double>(time_delta)> path)
+PathEntity::PathEntity(PathFunction path)
 	: elapsed(0), path(path)
 { }
 
