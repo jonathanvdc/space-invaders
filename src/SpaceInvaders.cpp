@@ -9,7 +9,7 @@
 
 int main(int argc, char* argv[])
 {
-	sf::RenderWindow w(sf::VideoMode(250, 250), "Namespace invaders");
+	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
 
 	si::model::PathEntity entity([=](si::model::time_delta t) 
 	{ 
@@ -26,6 +26,11 @@ int main(int argc, char* argv[])
 			if (event.type == sf::Event::Closed)
 			{
 				w.close();
+			}
+			else if (event.type == sf::Event::Resized)
+			{
+				auto size = sf::Vector2f(w.getSize());
+				w.setView(sf::View(0.5f * size, size));
 			}
 		}
 		w.clear(sf::Color::Black);
