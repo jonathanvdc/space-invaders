@@ -1,7 +1,16 @@
 #pragma once
+#include <SFML/System/Vector2.hpp>
 
-class Entity
+namespace si
 {
-public:
-};
-
+	namespace model
+	{
+		class Entity
+		{
+		public:
+			/// Gets this entity's position, as an offset 
+			/// relative to the origin.
+			virtual sf::Vector2<double> getPosition() const = 0;
+		};
+	}
+}
