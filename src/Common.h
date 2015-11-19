@@ -12,8 +12,8 @@ namespace si
 	typedef std::chrono::duration<double> duration_t;
 	typedef sf::Vector2<double> Vector2d;
 
-	/// Computes the square of the length 
-	/// of the given vector.
+	/// Computes the square of given vector's
+	/// length.
 	template<typename T>
 	auto vecLengthSqr(sf::Vector2<T> vec)
 	{

@@ -50,11 +50,24 @@ namespace si
 
 			/// Gets this physics entity's physics properties.
 			PhysicsProperties getPhysicsProperties() const;
+
+		protected:
+			// These members exist to avoid
+			// forcing derived classes to maintain 
+			// their own copies, but it shouldn't be 
+			// used by the outside world.
+
+			/// Sets this physics entity's velocity to
+			/// the given value.
+			void setVelocity(Vector2d value);
+
+			// The physics entity's previous position.
+			Vector2d prevPos;
+
 		private:
 			// The physics entity's intrinsic physics properties.
 			PhysicsProperties physProps;
-			// The physics entity's previous position.
-			Vector2d prevPos;
+
 			// The physics entity's velocity.
 			Vector2d velocity;
 		};

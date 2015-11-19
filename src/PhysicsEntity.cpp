@@ -28,6 +28,11 @@ PhysicsProperties PhysicsEntity::getPhysicsProperties() const
 	return this->physProps;
 }
 
+void PhysicsEntity::setVelocity(Vector2d value)
+{
+	this->velocity = value;
+}
+
 bool PhysicsEntity::overlaps(const PhysicsEntity& other) const
 {
 	double distSquared = vecLengthSqr(this->getPosition() - other.getPosition());
@@ -40,10 +45,11 @@ void PhysicsEntity::updateTime(duration_t delta)
 	this->Entity::updateTime(delta);
 
 	// Update the physics entity's velocity
-	// by performing a simple numerical derivation.
+	// by performing a simple numerical derivation
+	// on the distance traveled.
 	auto currentPos = this->getPosition();
 	auto posDelta = currentPos - this->prevPos;
-	this->velocity = posDelta / delta.count();
+	this->setVelocity(posDelta / delta.count());
 	// Update the 'previous' position, which
 	// is actually the current position now.
 	this->prevPos = currentPos;

@@ -16,7 +16,8 @@ namespace si
 		class PathEntity : public PhysicsEntity
 		{
 		public:
-			/// Creates a new path entity from the given path.
+			/// Creates a new path entity from the given physics
+			/// properties and path function.
 			PathEntity(PhysicsProperties physProps, PathFunction path);
 
 			/// Gets this path entity's position.
