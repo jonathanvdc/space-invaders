@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <memory>
 #include <SFML/System/Vector2.hpp>
 
 // Defines a number of aliases for types 
@@ -25,5 +26,13 @@ namespace si
 	auto vecLength(sf::Vector2<T> vec)
 	{
 		return std::sqrt(vecLengthSqr(vec));
+	}
+
+	/// Tests if the given shared pointer is of the 
+	/// given type.
+	template<typename T, typename V>
+	bool isinstance(const std::shared_ptr<V>& ptr)
+	{
+		return std::dynamic_pointer_cast<T>(ptr) != nullptr;
 	}
 }

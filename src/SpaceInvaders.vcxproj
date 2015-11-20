@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="DriftingEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
     <ClInclude Include="RandomGenerator.h" />

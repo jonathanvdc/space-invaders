@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "Common.h"
 
 namespace si
@@ -27,5 +28,7 @@ namespace si
 		private:
 			duration_t elapsed{ 0.0 };
 		};
+
+		typedef std::shared_ptr<Entity> Entity_ptr;
 	}
 }
