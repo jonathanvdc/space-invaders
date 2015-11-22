@@ -160,17 +160,22 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
+    <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
+    <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IRenderable.h" />
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
+    <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />
+    <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Common.h" />
   </ItemGroup>

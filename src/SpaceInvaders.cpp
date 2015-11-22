@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
 	si::model::Game game;
 	auto& rng = si::RandomGenerator::instance;
-	for (size_t i = 0; i < 200; i++)
+	for (size_t i = 0; i < 2000; i++)
 	{
 		double size = rng.nextReal<double>(0.001, 0.01);
 		double mass = size * 200;
@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 
 		auto delta = si::Stopwatch::instance.delta();
 
+		double maxVeloc = 0;
 		for (size_t i = 0; i < entities.size(); i++)
 		{
 			auto& outer = entities[i];
@@ -74,9 +75,15 @@ int main(int argc, char* argv[])
 					outer->accelerate(-(totalMomentum / outer->getPhysicsProperties().mass / si::vecLength(outer->getVelocity())) * outer->getVelocity() - outer->getVelocity());
 				}
 			}
+			auto outerVeloc = si::vecLengthSqr(outer->getVelocity());
+			if (outerVeloc > maxVeloc)
+			{
+				maxVeloc = outerVeloc;
+			}
 		}
+		maxVeloc = std::sqrt(maxVeloc);
 
-		for (auto& item : entities)
+		for (const auto& item : entities)
 		{
 			auto dir = si::Vector2d(0.5, 0.5) - item->getPosition();
 			// item.accelerate(0.01 * delta.count() * dir);
@@ -84,7 +91,7 @@ int main(int argc, char* argv[])
 			double itemRadius = item->getPhysicsProperties().radius;
 			float radius = (float)itemRadius * std::sqrt((float)w.getSize().x * (float)w.getSize().y);
 			sf::CircleShape circle(radius);
-			circle.setFillColor(sf::Color::Cyan);
+			circle.setFillColor(sf::Color(255, 255, 255, sf::Uint8(255 * si::vecLength(item->getVelocity()) / maxVeloc)));
 			auto pos = 0.95 * (item->getPosition() + (si::Vector2d(itemRadius, itemRadius) / 2.0));
 			auto screenSize = 0.5f * sf::Vector2f(w.getSize());
 			circle.setPosition((float)pos.x * screenSize.x + screenSize.x, (float)pos.y * screenSize.y + screenSize.y);

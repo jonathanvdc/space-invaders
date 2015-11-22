@@ -2,6 +2,7 @@
 #include <chrono>
 #include <memory>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 // Defines a number of aliases for types 
 // which are used throughout the project.
@@ -12,6 +13,7 @@ namespace si
 {
 	typedef std::chrono::duration<double> duration_t;
 	typedef sf::Vector2<double> Vector2d;
+	typedef sf::Rect<double> DoubleRect;
 
 	/// Computes the square of given vector's
 	/// length.
