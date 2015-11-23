@@ -5,11 +5,11 @@
 using namespace si;
 using namespace si::view;
 
-RenderContext::RenderContext(sf::RenderTarget& target)
-	: target(target)
+RenderContext::RenderContext(sf::RenderTarget& target, duration_t timeDelta)
+	: target(target), timeDelta(timeDelta)
 { }
 
-sf::RenderTarget& RenderContext::getTarget() const
+sf::RenderTarget& RenderContext::getTarget()
 {
 	return this->target;
 }
@@ -30,4 +30,9 @@ double RenderContext::transformView(double scalar) const
 {
 	Vector2d size(this->target.getSize());
 	return std::sqrt(size.x * size.y) * scalar;
+}
+
+duration_t RenderContext::getTimeDelta() const
+{
+	return this->timeDelta;
 }

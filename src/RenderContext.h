@@ -13,10 +13,10 @@ namespace si
 		public:
 			/// Creates a new render context from the given 
 			/// render target.
-			RenderContext(sf::RenderTarget& target);
+			RenderContext(sf::RenderTarget& target, duration_t timeDelta);
 
 			/// Gets this render context's render target.
-			sf::RenderTarget& getTarget() const;
+			sf::RenderTarget& getTarget();
 
 			/// Applies a viewport transformation to
 			/// the given scalar by multiplying it
@@ -38,8 +38,13 @@ namespace si
 			/// transformation to both its position
 			/// and dimensions.
 			DoubleRect transformView(DoubleRect vec) const;
+
+			/// Gets the amount of time elapsed since
+			/// the last frame was rendered.
+			duration_t getTimeDelta() const;
 		private:
 			sf::RenderTarget& target;
+			duration_t timeDelta;
 		};
 	}
 }

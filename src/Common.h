@@ -15,7 +15,7 @@ namespace si
 	typedef sf::Vector2<double> Vector2d;
 	typedef sf::Rect<double> DoubleRect;
 
-	/// Computes the square of given vector's
+	/// Computes the square of the given vector's
 	/// length.
 	template<typename T>
 	auto vecLengthSqr(sf::Vector2<T> vec)
