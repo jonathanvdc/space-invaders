@@ -19,6 +19,8 @@ namespace si
 
 			/// Adds the given time delta to the total amount 
 			/// of time elapsed.
+			/// The entity may also update some of its properties,
+			/// such as its position, based on this delta.
 			virtual void updateTime(duration_t delta);
 
 			/// Gets the total lifetime of this entity,

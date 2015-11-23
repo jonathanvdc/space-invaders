@@ -160,6 +160,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="ShipEntity.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="RenderContext.cpp" />
@@ -167,12 +169,15 @@
     <ClCompile Include="Stopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IController.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="ShipEntity.h" />
     <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="RenderContext.h" />
