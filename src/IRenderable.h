@@ -11,8 +11,11 @@ namespace si
 		class IRenderable
 		{
 		public:
-			/// Renders this renderable object.
-			virtual void render(RenderContext& target) const = 0;
+			/// Renders this renderable object on the 
+			/// given render context, within the given
+			/// bounds, which is given in absolute 
+			/// coordinates.
+			virtual void render(RenderContext& target, DoubleRect bounds) const = 0;
 		};
 	}
 }

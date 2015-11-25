@@ -160,12 +160,14 @@
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="RelativeBoxRenderable.cpp" />
     <ClCompile Include="ShipEntity.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
+    <ClCompile Include="TextRenderable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Container.h" />
@@ -179,12 +181,14 @@
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="RelativeBoxRenderable.h" />
     <ClInclude Include="ShipEntity.h" />
     <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="TextRenderable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

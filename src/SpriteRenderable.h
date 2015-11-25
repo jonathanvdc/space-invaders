@@ -14,18 +14,13 @@ namespace si
 		class SpriteRenderable final : public IRenderable
 		{
 		public:
-			/// Creates a renderable sprite from the given texture,
-			/// as well as a function that computes the sprite's
-			/// current bounding rectangle.
-			SpriteRenderable(
-				const std::shared_ptr<sf::Texture>& texture, 
-				std::function<DoubleRect()> getBounds);
+			/// Creates a renderable sprite from the given texture.
+			SpriteRenderable(const std::shared_ptr<sf::Texture>& texture);
 
 			/// Renders this sprite.
-			void render(RenderContext& target) const final override;
+			void render(RenderContext& target, DoubleRect bounds) const final override;
 		private:
 			std::shared_ptr<sf::Texture> texture;
-			std::function<DoubleRect()> getBounds;
 		};
 	}
 }

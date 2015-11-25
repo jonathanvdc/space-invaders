@@ -39,6 +39,10 @@ namespace si
 			/// and dimensions.
 			DoubleRect transformView(DoubleRect vec) const;
 
+			/// Gets this render context's bounds in 
+			/// absolute screen coordinates.
+			DoubleRect getBounds() const;
+
 			/// Gets the amount of time elapsed since
 			/// the last frame was rendered.
 			duration_t getTimeDelta() const;

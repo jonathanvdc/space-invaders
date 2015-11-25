@@ -2,6 +2,7 @@
 //
 
 #include <functional>
+#include <exception>
 #include <SFML/Graphics.hpp>
 #include "Common.h"
 #include "RandomGenerator.h"
@@ -9,11 +10,14 @@
 #include "PathEntity.h"
 #include "DriftingEntity.h"
 #include "Game.h"
+#include "GameRenderer.h"
+#include "GameController.h"
+#include "RenderContext.h"
+#include "TextRenderable.h"
 
-int main(int argc, char* argv[])
+/// A physics sim for testing purposes.
+void physicsSim(sf::RenderWindow& w)
 {
-	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
-
 	si::model::Game game;
 	auto& rng = si::RandomGenerator::instance;
 	for (size_t i = 0; i < 2000; i++)
@@ -21,10 +25,10 @@ int main(int argc, char* argv[])
 		double size = rng.nextReal<double>(0.001, 0.01);
 		double mass = size * 200;
 		game.add(std::make_shared<si::model::DriftingEntity>(
-			si::model::PhysicsProperties(mass, size), 
+			si::model::PhysicsProperties(mass, size),
 			si::Vector2d(rng.nextReal<double>(-2, 2), rng.nextReal<double>(-2, 2))));
 	}
-	
+
 	auto entities = game.getAll<si::model::DriftingEntity>();
 
 	(void)si::Stopwatch::instance.delta();
@@ -102,6 +106,70 @@ int main(int argc, char* argv[])
 
 		w.display();
 	}
+}
+
+/// The actual space invaders game.
+void spaceInvaders(sf::RenderWindow& w)
+{
+	si::model::Game game;
+	si::view::GameRenderer renderer(sf::Color::Black);
+	si::controller::GameController controller;
+
+	sf::Font font;
+
+	if (!font.loadFromFile("arial.ttf"))
+	{
+		throw std::runtime_error("Couldn't load 'arial.ttf'.");
+	}
+
+	auto framecounter = std::make_shared<si::view::TextRenderable>("", font, sf::Color::Red);
+	renderer.add(framecounter);
+
+	(void)si::Stopwatch::instance.delta();
+
+	si::duration_t elapsed = si::duration_t(0.0);
+	int framecount = 0;
+	while (w.isOpen())
+	{
+		sf::Event event;
+		while (w.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				w.close();
+			}
+			else if (event.type == sf::Event::Resized)
+			{
+				auto size = sf::Vector2f(w.getSize());
+				w.setView(sf::View(0.5f * size, size));
+			}
+		}
+
+		auto delta = si::Stopwatch::instance.delta();
+		elapsed += delta;
+		framecount++;
+
+		if (elapsed > si::duration_t(1.0))
+		{
+			framecounter->setText(std::to_string(framecount / elapsed.count()) + "fps");
+			framecount = 0;
+			elapsed -= si::duration_t(1.0);
+		}
+
+		game.updateTime(delta);
+		controller.update(game, delta);
+		auto context = si::view::RenderContext(w, delta);
+		renderer.render(context, context.getBounds());
+
+		w.display();
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
+
+	spaceInvaders(w);
 
 	return 0;
 }

@@ -32,6 +32,13 @@ double RenderContext::transformView(double scalar) const
 	return std::sqrt(size.x * size.y) * scalar;
 }
 
+DoubleRect RenderContext::getBounds() const
+{
+	Vector2d pos(0.0, 0.0);
+	Vector2d size(this->target.getSize());
+	return DoubleRect(pos, size);
+}
+
 duration_t RenderContext::getTimeDelta() const
 {
 	return this->timeDelta;

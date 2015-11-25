@@ -7,7 +7,7 @@ GameRenderer::GameRenderer(sf::Color backgroundColor)
 	: backgroundColor(backgroundColor)
 { }
 
-void GameRenderer::render(RenderContext& target) const
+void GameRenderer::render(RenderContext& target, DoubleRect bounds) const
 {
 	// First, clear the render target.
 	target.getTarget().clear(backgroundColor);
@@ -15,7 +15,7 @@ void GameRenderer::render(RenderContext& target) const
 	// Then render the game by rendering all sub-objects.
 	for (const auto& item : this->items)
 	{
-		item->render(target);
+		item->render(target, bounds);
 	}
 }
 

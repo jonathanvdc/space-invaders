@@ -14,7 +14,7 @@ namespace si
 			GameRenderer(sf::Color backgroundColor);
 
 			/// Renders the entire game.
-			void render(RenderContext& target) const final override;
+			void render(RenderContext& target, DoubleRect bounds) const final override;
 
 			/// Gets the game's background color.
 			sf::Color getBackgroundColor() const;
