@@ -20,12 +20,12 @@ int main(int argc, char* argv[])
 	{
 		double size = rng.nextReal<double>(0.001, 0.01);
 		double mass = size * 200;
-		game.addEntity(std::make_shared<si::model::DriftingEntity>(
+		game.add(std::make_shared<si::model::DriftingEntity>(
 			si::model::PhysicsProperties(mass, size), 
 			si::Vector2d(rng.nextReal<double>(-2, 2), rng.nextReal<double>(-2, 2))));
 	}
 	
-	auto entities = game.getEntities<si::model::DriftingEntity>();
+	auto entities = game.getAll<si::model::DriftingEntity>();
 
 	(void)si::Stopwatch::instance.delta();
 
