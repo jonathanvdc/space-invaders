@@ -25,3 +25,8 @@ double ShipEntity::getMaxHealth() const
 {
 	return this->maxHealth;
 }
+
+bool ShipEntity::isAlive() const
+{
+	return this->health > 0.0;
+}

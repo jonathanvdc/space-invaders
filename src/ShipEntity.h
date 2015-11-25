@@ -24,6 +24,9 @@ namespace si
 			/// Gets this ship's max health.
 			double getMaxHealth() const;
 
+			/// Tests if this ship entity is still alive.
+			bool isAlive() const;
+
 		private:
 			double health;
 			double maxHealth;

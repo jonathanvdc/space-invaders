@@ -15,8 +15,8 @@ void SpriteRenderable::render(RenderContext& context) const
 {
 	sf::Sprite sprite(*this->texture);
 	auto rect = context.transformView(this->getBounds());
-	sprite.setPosition((float)rect.left, (float)rect.top);
+	sprite.setPosition(static_cast<float>(rect.left), static_cast<float>(rect.top));
 	auto textureSize = this->texture->getSize();
-	sprite.setScale((float)rect.width / textureSize.x, (float)rect.height / textureSize.y);
+	sprite.setScale(static_cast<float>(rect.width) / textureSize.x, static_cast<float>(rect.height) / textureSize.y);
 	context.getTarget().draw(sprite);
 }
