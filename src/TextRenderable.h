@@ -22,7 +22,7 @@ namespace si
 			TextRenderable(const std::string& text, const sf::Font& font, sf::Color textColor);
 
 			/// Renders this text object.
-			void render(RenderContext& target, DoubleRect bounds) const final override;
+			void render(RenderContext& target, DoubleRect bounds) final override;
 
 			/// Gets the text that this 
 			/// object renders.

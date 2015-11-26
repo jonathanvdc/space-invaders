@@ -13,7 +13,7 @@ SpriteRenderable::SpriteRenderable(const std::shared_ptr<sf::Texture>& texture)
 	: texture(texture)
 { }
 
-void SpriteRenderable::render(RenderContext& context, DoubleRect bounds) const
+void SpriteRenderable::render(RenderContext& context, DoubleRect bounds)
 {
 	sf::Sprite sprite(*this->texture);
 	sprite.setPosition(static_cast<float>(bounds.left), static_cast<float>(bounds.top));

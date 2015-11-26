@@ -15,7 +15,7 @@ namespace si
 			/// given render context, within the given
 			/// bounds, which is given in absolute 
 			/// coordinates.
-			virtual void render(RenderContext& target, DoubleRect bounds) const = 0;
+			virtual void render(RenderContext& target, DoubleRect bounds) = 0;
 		};
 	}
 }

@@ -49,7 +49,7 @@ void TextRenderable::setColor(sf::Color color)
 	this->textColor = color;
 }
 
-void TextRenderable::render(RenderContext& context, DoubleRect bounds) const
+void TextRenderable::render(RenderContext& context, DoubleRect bounds)
 {
 	double widthFit = bounds.width / this->text.size();
 	double heightFit = bounds.height;

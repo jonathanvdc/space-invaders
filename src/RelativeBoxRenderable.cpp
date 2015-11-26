@@ -14,7 +14,7 @@ RelativeBoxRenderable::RelativeBoxRenderable(const std::shared_ptr<IRenderable>&
 
 /// Renders the relative box renderable's child
 /// within a relative box in the given outer bounds.
-void RelativeBoxRenderable::render(RenderContext& target, DoubleRect bounds) const
+void RelativeBoxRenderable::render(RenderContext& target, DoubleRect bounds)
 {
 	DoubleRect innerBox(
 		bounds.left + bounds.width * this->box.left,

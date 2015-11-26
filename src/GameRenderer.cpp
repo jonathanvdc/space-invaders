@@ -7,7 +7,7 @@ GameRenderer::GameRenderer(sf::Color backgroundColor)
 	: backgroundColor(backgroundColor)
 { }
 
-void GameRenderer::render(RenderContext& target, DoubleRect bounds) const
+void GameRenderer::render(RenderContext& target, DoubleRect bounds)
 {
 	// First, clear the render target.
 	target.getTarget().clear(backgroundColor);

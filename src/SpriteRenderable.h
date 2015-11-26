@@ -18,7 +18,7 @@ namespace si
 			SpriteRenderable(const std::shared_ptr<sf::Texture>& texture);
 
 			/// Renders this sprite.
-			void render(RenderContext& target, DoubleRect bounds) const final override;
+			void render(RenderContext& target, DoubleRect bounds) final override;
 		private:
 			std::shared_ptr<sf::Texture> texture;
 		};
