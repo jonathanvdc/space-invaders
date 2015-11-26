@@ -7,7 +7,7 @@
 using namespace si;
 using namespace si::controller;
 
-PlayerController::PlayerController(std::shared_ptr<si::model::ShipEntity> player, double acceleration)
+PlayerController::PlayerController(const std::shared_ptr<si::model::ShipEntity>& player, double acceleration)
 	: player(player), accelConst(acceleration)
 { }
 

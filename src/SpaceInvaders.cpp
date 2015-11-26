@@ -14,6 +14,10 @@
 #include "GameController.h"
 #include "RenderContext.h"
 #include "TextRenderable.h"
+#include "PathOffsetRenderable.h"
+#include "SpriteRenderable.h"
+#include "RelativeBoxRenderable.h"
+#include "PlayerController.h"
 
 /// A physics sim for testing purposes.
 void physicsSim(sf::RenderWindow& w)
@@ -122,8 +126,24 @@ void spaceInvaders(sf::RenderWindow& w)
 		throw std::runtime_error("Couldn't load 'arial.ttf'.");
 	}
 
+	auto shipTex = std::make_shared<sf::Texture>();
+	if (!shipTex->loadFromFile("ship_cpp.png"))
+	{
+		throw std::runtime_error("Couldn't load 'ship_cpp.png'.");
+	}
+
 	auto framecounter = std::make_shared<si::view::TextRenderable>("", font, sf::Color::Red);
 	renderer.add(framecounter);
+
+	auto ship = std::make_shared<si::model::ShipEntity>(
+		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 2000);
+	game.add(ship);
+	auto sprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
+	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, si::DoubleRect(0, 0, 0.1, 0.1));
+	auto shipView = std::make_shared<si::view::PathOffsetRenderable>(box, [=]() { return ship->getPosition(); });
+	renderer.add(shipView);
+
+	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
 
 	(void)si::Stopwatch::instance.delta();
 

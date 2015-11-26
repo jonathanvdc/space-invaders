@@ -16,7 +16,7 @@ namespace si
 		public:
 			/// Creates a player controller from the given player and
 			/// acceleration multiplier.
-			PlayerController(std::shared_ptr<si::model::ShipEntity> player, double acceleration);
+			PlayerController(const std::shared_ptr<si::model::ShipEntity>& player, double acceleration);
 
 			/// Updates the game model based on the given time delta.
 			void update(si::model::Game& game, duration_t timeDelta) const final override;
