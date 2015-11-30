@@ -11,6 +11,8 @@ namespace si
 		class IRenderable
 		{
 		public:
+			virtual ~IRenderable() { }
+
 			/// Renders this renderable object on the 
 			/// given render context, within the given
 			/// bounds, which is given in absolute 

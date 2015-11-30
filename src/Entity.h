@@ -11,6 +11,8 @@ namespace si
 		class Entity
 		{
 		public:
+			virtual ~Entity() { }
+
 			/// Gets this entity's position, as an offset 
 			/// relative to the origin. The game's "board"
 			/// ranges from zero to one in both x and y 

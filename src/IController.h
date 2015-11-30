@@ -11,6 +11,8 @@ namespace si
 		class IController
 		{
 		public:
+			virtual ~IController() { }
+
 			/// Checks if this controller is still "alive".
 			/// A live controller will remain in the controller
 			/// list, whereas dead controllers will be eliminated.
