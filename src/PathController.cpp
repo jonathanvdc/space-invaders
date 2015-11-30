@@ -42,7 +42,7 @@ void PathController::update(si::model::Game& game, duration_t timeDelta)
 	// Calculate the force exerted by the spring.
 	auto springForce = this->springConstant * direction;
 	// Compute the damping force.
-	auto dampingForce = -2 * std::sqrt(springConstant) * this->target->getVelocity();
+	auto dampingForce = -2 * std::sqrt(this->springConstant) * this->target->getVelocity();
 
 	// The total force to apply is the sum of the above
 	// forces.

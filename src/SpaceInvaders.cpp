@@ -17,6 +17,7 @@
 #include "PathOffsetRenderable.h"
 #include "SpriteRenderable.h"
 #include "RelativeBoxRenderable.h"
+#include "PathController.h"
 #include "PlayerController.h"
 
 /// A physics sim for testing purposes.
@@ -142,8 +143,17 @@ void spaceInvaders(sf::RenderWindow& w)
 	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, si::DoubleRect(0, 0, 0.1, 0.1));
 	auto shipView = std::make_shared<si::view::PathOffsetRenderable>(box, [=]() { return ship->getPosition(); });
 	renderer.add(shipView);
-
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
+
+	auto other = std::make_shared<si::model::ShipEntity>(
+		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 2000);
+	game.add(other);
+	auto otherSprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
+	auto otherBox = std::make_shared<si::view::RelativeBoxRenderable>(otherSprite, si::DoubleRect(0, 0, 0.1, 0.1));
+	auto otherView = std::make_shared<si::view::PathOffsetRenderable>(otherBox, [=]() { return other->getPosition(); });
+	renderer.add(otherView);
+	controller.add(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
+
 
 	(void)si::Stopwatch::instance.delta();
 
