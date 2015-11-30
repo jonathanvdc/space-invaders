@@ -30,7 +30,7 @@ namespace si
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 		protected:
 			/// Handles a collision with another entity.
-			virtual void handleCollision(si::model::Game& game, const si::model::Entity_ptr& other) = 0;
+			virtual void handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other) = 0;
 		private:
 			/// Defines a vector of collisions which were detected in the 
 			/// previous frame. Collisions are not handled immediately, because
@@ -41,7 +41,7 @@ namespace si
 			/// would be none the wiser. 
 			/// To avoid this kind of awkward situation, collisions are handled 
 			/// the next frame.
-			std::vector<si::model::Entity_ptr> collisionTargets;
+			std::vector<std::shared_ptr<si::model::PhysicsEntity>> collisionTargets;
 		};
 	}
 }

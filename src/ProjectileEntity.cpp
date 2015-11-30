@@ -11,20 +11,15 @@
 using namespace si;
 using namespace si::model;
 
-ProjectileEntity::ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, double damage,
+ProjectileEntity::ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc,
 	ProjectileCreationFunction nestedProjectiles)
-	: DriftingEntity(physProps, initialPos), damage(damage), nestedProjectiles(nestedProjectiles)
+	: DriftingEntity(physProps, initialPos, initialVeloc), nestedProjectiles(nestedProjectiles)
 { }
 
-ProjectileEntity::ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, double damage)
-	: ProjectileEntity(physProps, initialPos, damage, 
+ProjectileEntity::ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc)
+	: ProjectileEntity(physProps, initialPos, initialVeloc,
 		[]() { return std::vector<std::shared_ptr<ProjectileEntity>>(); })
 { }
-
-double ProjectileEntity::getDamage() const
-{
-	return this->damage;
-}
 
 std::vector<std::shared_ptr<ProjectileEntity>> ProjectileEntity::createNestedProjectiles() const
 {

@@ -20,19 +20,15 @@ namespace si
 			typedef std::function<std::vector<std::shared_ptr<ProjectileEntity>>()> ProjectileCreationFunction;
 
 			/// Creates a new projectile entity from the given physics properties,
-			/// initial position, damage, and a function that creates a 
+			/// initial position, initial velocity, and a function that creates a 
 			/// sequence of nested projectiles.
-			ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, double damage,
+			ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc,
 				ProjectileCreationFunction createNestedProjectiles);
 
 			/// Creates a new projectile entity from the given physics properties,
-			/// initial position and damage. This projectile will not spawn any
+			/// initial position and initial velocity. This projectile will not spawn any
 			/// additional projectiles.
-			ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, double damage);
-
-			/// Gets this amount of damage this projectile does
-			/// when it collides with an entity.
-			double getDamage() const;
+			ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc);
 
 			/// Creates a sequence of nested projectiles for this projectile.
 			std::vector<std::shared_ptr<ProjectileEntity>> createNestedProjectiles() const;

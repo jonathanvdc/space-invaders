@@ -166,6 +166,7 @@
     <ClCompile Include="ProjectileEntity.cpp" />
     <ClCompile Include="RelativeBoxRenderable.cpp" />
     <ClCompile Include="PathOffsetRenderable.cpp" />
+    <ClCompile Include="ShipCollisionController.cpp" />
     <ClCompile Include="ShipEntity.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="ProjectileEntity.h" />
     <ClInclude Include="RelativeBoxRenderable.h" />
     <ClInclude Include="PathOffsetRenderable.h" />
+    <ClInclude Include="ShipCollisionController.h" />
     <ClInclude Include="ShipEntity.h" />
     <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />

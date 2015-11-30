@@ -9,6 +9,13 @@ DriftingEntity::DriftingEntity(PhysicsProperties physProps, Vector2d initialPos)
 	this->prevPos = initialPos;
 }
 
+DriftingEntity::DriftingEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc)
+	: PhysicsEntity(physProps)
+{
+	this->prevPos = initialPos;
+	this->setVelocity(initialVeloc);
+}
+
 Vector2d DriftingEntity::getPosition() const
 {
 	// The 'previous' position also happens to be the

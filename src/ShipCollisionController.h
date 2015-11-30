@@ -3,7 +3,7 @@
 #include "Common.h"
 #include "Entity.h"
 #include "PhysicsEntity.h"
-#include "ProjectileEntity.h"
+#include "ShipEntity.h"
 #include "IController.h"
 #include "CollisionControllerBase.h"
 
@@ -11,11 +11,11 @@ namespace si
 {
 	namespace controller
 	{
-		/// Defines a collision handler for projectiles.
-		class ProjectileCollisionController final : public CollisionControllerBase
+		/// Defines a collision handler for ships.
+		class ShipCollisionController final : public CollisionControllerBase
 		{
 		public:
-			ProjectileCollisionController(const std::shared_ptr<si::model::ProjectileEntity>& projectile);
+			ShipCollisionController(const std::shared_ptr<si::model::ShipEntity>& ship);
 
 			/// Gets the entity this collision controller detects collisions
 			/// for.
@@ -24,7 +24,7 @@ namespace si
 			/// Handles a collision with another entity.
 			void handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other) final override;
 		private:
-			std::shared_ptr<si::model::ProjectileEntity> projectile;
+			std::shared_ptr<si::model::ShipEntity> ship;
 		};
 
 	}

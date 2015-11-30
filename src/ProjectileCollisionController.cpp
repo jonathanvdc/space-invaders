@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "Entity.h"
 #include "PhysicsEntity.h"
+#include "ProjectileEntity.h"
 #include "IController.h"
 #include "CollisionControllerBase.h"
 
@@ -21,7 +22,7 @@ std::shared_ptr<si::model::PhysicsEntity> ProjectileCollisionController::getEnti
 }
 
 /// Handles a collision with another entity.
-void ProjectileCollisionController::handleCollision(si::model::Game& game, const si::model::Entity_ptr& other)
+void ProjectileCollisionController::handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other)
 {
 	if (this->isAlive())
 	{
@@ -34,6 +35,7 @@ void ProjectileCollisionController::handleCollision(si::model::Game& game, const
 		{
 			game.add(item);
 		}
+
+		this->projectile = nullptr;
 	}
-	this->projectile = nullptr;
 }

@@ -15,6 +15,10 @@ namespace si
 			/// and initial position.
 			DriftingEntity(PhysicsProperties physProps, Vector2d initialPos);
 
+			/// Creates a new drifting entity from the given physics properties,
+			/// initial position and initial velocity.
+			DriftingEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc);
+
 			/// Gets this drifting entity's position.
 			virtual Vector2d getPosition() const override;
 
