@@ -157,6 +157,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
+    <ClCompile Include="PathController.cpp" />
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
     <ClCompile Include="PlayerController.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="PathController.h" />
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
     <ClInclude Include="PlayerController.h" />
