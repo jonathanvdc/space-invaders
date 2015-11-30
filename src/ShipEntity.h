@@ -14,7 +14,7 @@ namespace si
 		public:
 			/// Creates a new ship entity from the given physics properties,
 			/// initial position and max health.
-			ShipEntity(PhysicsProperties physProps, Vector2d initialPos, double MaxHealth);
+			ShipEntity(PhysicsProperties physProps, Vector2d initialPos, double maxHealth);
 
 			/// Gets this ship's current health.
 			double getHealth() const;
