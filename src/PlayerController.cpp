@@ -11,8 +11,13 @@ PlayerController::PlayerController(const std::shared_ptr<si::model::ShipEntity>&
 	: player(player), accelConst(acceleration)
 { }
 
+bool PlayerController::isAlive() const
+{
+	return this->player->isAlive();
+}
+
 /// Updates the game model based on the given time delta.
-void PlayerController::update(si::model::Game& game, duration_t timeDelta) const
+void PlayerController::update(si::model::Game& game, duration_t timeDelta)
 {
 	Vector2d accel;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))

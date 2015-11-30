@@ -11,6 +11,11 @@ namespace si
 		class IController
 		{
 		public:
+			/// Checks if this controller is still "alive".
+			/// A live controller will remain in the controller
+			/// list, whereas dead controllers will be eliminated.
+			virtual bool isAlive() const = 0;
+
 			/// Updates the game model based on the given time delta.
 			/// It is distinct from Entity::updateTime in that this method
 			/// should be used to represent changes caused by some outside force,
@@ -18,7 +23,7 @@ namespace si
 			/// may be used to propagate the absence of such forces. For example,
 			/// an implementation Newton's first law of motion belongs in the model,
 			/// because it is intrinsic to the object it models.
-			virtual void update(si::model::Game& game, duration_t timeDelta) const = 0;
+			virtual void update(si::model::Game& game, duration_t timeDelta) = 0;
 		};
 	}
 }
