@@ -137,7 +137,7 @@ void spaceInvaders(sf::RenderWindow& w)
 	renderer.add(framecounter);
 
 	auto ship = std::make_shared<si::model::ShipEntity>(
-		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 2000);
+		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
 	game.add(ship);
 	auto sprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
 	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, si::DoubleRect(0, 0, 0.1, 0.1));
@@ -146,7 +146,7 @@ void spaceInvaders(sf::RenderWindow& w)
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
 
 	auto other = std::make_shared<si::model::ShipEntity>(
-		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 2000);
+		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
 	game.add(other);
 	auto otherSprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
 	auto otherBox = std::make_shared<si::view::RelativeBoxRenderable>(otherSprite, si::DoubleRect(0, 0, 0.1, 0.1));
