@@ -24,8 +24,12 @@ void GameController::update(si::model::Game& game, duration_t timeDelta)
 		std::remove_if(this->items.begin(), this->items.end(),
 			[](const std::shared_ptr<IController>& x) -> bool { return !x->isAlive(); }),
 		this->items.end());
+	// Create a copy of the items
+	// now, to ensure that we don't
+	// iterate-and-edit later.
+	auto itemCopy = this->items;
 	// Next, update controllers.
-	for (const auto& item : this->items)
+	for (const auto& item : itemCopy)
 	{
 		item->update(game, timeDelta);
 	}

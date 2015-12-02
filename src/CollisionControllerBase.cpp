@@ -15,7 +15,7 @@ using namespace si::controller;
 /// list, whereas dead controllers will be eliminated.
 bool CollisionControllerBase::isAlive() const
 {
-	this->getEntity() == nullptr;
+	return this->getEntity() == nullptr;
 }
 
 /// Updates the game model based on the given time delta.

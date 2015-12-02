@@ -27,7 +27,9 @@ namespace si
 		/// is returned. Otherwise, true is returned.
 		bool remove(const std::shared_ptr<T>& item)
 		{
-			this->items.erase(std::remove(this->items.begin(), this->items.end(), item), this->items.end());
+			auto iter = std::remove(this->items.begin(), this->items.end(), item);
+			this->items.erase(iter, this->items.end());
+			return iter != this->items.end();
 		}
 
 		/// Gets all items in this container that

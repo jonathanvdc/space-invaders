@@ -207,6 +207,7 @@ void spaceInvaders(sf::RenderWindow& w)
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
 			game.add(bullet);
 			renderer.add(createSprite(bullet, shipTex, 0.05, 0.05));
+			controller.add(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
 		}
 		return isAlive;
 	}));
