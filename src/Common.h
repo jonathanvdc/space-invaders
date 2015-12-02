@@ -29,6 +29,13 @@ namespace si
 	{
 		return std::sqrt(vecLengthSqr(vec));
 	}
+	
+	/// Normalizes the given vector.
+	template<typename T>
+	auto normalizeVec(sf::Vector2<T> vec)
+	{
+		return vec / vecLength(vec);
+	}
 
 	/// Tests if the given shared pointer is of the 
 	/// given type.

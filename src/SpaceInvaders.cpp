@@ -9,6 +9,7 @@
 #include "Stopwatch.h"
 #include "PathEntity.h"
 #include "DriftingEntity.h"
+#include "ProjectileEntity.h"
 #include "Game.h"
 #include "GameRenderer.h"
 #include "GameController.h"
@@ -19,6 +20,9 @@
 #include "RelativeBoxRenderable.h"
 #include "PathController.h"
 #include "PlayerController.h"
+#include "ActionController.h"
+#include "ProjectileCollisionController.h"
+#include "ShipCollisionController.h"
 
 /// A physics sim for testing purposes.
 void physicsSim(sf::RenderWindow& w)
@@ -113,6 +117,41 @@ void physicsSim(sf::RenderWindow& w)
 	}
 }
 
+/// Creates a simple projectile with the given characteristics.
+std::shared_ptr<si::model::ProjectileEntity> createProjectile(
+	const si::model::PhysicsEntity& origin, 
+	double mass, double radius, si::Vector2d velocity)
+{
+	auto dir = si::normalizeVec(velocity);
+	auto bulletOffset = (origin.getPhysicsProperties().radius + radius) * dir;
+	auto bulletPos = origin.getPosition() + bulletOffset;
+	return std::make_shared<si::model::ProjectileEntity>(
+		si::model::PhysicsProperties(mass, radius), 
+		bulletPos, velocity);
+}
+
+/// Creates a sprite view for the given texture and dimensions
+/// that follows the given entity around.
+std::shared_ptr<si::view::IRenderable> createSprite(
+	const si::model::Entity_ptr& model,
+	const std::shared_ptr<sf::Texture>& texture,
+	si::DoubleRect relativeSize)
+{
+	auto sprite = std::make_shared<si::view::SpriteRenderable>(texture);
+	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, relativeSize);
+	return std::make_shared<si::view::PathOffsetRenderable>(box, [=]() { return model->getPosition(); });
+}
+
+/// Creates a sprite view for the given texture and dimensions
+/// that follows the given entity around.
+std::shared_ptr<si::view::IRenderable> createSprite(
+	const si::model::Entity_ptr& model,
+	const std::shared_ptr<sf::Texture>& texture,
+	double width, double height)
+{
+	return createSprite(model, texture, si::DoubleRect(0.0, 0.0, width, height));
+}
+
 /// The actual space invaders game.
 void spaceInvaders(sf::RenderWindow& w)
 {
@@ -139,21 +178,14 @@ void spaceInvaders(sf::RenderWindow& w)
 	auto ship = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
 	game.add(ship);
-	auto sprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
-	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, si::DoubleRect(0, 0, 0.1, 0.1));
-	auto shipView = std::make_shared<si::view::PathOffsetRenderable>(box, [=]() { return ship->getPosition(); });
-	renderer.add(shipView);
+	renderer.add(createSprite(ship, shipTex, 0.1, 0.1));
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
 
 	auto other = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
 	game.add(other);
-	auto otherSprite = std::make_shared<si::view::SpriteRenderable>(shipTex);
-	auto otherBox = std::make_shared<si::view::RelativeBoxRenderable>(otherSprite, si::DoubleRect(0, 0, 0.1, 0.1));
-	auto otherView = std::make_shared<si::view::PathOffsetRenderable>(otherBox, [=]() { return other->getPosition(); });
-	renderer.add(otherView);
+	renderer.add(createSprite(other, shipTex, 0.1, 0.1));
 	controller.add(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
-
 
 	(void)si::Stopwatch::instance.delta();
 
