@@ -16,6 +16,11 @@ namespace si
 		{
 			items.push_back(item);
 		}
+		/// Adds the given item to this container.
+		void add(std::shared_ptr<T>&& item)
+		{
+			items.push_back(item);
+		}
 
 		/// Tries to remove the given item from this
 		/// container. If this cannot be done, false 

@@ -120,14 +120,33 @@ void physicsSim(sf::RenderWindow& w)
 /// Creates a simple projectile with the given characteristics.
 std::shared_ptr<si::model::ProjectileEntity> createProjectile(
 	const si::model::PhysicsEntity& origin, 
-	double mass, double radius, si::Vector2d velocity)
+	double mass, double radius, si::Vector2d veloc)
 {
-	auto dir = si::normalizeVec(velocity);
-	auto bulletOffset = (origin.getPhysicsProperties().radius + radius) * dir;
+	auto bulletOffset = (origin.getPhysicsProperties().radius + radius) * si::normalizeVec(veloc);
 	auto bulletPos = origin.getPosition() + bulletOffset;
 	return std::make_shared<si::model::ProjectileEntity>(
-		si::model::PhysicsProperties(mass, radius), 
-		bulletPos, velocity);
+		si::model::PhysicsProperties(mass, radius),
+		bulletPos, origin.getVelocity() + veloc);
+}
+
+/// Fires a simple projectile with the given characteristics
+/// from the given origin. Momentum is conserved.
+std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
+	si::model::DriftingEntity& origin,
+	double mass, double radius, si::Vector2d veloc)
+{
+	origin.accelerate(-si::Vector2d(veloc));
+	return createProjectile(origin, mass, radius, veloc);
+}
+
+/// Fires a simple projectile with the given characteristics
+/// from the given origin. Momentum is conserved.
+std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
+	si::model::DriftingEntity& origin,
+	double mass, double radius, double speed)
+{
+	auto veloc = speed * origin.getOrientation();
+	return fireProjectile(origin, mass, radius, veloc);
 }
 
 /// Creates a sprite view for the given texture and dimensions
@@ -180,6 +199,17 @@ void spaceInvaders(sf::RenderWindow& w)
 	game.add(ship);
 	renderer.add(createSprite(ship, shipTex, 0.1, 0.1));
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
+	controller.add(std::make_shared<si::controller::ActionController>([&](si::model::Game& game, si::duration_t timeDelta)
+	{
+		bool isAlive = ship->isAlive();
+		if (isAlive && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
+			game.add(bullet);
+			renderer.add(createSprite(bullet, shipTex, 0.05, 0.05));
+		}
+		return isAlive;
+	}));
 
 	auto other = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);

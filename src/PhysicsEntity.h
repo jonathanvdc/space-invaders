@@ -43,6 +43,15 @@ namespace si
 			/// Gets this physics entity's velocity.
 			Vector2d getVelocity() const;
 
+			/// Gets the direction in which this physics
+			/// entity is oriented, as a normalized vector.
+			Vector2d getOrientation() const;
+
+			/// Gets the direction in which this
+			/// physics entity is oriented, in
+			/// radians.
+			double getOrientationAngle() const;
+
 			/// Gets this physics entity's momentum,
 			/// i.e. the current velocity multiplied by
 			/// the entity's mass.

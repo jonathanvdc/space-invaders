@@ -1,6 +1,7 @@
 #include "PhysicsEntity.h"
 
 #include <algorithm>
+#include <cmath>
 #include "Common.h"
 #include "Entity.h"
 
@@ -16,6 +17,30 @@ PhysicsEntity::PhysicsEntity(PhysicsProperties props)
 Vector2d PhysicsEntity::getVelocity() const
 {
 	return this->velocity;
+}
+
+/// Gets the direction in which this physics
+/// entity is oriented, as a normalized vector.
+Vector2d PhysicsEntity::getOrientation() const
+{
+	const double epsilon = 0.0000000001;
+	auto length = si::vecLength(this->velocity);
+	// If the length of the velocity vector
+	// is smaller than the epsilon value, 
+	// then we'll just assume this entity is
+	// oriented upwards.
+	return length < epsilon 
+		? Vector2d(0.0, -1.0) 
+		: this->velocity / length;
+}
+
+/// Gets the direction in which this
+/// physics entity is oriented, in
+/// radians.
+double PhysicsEntity::getOrientationAngle() const
+{
+	auto orient = this->getOrientation();
+	return std::atan2(orient.y, orient.x);
 }
 
 Vector2d PhysicsEntity::getMomentum() const
