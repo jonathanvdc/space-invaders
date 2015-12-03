@@ -205,18 +205,18 @@ void spaceInvaders(sf::RenderWindow& w)
 	renderer.add(createSprite(ship, shipTex, 0.1, 0.1));
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
 	controller.add(std::make_shared<si::controller::IntervalActionController>(0.5s, 
-		[=](si::model::Game& game, si::duration_t timeDelta)
+		[](si::model::Game&, si::duration_t)
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[&](si::model::Game& game, si::duration_t timeDelta)
+		[&](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
 			game.add(bullet);
 			renderer.add(createSprite(bullet, shipTex, 0.05, 0.05));
 			controller.add(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
 		},
-		[=](si::model::Game& game, si::duration_t timeDelta)
+		[=](si::model::Game&, si::duration_t)
 		{
 			return ship->isAlive();
 		}));
