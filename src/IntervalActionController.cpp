@@ -11,7 +11,7 @@ using namespace si::controller;
 using namespace std::chrono_literals;
 
 /// Creates a new action controller from the given
-/// function and duration.
+/// functions and duration.
 IntervalActionController::IntervalActionController(
 	duration_t interval,
 	const PerformActionPredicate& actionPredicate,
@@ -20,6 +20,17 @@ IntervalActionController::IntervalActionController(
 	: isStillAlive(true), interval(interval), elapsed(0.0s), 
 	  actionPredicate(actionPredicate), performAction(performAction),
 	  livelinessPredicate(livelinessPredicate)
+{ }
+
+/// Creates a new action controller from the given
+/// functions and duration.
+IntervalActionController::IntervalActionController(
+	duration_t interval,
+	const ActionFunction& performAction,
+	const LivelinessPredicate& livelinessPredicate)
+	: IntervalActionController(interval, 
+		PerformActionPredicate([](si::model::Game&, duration_t) { return true; }),
+		performAction, livelinessPredicate)
 { }
 
 /// Checks if this controller is still "alive".

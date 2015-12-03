@@ -30,16 +30,25 @@ namespace si
 			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> LivelinessPredicate;
 
 			/// Creates a new action controller from the given
-			/// function, which is called on every frame
-			/// for as long as this controller is alive.
-			/// Once this function returns false, the action
-			/// controller is marked as dead.
+			/// perform-action predicate, perform-action
+			/// function and liveliness predicate.
 			/// A duration determines how much time
 			/// must pass between two calls to the
 			/// action-performing function.
 			IntervalActionController(
 				duration_t interval,
 				const PerformActionPredicate& actionPredicate,
+				const ActionFunction& performAction,
+				const LivelinessPredicate& livelinessPredicate);
+
+			/// Creates a new action controller from 
+			/// the given perform-action
+			/// function and liveliness predicate.
+			/// A duration determines how much time
+			/// must pass between two calls to the
+			/// action-performing function.
+			IntervalActionController(
+				duration_t interval,
 				const ActionFunction& performAction,
 				const LivelinessPredicate& livelinessPredicate);
 
