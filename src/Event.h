@@ -38,7 +38,7 @@ namespace si
 	/// event handlers, which are called
 	/// when the event is raised.
 	template<typename TRet, typename... TArgs>
-	class Event<TRet(TArgs...)> final : EventBase<TRet, TArgs...>
+	class Event<TRet(TArgs...)> final : public EventBase<TRet, TArgs...>
 	{
 	public:
 		/// Raises this event. All handlers are
@@ -67,7 +67,7 @@ namespace si
 	/// event handlers, which are called
 	/// when the event is raised.
 	template<typename... TArgs>
-	class Event<void(TArgs...)> final : EventBase<void, TArgs...>
+	class Event<void(TArgs...)> final : public EventBase<void, TArgs...>
 	{
 	public:
 		/// Raises this event. All handlers are

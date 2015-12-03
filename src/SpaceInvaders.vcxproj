@@ -168,6 +168,7 @@
     <ClCompile Include="ProjectileEntity.cpp" />
     <ClCompile Include="RelativeBoxRenderable.cpp" />
     <ClCompile Include="PathOffsetRenderable.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShipCollisionController.cpp" />
     <ClCompile Include="ShipEntity.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="ProjectileEntity.h" />
     <ClInclude Include="RelativeBoxRenderable.h" />
     <ClInclude Include="PathOffsetRenderable.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShipCollisionController.h" />
     <ClInclude Include="ShipEntity.h" />
     <ClInclude Include="SpriteRenderable.h" />

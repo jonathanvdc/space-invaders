@@ -1,4 +1,6 @@
 #pragma once
+
+#include <memory>
 #include "Common.h"
 #include "RenderContext.h"
 
@@ -19,5 +21,7 @@ namespace si
 			/// coordinates.
 			virtual void render(RenderContext& target, DoubleRect bounds) = 0;
 		};
+
+		typedef std::shared_ptr<IRenderable> IRenderable_ptr;
 	}
 }

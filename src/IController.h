@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "Common.h"
 #include "Game.h"
 
@@ -27,5 +28,7 @@ namespace si
 			/// because it is intrinsic to the object it models.
 			virtual void update(si::model::Game& game, duration_t timeDelta) = 0;
 		};
+
+		typedef std::shared_ptr<IController> IController_ptr;
 	}
 }
