@@ -8,16 +8,12 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Game.h"
-#include "ProjectileEntity.h"
 #include "IController.h"
 #include "GameController.h"
 #include "IRenderable.h"
 #include "RenderContext.h"
 #include "GameRenderer.h"
-#include "SpriteRenderable.h"
-#include "RelativeBoxRenderable.h"
 #include "PathOffsetRenderable.h"
-#include "Stopwatch.h"
 
 using namespace si;
 

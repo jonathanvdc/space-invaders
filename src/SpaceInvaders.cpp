@@ -26,6 +26,7 @@
 #include "IntervalActionController.h"
 #include "ProjectileCollisionController.h"
 #include "ShipCollisionController.h"
+#include "Scene.h"
 
 using namespace std::chrono_literals;
 
@@ -177,30 +178,10 @@ si::view::IRenderable_ptr createSprite(
 	return createSprite(model, texture, si::DoubleRect(0.0, 0.0, width, height));
 }
 
-/// Registers the given model with the
-/// given game, and registers its corresponding
-/// renderable with the renderer. The model is
-/// then mapped to the renderable in the given
-/// map, which can be used to remove elements from 
-/// a 
-void registerWithView(
-	const si::model::Entity_ptr& model,
-	const si::view::IRenderable_ptr& view,
-	si::model::Game& game,
-	si::view::GameRenderer& renderer,
-	std::map<si::model::Entity_ptr, si::view::IRenderable_ptr>& assocMap)
-{
-	game.add(model);
-	renderer.add(view);
-	assocMap[model] = view;
-}
-
 /// The actual space invaders game.
 void spaceInvaders(sf::RenderWindow& w)
 {
-	si::model::Game game;
-	si::view::GameRenderer renderer(sf::Color::Black);
-	si::controller::GameController controller;
+	si::Scene scene;
 
 	sf::Font font;
 
@@ -216,14 +197,13 @@ void spaceInvaders(sf::RenderWindow& w)
 	}
 
 	auto framecounter = std::make_shared<si::view::TextRenderable>("", font, sf::Color::Red);
-	renderer.add(framecounter);
+	scene.addRenderable(framecounter);
 
 	auto ship = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
-	game.add(ship);
-	renderer.add(createSprite(ship, shipTex, 0.1, 0.1));
-	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
-	controller.add(std::make_shared<si::controller::IntervalActionController>(0.5s, 
+	scene.addEntity(ship, createSprite(ship, shipTex, 0.1, 0.1));
+	scene.addController(std::make_shared<si::controller::PlayerController>(ship, 0.05));
+	scene.addController(std::make_shared<si::controller::IntervalActionController>(0.5s,
 		[](si::model::Game&, si::duration_t)
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
@@ -231,9 +211,8 @@ void spaceInvaders(sf::RenderWindow& w)
 		[&](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
-			game.add(bullet);
-			renderer.add(createSprite(bullet, shipTex, 0.05, 0.05));
-			controller.add(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
+			scene.addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
+			scene.addController(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
 		},
 		[=](si::model::Game&, si::duration_t)
 		{
@@ -242,9 +221,8 @@ void spaceInvaders(sf::RenderWindow& w)
 
 	auto other = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
-	game.add(other);
-	renderer.add(createSprite(other, shipTex, 0.1, 0.1));
-	controller.add(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
+	scene.addEntity(other, createSprite(other, shipTex, 0.1, 0.1));
+	scene.addController(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
 
 	(void)si::Stopwatch::instance.delta();
 
@@ -277,10 +255,7 @@ void spaceInvaders(sf::RenderWindow& w)
 			elapsed -= si::duration_t(1.0);
 		}
 
-		game.updateTime(delta);
-		controller.update(game, delta);
-		auto context = si::view::RenderContext(w, delta);
-		renderer.render(context, context.getBounds());
+		scene.frame(w, delta);
 
 		w.display();
 	}
