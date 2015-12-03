@@ -48,6 +48,14 @@ namespace si
 			const si::model::Entity_ptr& model,
 			const si::view::IRenderable_ptr& view);
 
+		/// Adds a renderable (view) element to 
+		/// this scene that is not associated 
+		/// with anything in the model. This
+		/// can be useful when constructing a 
+		/// background, or an HUD.
+		void addRenderable(
+			const si::view::IRenderable_ptr& view);
+
 		/// Adds the given controller to this scene.
 		void addController(
 			const si::controller::IController_ptr& item);

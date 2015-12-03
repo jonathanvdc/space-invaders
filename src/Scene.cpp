@@ -67,6 +67,17 @@ void Scene::addEntity(
 	this->associatedView[model] = view;
 }
 
+/// Adds a renderable (view) element to 
+/// this scene that is not associated 
+/// with anything in the model. This
+/// can be useful when constructing a 
+/// background, or an HUD.
+void Scene::addRenderable(
+	const si::view::IRenderable_ptr& view)
+{
+	this->renderer.add(view);
+}
+
 /// Adds the given controller to this scene.
 void Scene::addController(
 	const si::controller::IController_ptr& item)
