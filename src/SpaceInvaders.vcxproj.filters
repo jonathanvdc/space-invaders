@@ -84,6 +84,9 @@
     <ClCompile Include="ActionController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IntervalActionController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RandomGenerator.h">
@@ -162,6 +165,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ActionController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntervalActionController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

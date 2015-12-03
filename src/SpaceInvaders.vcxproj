@@ -159,6 +159,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
+    <ClCompile Include="IntervalActionController.cpp" />
     <ClCompile Include="PathController.cpp" />
     <ClCompile Include="PathEntity.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="IController.h" />
+    <ClInclude Include="IntervalActionController.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
