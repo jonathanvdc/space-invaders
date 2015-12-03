@@ -18,7 +18,16 @@ namespace si
 		class IntervalActionController final : public IController
 		{
 		public:
-			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> ActionFunction;
+			/// A type for functions that check if an action
+			/// should be performed.
+			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> PerformActionPredicate;
+
+			/// A type for functions that perform some action.
+			typedef std::function<void(si::model::Game& game, duration_t timeDelta)> ActionFunction;
+
+			/// A type for functions that check if a controller
+			/// is still alive.
+			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> LivelinessPredicate;
 
 			/// Creates a new action controller from the given
 			/// function, which is called on every frame
@@ -30,7 +39,9 @@ namespace si
 			/// action-performing function.
 			IntervalActionController(
 				duration_t interval,
-				const ActionFunction& performAction);
+				const PerformActionPredicate& actionPredicate,
+				const ActionFunction& performAction,
+				const LivelinessPredicate& livelinessPredicate);
 
 			/// Checks if this controller is still "alive".
 			/// A live controller will remain in the controller
@@ -40,12 +51,13 @@ namespace si
 			/// Updates the game model based on the given time delta.
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 
-
 		private:
 			bool isStillAlive;
 			const duration_t interval;
 			duration_t elapsed;
+			PerformActionPredicate actionPredicate;
 			ActionFunction performAction;
+			LivelinessPredicate livelinessPredicate;
 		};
 
 	}

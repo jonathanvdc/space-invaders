@@ -1,6 +1,7 @@
 // SpaceInvaders.cpp : Defines the entry point for the application.
 //
 
+#include <chrono>
 #include <functional>
 #include <exception>
 #include <SFML/Graphics.hpp>
@@ -21,8 +22,11 @@
 #include "PathController.h"
 #include "PlayerController.h"
 #include "ActionController.h"
+#include "IntervalActionController.h"
 #include "ProjectileCollisionController.h"
 #include "ShipCollisionController.h"
+
+using namespace std::chrono_literals;
 
 /// A physics sim for testing purposes.
 void physicsSim(sf::RenderWindow& w)
@@ -135,8 +139,9 @@ std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
 	si::model::DriftingEntity& origin,
 	double mass, double radius, si::Vector2d veloc)
 {
+	auto result = createProjectile(origin, mass, radius, veloc);
 	origin.accelerate(-si::Vector2d(veloc));
-	return createProjectile(origin, mass, radius, veloc);
+	return result;
 }
 
 /// Fires a simple projectile with the given characteristics
@@ -199,18 +204,22 @@ void spaceInvaders(sf::RenderWindow& w)
 	game.add(ship);
 	renderer.add(createSprite(ship, shipTex, 0.1, 0.1));
 	controller.add(std::make_shared<si::controller::PlayerController>(ship, 0.05));
-	controller.add(std::make_shared<si::controller::ActionController>([&](si::model::Game& game, si::duration_t timeDelta)
-	{
-		bool isAlive = ship->isAlive();
-		if (isAlive && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	controller.add(std::make_shared<si::controller::IntervalActionController>(0.5s, 
+		[=](si::model::Game& game, si::duration_t timeDelta)
+		{
+			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+		},
+		[&](si::model::Game& game, si::duration_t timeDelta)
 		{
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
 			game.add(bullet);
 			renderer.add(createSprite(bullet, shipTex, 0.05, 0.05));
 			controller.add(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
-		}
-		return isAlive;
-	}));
+		},
+		[=](si::model::Game& game, si::duration_t timeDelta)
+		{
+			return ship->isAlive();
+		}));
 
 	auto other = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);

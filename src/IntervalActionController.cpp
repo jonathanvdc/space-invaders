@@ -14,8 +14,12 @@ using namespace std::chrono_literals;
 /// function and duration.
 IntervalActionController::IntervalActionController(
 	duration_t interval,
-	const ActionFunction& performAction)
-	: isStillAlive(true), interval(interval), elapsed(0.0s), performAction(performAction)
+	const PerformActionPredicate& actionPredicate,
+	const ActionFunction& performAction,
+	const LivelinessPredicate& livelinessPredicate)
+	: isStillAlive(true), interval(interval), elapsed(0.0s), 
+	  actionPredicate(actionPredicate), performAction(performAction),
+	  livelinessPredicate(livelinessPredicate)
 { }
 
 /// Checks if this controller is still "alive".
@@ -29,10 +33,14 @@ bool IntervalActionController::isAlive() const
 /// Updates the game model based on the given time delta.
 void IntervalActionController::update(si::model::Game& game, duration_t timeDelta)
 {
-	this->elapsed += timeDelta;
-	if (this->interval <= this->elapsed)
+	this->elapsed += timeDelta;	
+	if (this->isStillAlive)
 	{
-		this->isStillAlive = this->performAction(game, timeDelta);
-		this->elapsed -= this->interval;
+		if (this->elapsed >= this->interval && this->actionPredicate(game, timeDelta))
+		{
+			this->performAction(game, timeDelta);
+			this->elapsed = 0.0s;
+		}
+		this->isStillAlive = this->livelinessPredicate(game, timeDelta);
 	}
 }
