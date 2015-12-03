@@ -2,8 +2,9 @@
 //
 
 #include <chrono>
-#include <functional>
 #include <exception>
+#include <functional>
+#include <map>
 #include <SFML/Graphics.hpp>
 #include "Common.h"
 #include "RandomGenerator.h"
@@ -156,7 +157,7 @@ std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
 
 /// Creates a sprite view for the given texture and dimensions
 /// that follows the given entity around.
-std::shared_ptr<si::view::IRenderable> createSprite(
+si::view::IRenderable_ptr createSprite(
 	const si::model::Entity_ptr& model,
 	const std::shared_ptr<sf::Texture>& texture,
 	si::DoubleRect relativeSize)
@@ -168,12 +169,30 @@ std::shared_ptr<si::view::IRenderable> createSprite(
 
 /// Creates a sprite view for the given texture and dimensions
 /// that follows the given entity around.
-std::shared_ptr<si::view::IRenderable> createSprite(
+si::view::IRenderable_ptr createSprite(
 	const si::model::Entity_ptr& model,
 	const std::shared_ptr<sf::Texture>& texture,
 	double width, double height)
 {
 	return createSprite(model, texture, si::DoubleRect(0.0, 0.0, width, height));
+}
+
+/// Registers the given model with the
+/// given game, and registers its corresponding
+/// renderable with the renderer. The model is
+/// then mapped to the renderable in the given
+/// map, which can be used to remove elements from 
+/// a 
+void registerWithView(
+	const si::model::Entity_ptr& model,
+	const si::view::IRenderable_ptr& view,
+	si::model::Game& game,
+	si::view::GameRenderer& renderer,
+	std::map<si::model::Entity_ptr, si::view::IRenderable_ptr>& assocMap)
+{
+	game.add(model);
+	renderer.add(view);
+	assocMap[model] = view;
 }
 
 /// The actual space invaders game.

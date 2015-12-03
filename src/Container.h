@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include "Event.h"
 
 namespace si
 {
@@ -22,6 +23,14 @@ namespace si
 			items.push_back(item);
 		}
 
+		/// Registers the given event handler, which
+		/// will be called whenever an item is removed
+		/// from this container.
+		void registerRemoveHandler(std::function<void(const std::shared_ptr<T>&)> handler)
+		{
+			removedEvent.addHandler(handler);
+		}
+
 		/// Tries to remove the given item from this
 		/// container. If this cannot be done, false 
 		/// is returned. Otherwise, true is returned.
@@ -29,7 +38,15 @@ namespace si
 		{
 			auto iter = std::remove(this->items.begin(), this->items.end(), item);
 			this->items.erase(iter, this->items.end());
-			return iter != this->items.end();
+			if (iter != this->items.end())
+			{
+				removedEvent(item);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// Gets all items in this container that
@@ -51,5 +68,8 @@ namespace si
 
 	protected:
 		std::vector<std::shared_ptr<T>> items;
+
+	private:
+		Event<void(const std::shared_ptr<T>&)> removedEvent;
 	};
 }

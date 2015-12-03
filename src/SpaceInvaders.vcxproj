@@ -181,6 +181,7 @@
     <ClInclude Include="CollisionControllerBase.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="ActionController.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="IController.h" />
