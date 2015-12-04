@@ -36,9 +36,11 @@ namespace si
 		/// is returned. Otherwise, true is returned.
 		bool remove(const std::shared_ptr<T>& item)
 		{
-			auto iter = std::remove(this->items.begin(), this->items.end(), item);
-			this->items.erase(iter, this->items.end());
-			if (iter != this->items.end())
+			auto preCount = this->items.size();
+			this->items.erase(
+				std::remove(this->items.begin(), this->items.end(), item), 
+				this->items.end());
+			if (preCount > this->items.size())
 			{
 				removedEvent(item);
 				return true;
