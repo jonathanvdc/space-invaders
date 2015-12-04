@@ -1,5 +1,7 @@
 #include "SceneDescription.h"
 
+#include <exception>
+#include <fstream>
 #include <map>
 #include <memory>
 #include <string>
@@ -85,6 +87,29 @@ SceneDescription::SceneDescription(const std::string& path)
 std::string SceneDescription::getPath() const
 {
 	return this->path;
+}
+
+/// Reads all texture assets defined in this
+/// scene description document.
+std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextures() const
+{
+	std::map<std::string, std::shared_ptr<sf::Texture>> results;
+	auto textureNode = this->getTexturesNode();
+	for (auto child = textureNode->FirstChildElement(); 
+		 child != nullptr; 
+		 child = child->NextSiblingElement())
+	{
+		std::string name = child->Attribute("id");
+		std::string path = child->Attribute("path");
+		auto newPath = this->convertPath(path);
+		auto tex = std::make_shared<sf::Texture>();
+		if (!tex->loadFromFile(newPath))
+		{
+			throw std::runtime_error("Couldn't load file '" + newPath + "'.");
+		}
+		results[name] = tex;
+	}
+	return results;
 }
 
 void SceneDescription::throwError()
