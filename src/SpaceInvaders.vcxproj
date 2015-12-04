@@ -177,6 +177,7 @@
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="TextRenderable.cpp" />
+    <ClCompile Include="tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionControllerBase.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="TextRenderable.h" />
+    <ClInclude Include="tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

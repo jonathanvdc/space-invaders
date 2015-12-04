@@ -90,6 +90,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tinyxml2\tinyxml2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RandomGenerator.h">
@@ -177,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2\tinyxml2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
