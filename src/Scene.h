@@ -51,6 +51,14 @@ namespace si
 		void addRenderable(
 			const si::view::IRenderable_ptr& view);
 
+		/// Constrains the given entity to the
+		/// given bounds (in relative coordinates).
+		/// Once exceeded, the entity is removed
+		/// from the game.
+		void addBoundsConstraint(
+			const si::model::Entity_ptr& model,
+			si::DoubleRect bounds);
+
 		/// Adds the given controller to this scene.
 		void addController(
 			const si::controller::IController_ptr& item);

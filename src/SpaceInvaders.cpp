@@ -213,6 +213,7 @@ void spaceInvaders(sf::RenderWindow& w)
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
 			scene.addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
 			scene.addController(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
+			scene.addBoundsConstraint(bullet, si::DoubleRect(-0.5, -0.5, 2.0, 2.0));
 		},
 		[=](si::model::Game&, si::duration_t)
 		{

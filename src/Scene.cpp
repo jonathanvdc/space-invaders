@@ -10,6 +10,7 @@
 #include "Game.h"
 #include "IController.h"
 #include "GameController.h"
+#include "OutOfBoundsController.h"
 #include "IRenderable.h"
 #include "RenderContext.h"
 #include "GameRenderer.h"
@@ -19,8 +20,7 @@ using namespace si;
 
 Scene::Scene()
 	: Scene(sf::Color::Black)
-{
-}
+{ }
 
 Scene::Scene(sf::Color backgroundColor)
 	: game(), renderer(backgroundColor), controller(), associatedView()
@@ -72,6 +72,17 @@ void Scene::addRenderable(
 	const si::view::IRenderable_ptr& view)
 {
 	this->renderer.add(view);
+}
+
+/// Constrains the given entity to the
+/// given bounds (in relative coordinates).
+/// Once exceeded, the entity is removed
+/// from the game.
+void Scene::addBoundsConstraint(
+	const si::model::Entity_ptr& model,
+	si::DoubleRect bounds)
+{
+	this->addController(std::make_shared<si::controller::OutOfBoundsController>(model, bounds));
 }
 
 /// Adds the given controller to this scene.
