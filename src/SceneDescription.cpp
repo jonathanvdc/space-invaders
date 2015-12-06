@@ -11,6 +11,8 @@
 #include "tinyxml2/tinyxml2.h"
 #include "Common.h"
 #include "Entity.h"
+#include "ProjectileEntity.h"
+#include "ShipEntity.h"
 #include "IController.h"
 #include "IRenderable.h"
 #include "Scene.h"
@@ -151,14 +153,61 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	}
 	else if (nodeName == "Box")
 	{
-		double x = getDoubleAttribute(node, "x");
-		double y = getDoubleAttribute(node, "y");
+		double x = getDoubleAttribute(node, "posX");
+		double y = getDoubleAttribute(node, "posY");
 		double width = getDoubleAttribute(node, "width");
 		double height = getDoubleAttribute(node, "height");
 
 		auto contents = readRenderable(getSingleChild(node), textures);
 
 		return std::make_shared<si::view::RelativeBoxRenderable>(contents, DoubleRect(x, y, width, height));
+	}
+	else
+	{
+		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
+	}
+}
+
+/// Reads a ship entity as specified by the given node.
+std::shared_ptr<si::model::ShipEntity> SceneDescription::readShipEntity(
+	const tinyxml2::XMLElement* node)
+{
+	auto physProps = getPhysicsProperties(node);
+	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
+	double maxHealth = getDoubleAttribute(node, "health");
+
+	return std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
+}
+
+/// Reads a projectile entity as specified by the given node.
+/// The return type of this function is a parameterless function,
+/// which can be used to create an arbitrary number of projectiles
+/// on-demand.
+std::function<std::shared_ptr<si::model::ProjectileEntity>()> SceneDescription::readProjectileEntity(
+	const tinyxml2::XMLElement* node)
+{
+	auto physProps = getPhysicsProperties(node);
+	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
+	Vector2d veloc(getDoubleAttribute(node, "velX"), getDoubleAttribute(node, "velY"));
+
+	return [=]()
+	{
+		return std::make_shared<si::model::ProjectileEntity>(physProps, pos, veloc);
+	};
+}
+
+/// Reads a model entity specified by the given node.
+si::model::Entity_ptr SceneDescription::readEntity(
+	const tinyxml2::XMLElement* node)
+{
+	std::string nodeName = node->Name();
+	if (nodeName == "Ship")
+	{
+		return readShipEntity(node);
+	}
+	else if (nodeName == "Projectile")
+	{
+		return readProjectileEntity(node)();
 	}
 	else
 	{
@@ -224,6 +273,17 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 		return result;
 	}
 }
+
+/// Reads the given node's physics properties.
+si::model::PhysicsProperties SceneDescription::getPhysicsProperties(
+	const tinyxml2::XMLElement* node)
+{
+	double mass = getDoubleAttribute(node, "mass");
+	double radius = getDoubleAttribute(node, "radius");
+
+	return{ mass, radius };
+}
+
 
 /// Gets the only child of the given XML node.
 /// If this cannot be done, an exception is thrown.

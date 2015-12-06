@@ -10,6 +10,9 @@
 #include "tinyxml2/tinyxml2.h"
 #include "Common.h"
 #include "Entity.h"
+#include "PhysicsEntity.h"
+#include "ShipEntity.h"
+#include "ProjectileEntity.h"
 #include "IController.h"
 #include "IRenderable.h"
 #include "Scene.h"
@@ -83,7 +86,20 @@ namespace si
 			const tinyxml2::XMLElement* node, 
 			const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
 
-		// std::pair<si::model::Entity_ptr, si::view::IRenderable_ptr> 
+		/// Reads a ship entity as specified by the given node.
+		static std::shared_ptr<si::model::ShipEntity> readShipEntity(
+			const tinyxml2::XMLElement* node);
+
+		/// Reads a projectile entity as specified by the given node.
+		/// The return type of this function is a parameterless function,
+		/// which can be used to create an arbitrary number of projectiles
+		/// on-demand.
+		static std::function<std::shared_ptr<si::model::ProjectileEntity>()> readProjectileEntity(
+			const tinyxml2::XMLElement* node);
+
+		/// Reads a model entity specified by the given node.
+		static si::model::Entity_ptr readEntity(
+			const tinyxml2::XMLElement* node);
 		
 	private:
 		/// Gets this scene description's texture definition node.
@@ -114,6 +130,10 @@ namespace si
 		/// If no such attribute can be found, an
 		/// exception is thrown.
 		static double getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name);
+
+		/// Reads the given node's physics properties.
+		static si::model::PhysicsProperties getPhysicsProperties(
+			const tinyxml2::XMLElement* node);
 
 		/// Gets the only child of the given XML node.
 		/// If this cannot be done, an exception is thrown.
