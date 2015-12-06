@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "tinyxml2/tinyxml2.h"
@@ -52,6 +53,15 @@ namespace si
 		std::string errorStr2;
 	};
 
+	/// An exception class for semantic errors in scene
+	/// description documents.
+	class SceneDescriptionException : public std::exception
+	{
+	public:
+		SceneDescriptionException(const std::string& message);
+		SceneDescriptionException(const char* message);
+	};
+
 	/// Defines a scene description class.
 	class SceneDescription final
 	{
@@ -67,6 +77,13 @@ namespace si
 		/// Reads all texture assets defined in this
 		/// scene description document.
 		std::map<std::string, std::shared_ptr<sf::Texture>> readTextures() const;
+
+		/// Reads a renderable element specified by the given node.
+		static si::view::IRenderable_ptr readRenderable(
+			const tinyxml2::XMLElement* node, 
+			const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
+
+		// std::pair<si::model::Entity_ptr, si::view::IRenderable_ptr> 
 		
 	private:
 		/// Gets this scene description's texture definition node.
@@ -82,6 +99,25 @@ namespace si
 		/// associated with this scene is in an error
 		/// state.
 		void throwError();
+
+		/// Ensures that the attribute with the given name is present
+		/// in the given XML node. Otherwise, an exception is thrown.
+		static void ensureAttributePresent(const tinyxml2::XMLElement* node, const char* name);
+
+		/// Gets the value of the attribute with the given name 
+		/// in the given XML node. If no such attribute can be 
+		/// found, an exception is thrown.
+		static std::string getAttribute(const tinyxml2::XMLElement* node, const char* name);
+
+		/// Gets the value of the integer attribute with the
+		/// given name in the given XML node. 
+		/// If no such attribute can be found, an
+		/// exception is thrown.
+		static double getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name);
+
+		/// Gets the only child of the given XML node.
+		/// If this cannot be done, an exception is thrown.
+		static const tinyxml2::XMLElement* getSingleChild(const tinyxml2::XMLElement* parent);
 
 		tinyxml2::XMLDocument doc;
 		std::string path;
