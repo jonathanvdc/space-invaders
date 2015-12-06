@@ -81,6 +81,11 @@ namespace si
 		/// scene description document.
 		std::map<std::string, std::shared_ptr<sf::Texture>> readTextures() const;
 
+		/// Reads all renderable elements definitions in this
+		/// scene description document.
+		std::map<std::string, si::view::IRenderable_ptr> readRenderables(
+			const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const;
+
 		/// Reads a renderable element specified by the given node.
 		static si::view::IRenderable_ptr readRenderable(
 			const tinyxml2::XMLElement* node, 
@@ -102,8 +107,11 @@ namespace si
 			const tinyxml2::XMLElement* node);
 		
 	private:
-		/// Gets this scene description's texture definition node.
+		/// Gets this scene description's texture definitions node.
 		const tinyxml2::XMLElement* getTexturesNode() const;
+
+		/// Gets this scene description's renderable definitions node.
+		const tinyxml2::XMLElement* getRenderablesNode() const;
 
 		/// Converts the given path, which is relative
 		/// to the scene description's path, to a

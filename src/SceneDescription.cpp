@@ -27,7 +27,7 @@ XMLParseException::XMLParseException(
 	const std::string& errorName,
 	const std::string& errorStr1, const std::string& errorStr2)
 	: errorName(errorName),
-	  errorStr1(errorStr1), errorStr2(errorStr2)
+	errorStr1(errorStr1), errorStr2(errorStr2)
 {
 	std::string msg = this->errorName;
 	if (this->errorStr1.size() > 0)
@@ -45,7 +45,7 @@ XMLParseException::XMLParseException(
 /// given XML document.
 XMLParseException::XMLParseException(const tinyxml2::XMLDocument& doc)
 	: XMLParseException(
-		doc.ErrorName(), 
+		doc.ErrorName(),
 		doc.GetErrorStr1(), doc.GetErrorStr2())
 { }
 
@@ -110,8 +110,8 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 	auto textureNode = this->getTexturesNode();
 	if (textureNode == nullptr)
 		return results;
-	for (auto child = textureNode->FirstChildElement(); 
-		 child != nullptr; 
+	for (auto child = textureNode->FirstChildElement();
+		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
 		std::string name = getAttribute(child, "id");
@@ -127,9 +127,27 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 	return results;
 }
 
-const tinyxml2::XMLElement* SceneDescription::getTexturesNode() const
+/// Reads all renderable elements definitions in this
+/// scene description document.
+std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderables(
+	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const
 {
-	return this->doc.FirstChildElement("Textures");
+	std::map<std::string, si::view::IRenderable_ptr> results;
+	auto node = this->getRenderablesNode();
+	if (node == nullptr)
+	{
+		return results;
+	}
+
+	for (auto child = node->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		auto name = getAttribute(child, "id");
+		results[name] = readRenderable(child, textures);
+	}
+
+	return results;
 }
 
 /// Reads a renderable element specified by the given node.
@@ -140,13 +158,13 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	std::string nodeName = node->Name();
 	if (nodeName == "Sprite")
 	{
-		std::string textureName = getAttribute(node, "id");
+		std::string textureName = getAttribute(node, "texture");
 
 		std::string texName = textureName;
 		if (textures.find(texName) == textures.end())
 		{
-			throw SceneDescriptionException("'Sprite' node had an 'id' attribute value of '" + texName + 
-				                            "', but no matching texture was found.");
+			throw SceneDescriptionException("'Sprite' node had an 'id' attribute value of '" + texName +
+				"', but no matching texture was found.");
 		}
 
 		return std::make_shared<si::view::SpriteRenderable>(textures.at(texName));
@@ -302,4 +320,14 @@ const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XML
 	}
 
 	return child;
+}
+
+const tinyxml2::XMLElement* SceneDescription::getTexturesNode() const
+{
+	return this->doc.FirstChildElement("Textures");
+}
+
+const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
+{
+	return this->doc.FirstChildElement("Renderables");
 }
