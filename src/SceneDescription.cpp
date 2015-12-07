@@ -105,6 +105,25 @@ std::string SceneDescription::getPath() const
 	return this->path;
 }
 
+const char* const PlayerNodeName = "Player";
+const char* const AssetsTableNodeName = "Assets";
+const char* const TextureTableNodeName = "Textures";
+
+const char* const IdAttributeName = "id";
+const char* const PathAttributeName = "path";
+const char* const PositionXAttributeName = "posX";
+const char* const PositionYAttributeName = "posY";
+const char* const WidthAttributeName = "width";
+const char* const HeightAttributeName = "height";
+const char* const VelocityXAttributeName = "velX";
+const char* const VelocityYAttributeName = "velY";
+const char* const AccelerationAttributeName = "accel";
+const char* const MassAttributeName = "mass";
+const char* const RadiusAttributeName = "radius";
+const char* const HealthAttributeName = "health";
+const char* const TextureAttributeName = "texture";
+const char* const AssetAttributeName = "asset";
+
 /// Reads all texture assets defined in this
 /// scene description document.
 std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextures() const
@@ -117,8 +136,8 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
-		std::string name = getAttribute(child, "id");
-		std::string path = getAttribute(child, "path");
+		std::string name = getAttribute(child, IdAttributeName);
+		std::string path = getAttribute(child, PathAttributeName);
 		auto newPath = this->convertPath(path);
 		auto tex = std::make_shared<sf::Texture>();
 		if (!tex->loadFromFile(newPath))
@@ -146,7 +165,7 @@ std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderabl
 		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
-		auto name = getAttribute(child, "id");
+		auto name = getAttribute(child, IdAttributeName);
 		results[name] = readRenderable(child, textures);
 	}
 	
@@ -161,12 +180,12 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	auto result = std::make_unique<Scene>();
 
-	auto playerNode = getSingleChild(this->doc.RootElement(), "Player");
+	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
 
 	std::shared_ptr<si::model::ShipEntity> player = readShipEntity(playerNode);
 	result->addTrackedEntity(player, readAssociatedView(playerNode, assets));
 
-	double playerAccel = getDoubleAttribute(playerNode, "accel");
+	double playerAccel = getDoubleAttribute(playerNode, AccelerationAttributeName);
 	result->addController(std::make_shared<si::controller::PlayerController>(player, playerAccel));
 	result->addController(std::make_shared<si::controller::OutOfBoundsController>(player, DoubleRect(-0.1, -0.1, 1.2, 1.2)));
 	result->registerPlayer(player);
@@ -179,10 +198,11 @@ si::view::IRenderable_ptr SceneDescription::readAssociatedView(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
-	std::string assetName = getAttribute(node, "asset");
+	std::string assetName = getAttribute(node, AssetAttributeName);
 	if (assets.find(assetName) == assets.end())
 	{
-		throw SceneDescriptionException("'Sprite' node has an 'asset' attribute value of '" + assetName +
+		throw SceneDescriptionException("'Sprite' node has an '" + std::string(AssetAttributeName) 
+			+ "' attribute value of '" + assetName +
 			"', but no asset named '" + assetName + "' was found.");
 	}
 
@@ -197,10 +217,11 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	std::string nodeName = node->Name();
 	if (nodeName == "Sprite")
 	{
-		std::string texName = getAttribute(node, "texture");
+		std::string texName = getAttribute(node, TextureAttributeName);
 		if (textures.find(texName) == textures.end())
 		{
-			throw SceneDescriptionException("'Sprite' node has a 'texture' attribute value of '" + texName +
+			throw SceneDescriptionException("'Sprite' node has a '" + std::string(TextureAttributeName) + 
+				"' attribute value of '" + texName +
 				"', but no texture named '" + texName + "' was found.");
 		}
 
@@ -208,10 +229,10 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	}
 	else if (nodeName == "Box")
 	{
-		double x = getDoubleAttribute(node, "posX");
-		double y = getDoubleAttribute(node, "posY");
-		double width = getDoubleAttribute(node, "width");
-		double height = getDoubleAttribute(node, "height");
+		double x = getDoubleAttribute(node, PositionXAttributeName);
+		double y = getDoubleAttribute(node, PositionYAttributeName);
+		double width = getDoubleAttribute(node, WidthAttributeName);
+		double height = getDoubleAttribute(node, HeightAttributeName);
 
 		auto contents = readRenderable(getSingleChild(node), textures);
 
@@ -228,8 +249,8 @@ std::unique_ptr<si::model::ShipEntity> SceneDescription::readShipEntity(
 	const tinyxml2::XMLElement* node)
 {
 	auto physProps = getPhysicsProperties(node);
-	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
-	double maxHealth = getDoubleAttribute(node, "health");
+	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
+	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 
 	return std::make_unique<si::model::ShipEntity>(physProps, pos, maxHealth);
 }
@@ -242,8 +263,8 @@ std::unique_ptr<si::model::ProjectileEntity> SceneDescription::readProjectileEnt
 	const tinyxml2::XMLElement* node)
 {
 	auto physProps = getPhysicsProperties(node);
-	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
-	Vector2d veloc(getDoubleAttribute(node, "velX"), getDoubleAttribute(node, "velY"));
+	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
+	Vector2d veloc(getDoubleAttribute(node, VelocityXAttributeName), getDoubleAttribute(node, VelocityYAttributeName));
 
 	return std::make_unique<si::model::ProjectileEntity>(physProps, pos, veloc);
 }
@@ -318,9 +339,13 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 	switch (node->QueryDoubleAttribute(name, &result))
 	{
 	case tinyxml2::XML_NO_ATTRIBUTE:
-		throw SceneDescriptionException("'" + std::string(node->Name()) + "' node did not have a '" + name + "' attribute.");;
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) + 
+			"' node did not have a '" + name + "' attribute.");;
 	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
-		throw SceneDescriptionException("'" + std::string(node->Name()) + "' node did have a '" + name + "' attribute, but its value was not formatted as an integer.");
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) + 
+			"' node did have a '" + name + "' attribute, but its value was not formatted as an integer.");
 	default:
 		return result;
 	}
@@ -330,8 +355,8 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 si::model::PhysicsProperties SceneDescription::getPhysicsProperties(
 	const tinyxml2::XMLElement* node)
 {
-	double mass = getDoubleAttribute(node, "mass");
-	double radius = getDoubleAttribute(node, "radius");
+	double mass = getDoubleAttribute(node, MassAttributeName);
+	double radius = getDoubleAttribute(node, RadiusAttributeName);
 
 	return{ mass, radius };
 }
