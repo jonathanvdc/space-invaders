@@ -199,7 +199,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 	// Add the player to the scene.
 	addToScene(player, *scene);
 
-	// Register the player, throw in a player controller.
+	// Register the player, and throw in a player controller while we're at it.
 	double playerAccel = getDoubleAttribute(playerNode, AccelerationAttributeName);
 	scene->addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
 	scene->registerPlayer(player.model);
