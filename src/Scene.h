@@ -6,6 +6,7 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
+#include "ShipEntity.h"
 #include "Game.h"
 #include "IController.h"
 #include "GameController.h"
@@ -42,6 +43,13 @@ namespace si
 		void addEntity(
 			const si::model::Entity_ptr& model,
 			const si::view::IRenderable_ptr& view);
+		
+		/// Adds an entity that is associated with as
+		/// view to this scene. The view will
+		/// be wired to track the entity's position.
+		void addTrackedEntity(
+			const si::model::Entity_ptr& model,
+			const si::view::IRenderable_ptr& view);
 
 		/// Adds a renderable (view) element to 
 		/// this scene that is not associated 
@@ -63,10 +71,18 @@ namespace si
 		void addController(
 			const si::controller::IController_ptr& item);
 
+		/// Gets a vector containing all players that
+		/// are still alive in this scene.
+		std::vector<std::shared_ptr<si::model::ShipEntity>> getPlayers() const;
+
+		/// Registers the given ship as a player ship.
+		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
+
 	private:
 		si::model::Game game;
 		si::view::GameRenderer renderer;
 		si::controller::GameController controller;
+		std::vector<std::shared_ptr<si::model::ShipEntity>> players;
 		std::map<si::model::Entity_ptr, si::view::IRenderable_ptr> associatedView;
 	};
 }

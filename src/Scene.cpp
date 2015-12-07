@@ -63,6 +63,16 @@ void Scene::addEntity(
 	this->associatedView[model] = view;
 }
 
+/// Adds an entity that is associated with as
+/// view to this scene. The view will
+/// be wired to track the entity's position.
+void Scene::addTrackedEntity(
+	const si::model::Entity_ptr& model,
+	const si::view::IRenderable_ptr& view)
+{
+	this->addEntity(model, std::make_shared<si::view::PathOffsetRenderable>(view, [=]() { return model->getPosition(); }));
+}
+
 /// Adds a renderable (view) element to 
 /// this scene that is not associated 
 /// with anything in the model. This
@@ -90,4 +100,25 @@ void Scene::addController(
 	const si::controller::IController_ptr& item)
 {
 	this->controller.add(item);
+}
+
+/// Gets a vector containing all players that
+/// are still alive in this scene.
+std::vector<std::shared_ptr<si::model::ShipEntity>> Scene::getPlayers() const
+{
+	std::vector<std::shared_ptr<si::model::ShipEntity>> results;
+	for (const auto& item : this->players)
+	{
+		if (item->isAlive())
+		{
+			results.push_back(item);
+		}
+	}
+	return results;
+}
+
+/// Registers the given ship as a player ship.
+void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
+{
+	this->players.push_back(player);
 }

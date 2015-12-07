@@ -14,6 +14,9 @@
 #include "ProjectileEntity.h"
 #include "ShipEntity.h"
 #include "IController.h"
+#include "PlayerController.h"
+#include "ShipCollisionController.h"
+#include "OutOfBoundsController.h"
 #include "IRenderable.h"
 #include "Scene.h"
 #include "SpriteRenderable.h"
@@ -160,7 +163,13 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	auto playerNode = getSingleChild(this->doc.RootElement(), "Player");
 
-	result->addEntity(readShipEntity(playerNode), readAssociatedView(playerNode, assets));
+	std::shared_ptr<si::model::ShipEntity> player = readShipEntity(playerNode);
+	result->addTrackedEntity(player, readAssociatedView(playerNode, assets));
+
+	double playerAccel = getDoubleAttribute(playerNode, "accel");
+	result->addController(std::make_shared<si::controller::PlayerController>(player, playerAccel));
+	result->addController(std::make_shared<si::controller::OutOfBoundsController>(player, DoubleRect(-0.1, -0.1, 1.2, 1.2)));
+	result->registerPlayer(player);
 
 	return result;
 }
