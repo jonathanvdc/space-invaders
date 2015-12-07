@@ -86,24 +86,29 @@ namespace si
 		std::map<std::string, si::view::IRenderable_ptr> readRenderables(
 			const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const;
 
+		/// Reads the scene described by this document.
+		std::unique_ptr<Scene> readScene() const;
+
 		/// Reads a renderable element specified by the given node.
 		static si::view::IRenderable_ptr readRenderable(
 			const tinyxml2::XMLElement* node, 
 			const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
 
+		/// Reads an entity node's associated view.
+		static si::view::IRenderable_ptr readAssociatedView(
+			const tinyxml2::XMLElement* node,
+			const std::map<std::string, si::view::IRenderable_ptr>& assets);
+
 		/// Reads a ship entity as specified by the given node.
-		static std::shared_ptr<si::model::ShipEntity> readShipEntity(
+		static std::unique_ptr<si::model::ShipEntity> readShipEntity(
 			const tinyxml2::XMLElement* node);
 
 		/// Reads a projectile entity as specified by the given node.
-		/// The return type of this function is a parameterless function,
-		/// which can be used to create an arbitrary number of projectiles
-		/// on-demand.
-		static std::function<std::shared_ptr<si::model::ProjectileEntity>()> readProjectileEntity(
+		static std::unique_ptr<si::model::ProjectileEntity> readProjectileEntity(
 			const tinyxml2::XMLElement* node);
 
 		/// Reads a model entity specified by the given node.
-		static si::model::Entity_ptr readEntity(
+		static std::unique_ptr<si::model::Entity> readEntity(
 			const tinyxml2::XMLElement* node);
 		
 	private:
@@ -143,9 +148,11 @@ namespace si
 		static si::model::PhysicsProperties getPhysicsProperties(
 			const tinyxml2::XMLElement* node);
 
-		/// Gets the only child of the given XML node.
+		/// Gets the only child of the given XML node, optionally
+		/// with the given name.
 		/// If this cannot be done, an exception is thrown.
-		static const tinyxml2::XMLElement* getSingleChild(const tinyxml2::XMLElement* parent);
+		static const tinyxml2::XMLElement* getSingleChild(const tinyxml2::XMLElement* parent, 
+			const char* name = nullptr);
 
 		tinyxml2::XMLDocument doc;
 		std::string path;

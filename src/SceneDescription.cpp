@@ -146,8 +146,38 @@ std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderabl
 		auto name = getAttribute(child, "id");
 		results[name] = readRenderable(child, textures);
 	}
-
+	
 	return results;
+}
+
+/// Reads the scene described by this document.
+std::unique_ptr<Scene> SceneDescription::readScene() const
+{
+	auto textures = this->readTextures();
+	auto assets = this->readRenderables(textures);
+
+	auto result = std::make_unique<Scene>();
+
+	auto playerNode = getSingleChild(this->doc.RootElement(), "Player");
+
+	result->addEntity(readShipEntity(playerNode), readAssociatedView(playerNode, assets));
+
+	return result;
+}
+
+/// Reads an entity node's associated view.
+si::view::IRenderable_ptr SceneDescription::readAssociatedView(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+{
+	std::string assetName = getAttribute(node, "asset");
+	if (assets.find(assetName) == assets.end())
+	{
+		throw SceneDescriptionException("'Sprite' node has an 'asset' attribute value of '" + assetName +
+			"', but no asset named '" + assetName + "' was found.");
+	}
+
+	return assets.at(assetName);
 }
 
 /// Reads a renderable element specified by the given node.
@@ -158,13 +188,11 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	std::string nodeName = node->Name();
 	if (nodeName == "Sprite")
 	{
-		std::string textureName = getAttribute(node, "texture");
-
-		std::string texName = textureName;
+		std::string texName = getAttribute(node, "texture");
 		if (textures.find(texName) == textures.end())
 		{
-			throw SceneDescriptionException("'Sprite' node had an 'id' attribute value of '" + texName +
-				"', but no matching texture was found.");
+			throw SceneDescriptionException("'Sprite' node has a 'texture' attribute value of '" + texName +
+				"', but no texture named '" + texName + "' was found.");
 		}
 
 		return std::make_shared<si::view::SpriteRenderable>(textures.at(texName));
@@ -187,35 +215,32 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 }
 
 /// Reads a ship entity as specified by the given node.
-std::shared_ptr<si::model::ShipEntity> SceneDescription::readShipEntity(
+std::unique_ptr<si::model::ShipEntity> SceneDescription::readShipEntity(
 	const tinyxml2::XMLElement* node)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
 	double maxHealth = getDoubleAttribute(node, "health");
 
-	return std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
+	return std::make_unique<si::model::ShipEntity>(physProps, pos, maxHealth);
 }
 
 /// Reads a projectile entity as specified by the given node.
 /// The return type of this function is a parameterless function,
 /// which can be used to create an arbitrary number of projectiles
 /// on-demand.
-std::function<std::shared_ptr<si::model::ProjectileEntity>()> SceneDescription::readProjectileEntity(
+std::unique_ptr<si::model::ProjectileEntity> SceneDescription::readProjectileEntity(
 	const tinyxml2::XMLElement* node)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, "posX"), getDoubleAttribute(node, "posY"));
 	Vector2d veloc(getDoubleAttribute(node, "velX"), getDoubleAttribute(node, "velY"));
 
-	return [=]()
-	{
-		return std::make_shared<si::model::ProjectileEntity>(physProps, pos, veloc);
-	};
+	return std::make_unique<si::model::ProjectileEntity>(physProps, pos, veloc);
 }
 
 /// Reads a model entity specified by the given node.
-si::model::Entity_ptr SceneDescription::readEntity(
+std::unique_ptr<si::model::Entity> SceneDescription::readEntity(
 	const tinyxml2::XMLElement* node)
 {
 	std::string nodeName = node->Name();
@@ -225,7 +250,7 @@ si::model::Entity_ptr SceneDescription::readEntity(
 	}
 	else if (nodeName == "Projectile")
 	{
-		return readProjectileEntity(node)();
+		return readProjectileEntity(node);
 	}
 	else
 	{
@@ -305,18 +330,22 @@ si::model::PhysicsProperties SceneDescription::getPhysicsProperties(
 
 /// Gets the only child of the given XML node.
 /// If this cannot be done, an exception is thrown.
-const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XMLElement* node)
+const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XMLElement* node, const char* name)
 {
-	auto child = node->FirstChildElement();
+	auto child = node->FirstChildElement(name);
 
 	if (child == nullptr)
 	{
-		throw SceneDescriptionException("'" + std::string(node->Name()) + "' should have had exactly one child node, but had none.");
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) + "' should have had exactly one " + 
+			(name == nullptr ? "child" : "'" + std::string(name) + "' child") + " node, but had none.");
 	}
 
-	if (child->NextSiblingElement() != nullptr)
+	if (child->NextSiblingElement(name) != nullptr)
 	{
-		throw SceneDescriptionException("'" + std::string(node->Name()) + "' should have had exactly one child node, but more than one.");
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) + "' should have had exactly one " + 
+			(name == nullptr ? "child" : "'" + std::string(name) + "' child") + " node, but has more than one.");
 	}
 
 	return child;
@@ -324,10 +353,10 @@ const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XML
 
 const tinyxml2::XMLElement* SceneDescription::getTexturesNode() const
 {
-	return this->doc.FirstChildElement("Textures");
+	return this->doc.RootElement()->FirstChildElement("Textures");
 }
 
 const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
 {
-	return this->doc.FirstChildElement("Renderables");
+	return this->doc.RootElement()->FirstChildElement("Assets");
 }
