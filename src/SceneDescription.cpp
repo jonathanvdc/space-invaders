@@ -105,10 +105,16 @@ std::string SceneDescription::getPath() const
 	return this->path;
 }
 
+// Constants that define XML node names.
 const char* const PlayerNodeName = "Player";
+const char* const SpriteNodeName = "Sprite";
+const char* const BoxNodeName = "Box";
+const char* const ProjectileNodeName = "Projectile";
+const char* const ShipNodeName = "Ship";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
 
+// Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
 const char* const PathAttributeName = "path";
 const char* const PositionXAttributeName = "posX";
@@ -215,7 +221,7 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures)
 {
 	std::string nodeName = node->Name();
-	if (nodeName == "Sprite")
+	if (nodeName == SpriteNodeName)
 	{
 		std::string texName = getAttribute(node, TextureAttributeName);
 		if (textures.find(texName) == textures.end())
@@ -227,7 +233,7 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 
 		return std::make_shared<si::view::SpriteRenderable>(textures.at(texName));
 	}
-	else if (nodeName == "Box")
+	else if (nodeName == BoxNodeName)
 	{
 		double x = getDoubleAttribute(node, PositionXAttributeName);
 		double y = getDoubleAttribute(node, PositionYAttributeName);
@@ -274,11 +280,11 @@ std::unique_ptr<si::model::Entity> SceneDescription::readEntity(
 	const tinyxml2::XMLElement* node)
 {
 	std::string nodeName = node->Name();
-	if (nodeName == "Ship")
+	if (nodeName == ShipNodeName)
 	{
 		return readShipEntity(node);
 	}
-	else if (nodeName == "Projectile")
+	else if (nodeName == ProjectileNodeName)
 	{
 		return readProjectileEntity(node);
 	}
@@ -387,10 +393,10 @@ const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XML
 
 const tinyxml2::XMLElement* SceneDescription::getTexturesNode() const
 {
-	return this->doc.RootElement()->FirstChildElement("Textures");
+	return this->doc.RootElement()->FirstChildElement(TextureTableNodeName);
 }
 
 const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
 {
-	return this->doc.RootElement()->FirstChildElement("Assets");
+	return this->doc.RootElement()->FirstChildElement(AssetsTableNodeName);
 }
