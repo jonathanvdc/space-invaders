@@ -16,6 +16,7 @@
 #include "IController.h"
 #include "PlayerController.h"
 #include "ShipCollisionController.h"
+#include "ProjectileCollisionController.h"
 #include "OutOfBoundsController.h"
 #include "IRenderable.h"
 #include "Scene.h"
@@ -23,6 +24,7 @@
 #include "RelativeBoxRenderable.h"
 
 using namespace si;
+using namespace si::parser;
 
 /// Creates an XML parsing exception from the given
 /// data.
@@ -185,22 +187,24 @@ std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderabl
 /// Reads the scene described by this document.
 std::unique_ptr<Scene> SceneDescription::readScene() const
 {
+	// Start by reading all textures and assets (renderable view elements).
 	auto textures = this->readTextures();
 	auto assets = this->readRenderables(textures);
 
-	auto result = std::make_unique<Scene>();
+	auto scene = std::make_unique<Scene>();
 
+	// Find and parse the player node.
 	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
+	auto player = readShipEntity(playerNode, assets)();
+	// Add the player to the scene.
+	addToScene(player, *scene);
 
-	std::shared_ptr<si::model::ShipEntity> player = readShipEntity(playerNode);
-	result->addTrackedEntity(player, readAssociatedView(playerNode, assets));
-
+	// Register the player, throw in a player controller.
 	double playerAccel = getDoubleAttribute(playerNode, AccelerationAttributeName);
-	result->addController(std::make_shared<si::controller::PlayerController>(player, playerAccel));
-	result->addBoundsConstraint(player, GameBounds);
-	result->registerPlayer(player);
+	scene->addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
+	scene->registerPlayer(player.model);
 
-	return result;
+	return scene;
 }
 
 /// Reads an entity node's associated view.
@@ -208,15 +212,7 @@ si::view::IRenderable_ptr SceneDescription::readAssociatedView(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
-	std::string assetName = getAttribute(node, AssetAttributeName);
-	if (assets.find(assetName) == assets.end())
-	{
-		throw SceneDescriptionException("'Sprite' node has an '" + std::string(AssetAttributeName) 
-			+ "' attribute value of '" + assetName +
-			"', but no asset named '" + assetName + "' was found.");
-	}
-
-	return assets.at(assetName);
+	return getReferenceAttribute(node, AssetAttributeName, assets);
 }
 
 /// Reads a renderable element specified by the given node.
@@ -227,15 +223,8 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	std::string nodeName = node->Name();
 	if (nodeName == SpriteNodeName)
 	{
-		std::string texName = getAttribute(node, TextureAttributeName);
-		if (textures.find(texName) == textures.end())
-		{
-			throw SceneDescriptionException("'Sprite' node has a '" + std::string(TextureAttributeName) + 
-				"' attribute value of '" + texName +
-				"', but no texture named '" + texName + "' was found.");
-		}
-
-		return std::make_shared<si::view::SpriteRenderable>(textures.at(texName));
+		auto tex = getReferenceAttribute(node, TextureAttributeName, textures);
+		return std::make_shared<si::view::SpriteRenderable>(tex);
 	}
 	else if (nodeName == BoxNodeName)
 	{
@@ -255,46 +244,78 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 }
 
 /// Reads a ship entity as specified by the given node.
-std::unique_ptr<si::model::ShipEntity> SceneDescription::readShipEntity(
-	const tinyxml2::XMLElement* node)
+ParsedShipFactory SceneDescription::readShipEntity(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 
-	return std::make_unique<si::model::ShipEntity>(physProps, pos, maxHealth);
+	return [=]()
+	{
+		auto model = std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
+		auto view = readAssociatedView(node, assets);
+		std::vector<si::controller::IController_ptr> controllers;
+		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
+		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
+		return ParsedEntity<si::model::ShipEntity>(model, view, controllers);
+	};
 }
 
 /// Reads a projectile entity as specified by the given node.
 /// The return type of this function is a parameterless function,
 /// which can be used to create an arbitrary number of projectiles
 /// on-demand.
-std::unique_ptr<si::model::ProjectileEntity> SceneDescription::readProjectileEntity(
-	const tinyxml2::XMLElement* node)
+ParsedProjectileFactory SceneDescription::readProjectileEntity(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
 	Vector2d veloc(getDoubleAttribute(node, VelocityXAttributeName), getDoubleAttribute(node, VelocityYAttributeName));
 
-	return std::make_unique<si::model::ProjectileEntity>(physProps, pos, veloc);
+	return [=]()
+	{
+		auto model = std::make_shared<si::model::ProjectileEntity>(physProps, pos, veloc);
+		auto view = readAssociatedView(node, assets);
+		std::vector<si::controller::IController_ptr> controllers;
+		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
+		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
+		return ParsedEntity<si::model::ProjectileEntity>(model, view, controllers);
+	};
 }
 
 /// Reads a model entity specified by the given node.
-std::unique_ptr<si::model::Entity> SceneDescription::readEntity(
-	const tinyxml2::XMLElement* node)
+ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == ShipNodeName)
 	{
-		return readShipEntity(node);
+		return readShipEntity(node, assets);
 	}
 	else if (nodeName == ProjectileNodeName)
 	{
-		return readProjectileEntity(node);
+		return readProjectileEntity(node, assets);
 	}
 	else
 	{
 		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
+	}
+}
+
+/// Adds the given entity's model, view and
+/// controllers to the given scene.
+void SceneDescription::addToScene(
+	const ParsedEntity<si::model::Entity>& entity,
+	Scene& target)
+{
+	target.addTrackedEntity(entity.model, entity.view);
+	for (const auto& item : entity.controllers)
+	{
+		target.addController(item);
 	}
 }
 
