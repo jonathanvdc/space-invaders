@@ -117,6 +117,13 @@ std::vector<std::shared_ptr<si::model::ShipEntity>> Scene::getPlayers() const
 	return results;
 }
 
+/// Checks if any player ships are still alive.
+bool Scene::anyPlayersAlive() const
+{
+	return std::any_of(this->players.begin(), this->players.end(),
+		[](const std::shared_ptr<si::model::ShipEntity>& item) { return item->isAlive(); });
+}
+
 /// Registers the given ship as a player ship.
 void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
 {

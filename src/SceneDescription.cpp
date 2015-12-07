@@ -130,6 +130,10 @@ const char* const HealthAttributeName = "health";
 const char* const TextureAttributeName = "texture";
 const char* const AssetAttributeName = "asset";
 
+// Default game bounds. Anything that exceeds these bounds
+// will be removed from the game.
+const DoubleRect GameBounds{ -0.1, -0.1, 1.2, 1.2 };
+
 /// Reads all texture assets defined in this
 /// scene description document.
 std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextures() const
@@ -193,7 +197,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	double playerAccel = getDoubleAttribute(playerNode, AccelerationAttributeName);
 	result->addController(std::make_shared<si::controller::PlayerController>(player, playerAccel));
-	result->addController(std::make_shared<si::controller::OutOfBoundsController>(player, DoubleRect(-0.1, -0.1, 1.2, 1.2)));
+	result->addBoundsConstraint(player, GameBounds);
 	result->registerPlayer(player);
 
 	return result;

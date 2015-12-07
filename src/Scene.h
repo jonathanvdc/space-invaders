@@ -75,6 +75,9 @@ namespace si
 		/// are still alive in this scene.
 		std::vector<std::shared_ptr<si::model::ShipEntity>> getPlayers() const;
 
+		/// Checks if any player ships are still alive.
+		bool anyPlayersAlive() const;
+
 		/// Registers the given ship as a player ship.
 		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
 
