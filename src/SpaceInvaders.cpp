@@ -20,6 +20,7 @@
 #include "PathOffsetRenderable.h"
 #include "SpriteRenderable.h"
 #include "RelativeBoxRenderable.h"
+#include "FramecounterRenderable.h"
 #include "PathController.h"
 #include "PlayerController.h"
 #include "ActionController.h"
@@ -227,8 +228,7 @@ void spaceInvaders(sf::RenderWindow& w)
 		throw std::runtime_error("Couldn't load 'ship_cpp.png'.");
 	}
 
-	auto framecounter = std::make_shared<si::view::TextRenderable>("", font, sf::Color::Red);
-	scene.addRenderable(framecounter);
+	scene.addRenderable(std::make_shared<si::view::FramecounterRenderable>(font, sf::Color::Red));
 
 	auto ship = std::make_shared<si::model::ShipEntity>(
 		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
@@ -256,41 +256,7 @@ void spaceInvaders(sf::RenderWindow& w)
 	scene.addEntity(other, createSprite(other, shipTex, 0.1, 0.1));
 	scene.addController(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
 
-	(void)si::Stopwatch::instance.delta();
-
-	si::duration_t elapsed = si::duration_t(0.0);
-	int framecount = 0;
-	while (w.isOpen())
-	{
-		sf::Event event;
-		while (w.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				w.close();
-			}
-			else if (event.type == sf::Event::Resized)
-			{
-				auto size = sf::Vector2f(w.getSize());
-				w.setView(sf::View(0.5f * size, size));
-			}
-		}
-
-		auto delta = si::Stopwatch::instance.delta();
-		elapsed += delta;
-		framecount++;
-
-		if (elapsed > si::duration_t(1.0))
-		{
-			framecounter->setText(std::to_string(framecount / elapsed.count()) + "fps");
-			framecount = 0;
-			elapsed -= si::duration_t(1.0);
-		}
-
-		scene.frame(w, delta);
-
-		w.display();
-	}
+	playGame(w, scene);
 }
 
 int main(int argc, char* argv[])

@@ -156,6 +156,7 @@
     <ClCompile Include="DriftingEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="ActionController.cpp" />
+    <ClCompile Include="FramecounterRenderable.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Container.h" />
     <ClInclude Include="ActionController.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="FramecounterRenderable.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="IController.h" />
