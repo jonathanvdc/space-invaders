@@ -251,7 +251,9 @@ ParsedShipFactory SceneDescription::readShipEntity(
 	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
-	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
+	Vector2d pos(
+		getDoubleAttribute(node, PositionXAttributeName, 0.5), 
+		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
 
@@ -314,7 +316,8 @@ ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
 	// Create a new projectile.
 	auto projectile = projectileFactory();
 
-	// Compute the projectile's position and velocity.
+	// Compute the projectile's position and velocity,
+	// relative to its source.
 	auto veloc = vecLength(projectile.model->getVelocity()) * source.getOrientation();
 	double sourceRadius = source.getPhysicsProperties().radius;
 	double projectileRadius = projectile.model->getPhysicsProperties().radius;
@@ -328,6 +331,9 @@ ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
 	// accelerate in the opposite direction.
 	source.accelerate(-si::Vector2d(veloc));
 
+	// We're done here. Adding the 
+	// projectile to the scene is some
+	// other function's problem.
 	return projectile;
 }
 
@@ -340,8 +346,12 @@ ParsedProjectileFactory SceneDescription::readProjectileEntity(
 	const std::map<std::string, si::view::IRenderable_ptr>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
-	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
-	Vector2d veloc(getDoubleAttribute(node, VelocityXAttributeName), getDoubleAttribute(node, VelocityYAttributeName));
+	Vector2d pos(
+		getDoubleAttribute(node, PositionXAttributeName, 0.0), 
+		getDoubleAttribute(node, PositionYAttributeName, 0.0));
+	Vector2d veloc(
+		getDoubleAttribute(node, VelocityXAttributeName), 
+		getDoubleAttribute(node, VelocityYAttributeName));
 	auto view = readAssociatedView(node, assets);
 
 	return [=]()
@@ -440,11 +450,33 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 	case tinyxml2::XML_NO_ATTRIBUTE:
 		throw SceneDescriptionException(
 			"'" + std::string(node->Name()) + 
-			"' node did not have a '" + name + "' attribute.");;
+			"' node did not have a '" + name + "' attribute.");
 	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
 		throw SceneDescriptionException(
 			"'" + std::string(node->Name()) + 
-			"' node did have a '" + name + "' attribute, but its value was not formatted as an integer.");
+			"' node did have a '" + name + 
+			"' attribute, but its value was not formatted as a floating-point number.");
+	default:
+		return result;
+	}
+}
+
+/// Gets the value of the floating-point attribute with the
+/// given name in the given XML node. 
+/// If no such attribute can be found, the given default
+/// value is returned as a result.
+double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name, double defaultValue)
+{
+	double result;
+	switch (node->QueryDoubleAttribute(name, &result))
+	{
+	case tinyxml2::XML_NO_ATTRIBUTE:
+		return defaultValue;
+	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node did have a '" + name + 
+			"' attribute, but its value was not formatted as a floating-point number.");
 	default:
 		return result;
 	}
