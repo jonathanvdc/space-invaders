@@ -116,6 +116,7 @@ const char* const ProjectileNodeName = "Projectile";
 const char* const ShipNodeName = "Ship";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
+const char* const DecorTableNodeName = "Decor";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -195,16 +196,23 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	auto scene = std::make_unique<Scene>();
 
-	// Find and parse the player node.
+	// Find and parse the player node, then add it to the 
+	// scene.
 	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
-	auto player = readShipEntity(playerNode, assets)();
-	// Add the player to the scene.
-	addToScene(player, *scene);
-
-	// Register the player, and throw in a player controller while we're at it.
-	double playerAccel = getDoubleAttribute(playerNode, AccelerationAttributeName);
-	scene->addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
-	scene->registerPlayer(player.model);
+	addPlayerToScene(playerNode, assets, *scene);
+	
+	// Lookup the decor table.
+	auto decorNode = getSingleChild(this->doc.RootElement(), DecorTableNodeName, true);
+	if (decorNode != nullptr)
+	{
+		for (auto child = decorNode->FirstChildElement();
+			 child != nullptr;
+			 child = child->NextSiblingElement())
+		{
+			// Add all decor objects to the scene.
+			addToScene(readEntity(child, assets)(), *scene);
+		}
+	}
 
 	return scene;
 }
@@ -495,21 +503,28 @@ si::model::PhysicsProperties SceneDescription::getPhysicsProperties(
 
 /// Gets the only child of the given XML node.
 /// If this cannot be done, an exception is thrown.
-const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XMLElement* node, const char* name)
+const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XMLElement* node, const char* name, bool isOptional)
 {
 	auto child = node->FirstChildElement(name);
 
 	if (child == nullptr)
 	{
-		throw SceneDescriptionException(
-			"'" + std::string(node->Name()) + "' should have had exactly one " + 
-			(name == nullptr ? "child" : "'" + std::string(name) + "' child") + " node, but had none.");
+		if (isOptional)
+		{
+			return nullptr;
+		}
+		else
+		{
+			throw SceneDescriptionException(
+				"'" + std::string(node->Name()) + "' should have had exactly one " +
+				(name == nullptr ? "child" : "'" + std::string(name) + "' child") + " node, but had none.");
+		}
 	}
 
 	if (child->NextSiblingElement(name) != nullptr)
 	{
 		throw SceneDescriptionException(
-			"'" + std::string(node->Name()) + "' should have had exactly one " + 
+			"'" + std::string(node->Name()) + "' should have had " + (isOptional ? std::string("at most one ") : "exactly one ") +
 			(name == nullptr ? "child" : "'" + std::string(name) + "' child") + " node, but has more than one.");
 	}
 
@@ -518,10 +533,10 @@ const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XML
 
 const tinyxml2::XMLElement* SceneDescription::getTexturesNode() const
 {
-	return this->doc.RootElement()->FirstChildElement(TextureTableNodeName);
+	return getSingleChild(this->doc.RootElement(), TextureTableNodeName, true);
 }
 
 const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
 {
-	return this->doc.RootElement()->FirstChildElement(AssetsTableNodeName);
+	return getSingleChild(this->doc.RootElement(), AssetsTableNodeName, true);
 }

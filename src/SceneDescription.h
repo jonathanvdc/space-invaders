@@ -235,7 +235,7 @@ namespace si
 			/// with the given name.
 			/// If this cannot be done, an exception is thrown.
 			static const tinyxml2::XMLElement* getSingleChild(const tinyxml2::XMLElement* parent,
-				const char* name = nullptr);
+				const char* name = nullptr, bool isOptional = false);
 
 			/// Gets a value from the given key-value map
 			/// identified by the attribute with the given name
