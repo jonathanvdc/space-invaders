@@ -152,7 +152,7 @@ namespace si
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, si::view::IRenderable_ptr>& assets);
 
-			/// Reads a ship entity as specified by the given node.
+			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, si::view::IRenderable_ptr>& assets);
@@ -172,6 +172,21 @@ namespace si
 			static void addToScene(
 				const ParsedEntity<si::model::Entity>& entity,
 				Scene& target);
+
+			/// Adds a player entity, as specified by the given node,
+			/// to the scene.
+			static void addPlayerToScene(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, si::view::IRenderable_ptr>& assets,
+				Scene& scene);
+
+			/// Creates a bullet that is fired from the given source. 
+			/// Momentum is transferred from the source entity to
+			/// the projectile, but the bullet is not added to the
+			/// scene.
+			static ParsedEntity<si::model::ProjectileEntity> fireProjectile(
+				si::model::DriftingEntity& source,
+				const ParsedProjectileFactory& projectileFactory);
 
 		private:
 			/// Gets this scene description's texture definitions node.

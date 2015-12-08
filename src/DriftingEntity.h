@@ -22,10 +22,19 @@ namespace si
 			/// Gets this drifting entity's position.
 			virtual Vector2d getPosition() const override;
 
+			/// Sets this drifting entity's position.
+			void setPosition(Vector2d pos);
+
 			/// Accelerates the given drifting entity
 			/// by adding the given velocity to
 			/// the current velocity.
 			void accelerate(Vector2d velocity);
+
+			/// Expose PhysicsEntity::setVelocity here.
+			/// This is a far more elegant approach than
+			/// using accelerate when trying to set the
+			/// velocity.
+			using PhysicsEntity::setVelocity;
 
 			/// Adds the given time delta to the total amount 
 			/// of time elapsed.

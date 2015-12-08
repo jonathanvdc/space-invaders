@@ -24,6 +24,12 @@ Vector2d DriftingEntity::getPosition() const
 	return this->prevPos;
 }
 
+/// Sets this drifting entity's position.
+void DriftingEntity::setPosition(Vector2d pos)
+{
+	this->prevPos = pos;
+}
+
 void DriftingEntity::accelerate(Vector2d velocity)
 {
 	// Simply add the given vector to the 

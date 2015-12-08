@@ -18,6 +18,7 @@
 #include "ShipCollisionController.h"
 #include "ProjectileCollisionController.h"
 #include "OutOfBoundsController.h"
+#include "IntervalActionController.h"
 #include "IRenderable.h"
 #include "Scene.h"
 #include "SpriteRenderable.h"
@@ -131,6 +132,7 @@ const char* const RadiusAttributeName = "radius";
 const char* const HealthAttributeName = "health";
 const char* const TextureAttributeName = "texture";
 const char* const AssetAttributeName = "asset";
+const char* const FireIntervalAttributeName = "fireInterval";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -251,16 +253,82 @@ ParsedShipFactory SceneDescription::readShipEntity(
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
+	auto view = readAssociatedView(node, assets);
 
 	return [=]()
 	{
 		auto model = std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
-		auto view = readAssociatedView(node, assets);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
 		return ParsedEntity<si::model::ShipEntity>(model, view, controllers);
 	};
+}
+
+/// Reads a player entity as specified by the given node.
+void SceneDescription::addPlayerToScene(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets,
+	Scene& scene)
+{
+	// Read the player ship node, and instantiate it.
+	auto player = readShipEntity(node, assets)();
+
+	// Add the player to the scene.
+	addToScene(player, scene);
+
+	// Register the player, and throw in a player 
+	// velocity controller while we're at it.
+	double playerAccel = getDoubleAttribute(node, AccelerationAttributeName);
+	scene.addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
+	scene.registerPlayer(player.model);
+	
+	// Create a player projectile controller for this ship.
+	double fireInterval = getDoubleAttribute(node, FireIntervalAttributeName);
+	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
+	scene.addController(std::make_shared<si::controller::IntervalActionController>(si::duration_t(fireInterval),
+		[](si::model::Game&, si::duration_t)
+		{
+			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+		},
+		[&](si::model::Game& game, si::duration_t)
+		{
+			auto bullet = fireProjectile(*player.model, projectileFactory);
+			
+			addToScene(bullet, scene);
+		},
+		[=](si::model::Game&, si::duration_t)
+		{
+			return player.model->isAlive();
+		}));
+}
+
+/// Creates a bullet that is fired from the given source. 
+/// Momentum is transferred from the source entity to
+/// the projectile, but the bullet is not added to the
+/// scene.
+ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
+	si::model::DriftingEntity& source,
+	const ParsedProjectileFactory& projectileFactory)
+{
+	// Create a new projectile.
+	auto projectile = projectileFactory();
+
+	// Compute the projectile's position and velocity.
+	auto veloc = vecLength(projectile.model->getVelocity()) * source.getOrientation();
+	double sourceRadius = source.getPhysicsProperties().radius;
+	double projectileRadius = projectile.model->getPhysicsProperties().radius;
+	auto bulletOffset = (sourceRadius + projectileRadius) * si::normalizeVec(veloc);
+	
+	// Set the projectile's position and velocity.
+	projectile.model->setPosition(source.getPosition() + bulletOffset);
+	projectile.model->setVelocity(source.getVelocity() + veloc);
+
+	// Firing a projectile in space should make ships
+	// accelerate in the opposite direction.
+	source.accelerate(-si::Vector2d(veloc));
+
+	return projectile;
 }
 
 /// Reads a projectile entity as specified by the given node.
@@ -274,11 +342,11 @@ ParsedProjectileFactory SceneDescription::readProjectileEntity(
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(getDoubleAttribute(node, PositionXAttributeName), getDoubleAttribute(node, PositionYAttributeName));
 	Vector2d veloc(getDoubleAttribute(node, VelocityXAttributeName), getDoubleAttribute(node, VelocityYAttributeName));
+	auto view = readAssociatedView(node, assets);
 
 	return [=]()
 	{
 		auto model = std::make_shared<si::model::ProjectileEntity>(physProps, pos, veloc);
-		auto view = readAssociatedView(node, assets);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
