@@ -230,8 +230,8 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	}
 	else if (nodeName == BoxNodeName)
 	{
-		double x = getDoubleAttribute(node, PositionXAttributeName);
-		double y = getDoubleAttribute(node, PositionYAttributeName);
+		double x = getDoubleAttribute(node, PositionXAttributeName, 0.0);
+		double y = getDoubleAttribute(node, PositionYAttributeName, 0.0);
 		double width = getDoubleAttribute(node, WidthAttributeName);
 		double height = getDoubleAttribute(node, HeightAttributeName);
 
