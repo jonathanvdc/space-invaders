@@ -178,6 +178,37 @@ si::view::IRenderable_ptr createSprite(
 	return createSprite(model, texture, si::DoubleRect(0.0, 0.0, width, height));
 }
 
+/// Plays a space invaders game, as defined by the
+/// given scene. A render window is used to
+/// render the game.
+void playGame(sf::RenderWindow& w, si::Scene& scene)
+{
+	(void)si::Stopwatch::instance.delta();
+
+	while (w.isOpen())
+	{
+		sf::Event event;
+		while (w.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				w.close();
+			}
+			else if (event.type == sf::Event::Resized)
+			{
+				auto size = sf::Vector2f(w.getSize());
+				w.setView(sf::View(0.5f * size, size));
+			}
+		}
+
+		auto delta = si::Stopwatch::instance.delta();
+
+		scene.frame(w, delta);
+
+		w.display();
+	}
+}
+
 /// The actual space invaders game.
 void spaceInvaders(sf::RenderWindow& w)
 {
