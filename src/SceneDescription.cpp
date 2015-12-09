@@ -221,6 +221,17 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 		}
 	}
 
+	// Parse the timeline node, if any.
+	auto timelineNode = getSingleChild(this->doc.RootElement(), TimelineNodeName, true);
+	if (timelineNode != nullptr)
+	{
+		// We found a timeline. Awesome!
+		// Now let's parse it and add it
+		// to the scene.
+		auto tLine = std::make_shared<si::timeline::Timeline>(parseTimeline(timelineNode, assets));
+		scene->startEvent(tLine);
+	}
+
 	return scene;
 }
 
