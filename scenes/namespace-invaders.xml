@@ -16,4 +16,7 @@
     <Decor>
         <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
     </Decor>
+    <Timeline>
+        
+    </Timeline>
 </Scene>
