@@ -19,6 +19,11 @@ namespace si
 			/// are executed in sequence.
 			Timeline(const std::vector<ITimelineEvent_ptr>& allEvents);
 
+			/// Creates a new timeline from the given events, which
+			/// are executed in sequence. Move semantics are
+			/// used to make this operation more efficient.
+			Timeline(std::vector<ITimelineEvent_ptr>&& allEvents);
+
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
 
@@ -49,8 +54,8 @@ namespace si
 			/// that the timeline has not ended yet.
 			ITimelineEvent& getCurrentEvent();
 
-			const std::vector<ITimelineEvent_ptr> allEvents;
 			std::size_t currentEventIndex;
+			const std::vector<ITimelineEvent_ptr> allEvents;
 		};
 	}
 }

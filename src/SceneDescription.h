@@ -16,6 +16,8 @@
 #include "IController.h"
 #include "IRenderable.h"
 #include "Scene.h"
+#include "ITimelineEvent.h"
+#include "Timeline.h"
 
 namespace si
 {
@@ -164,6 +166,16 @@ namespace si
 
 			/// Reads an unknown entity as specified by the given node.
 			static ParsedEntityFactory<si::model::Entity> readEntity(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+
+			/// Reads a timeline as specified by the given node.
+			static si::timeline::Timeline parseTimeline(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+			
+			/// Reads a timeline event as specified by the given node.
+			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, si::view::IRenderable_ptr>& assets);
 

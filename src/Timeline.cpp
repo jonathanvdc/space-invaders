@@ -12,7 +12,14 @@ using namespace si::timeline;
 /// Creates a new timeline from the given events, which
 /// are executed in sequence.
 Timeline::Timeline(const std::vector<ITimelineEvent_ptr>& allEvents)
-	: allEvents(allEvents), currentEventIndex(allEvents.size())
+	: currentEventIndex(allEvents.size()), allEvents(allEvents)
+{ }
+
+/// Creates a new timeline from the given events, which
+/// are executed in sequence. Move semantics are
+/// used to make this operation more efficient.
+Timeline::Timeline(std::vector<ITimelineEvent_ptr>&& allEvents)
+	: currentEventIndex(allEvents.size()), allEvents(allEvents)
 { }
 
 /// Starts the timeline.

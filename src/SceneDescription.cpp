@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "tinyxml2/tinyxml2.h"
@@ -23,6 +24,8 @@
 #include "Scene.h"
 #include "SpriteRenderable.h"
 #include "RelativeBoxRenderable.h"
+#include "ITimelineEvent.h"
+#include "Timeline.h"
 
 using namespace si;
 using namespace si::parser;
@@ -117,6 +120,7 @@ const char* const ShipNodeName = "Ship";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
 const char* const DecorTableNodeName = "Decor";
+const char* const TimelineNodeName = "Timeline";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -388,6 +392,38 @@ ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 	else if (nodeName == ProjectileNodeName)
 	{
 		return readProjectileEntity(node, assets);
+	}
+	else
+	{
+		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
+	}
+}
+
+/// Reads a timeline as specified by the given node.
+si::timeline::Timeline SceneDescription::parseTimeline(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+{
+	std::vector<si::timeline::ITimelineEvent_ptr> events;
+	for (auto child = node->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		// Parse all events in the timeline.
+		events.push_back(parseTimelineEvent(child, assets));
+	}
+	return si::timeline::Timeline(std::move(events));
+}
+
+/// Reads a timeline event as specified by the given node.
+si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+{
+	std::string nodeName = node->Name();
+	if (nodeName == TimelineNodeName)
+	{
+		return std::make_shared<si::timeline::Timeline>(parseTimeline(node, assets));
 	}
 	else
 	{
