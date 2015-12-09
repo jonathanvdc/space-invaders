@@ -134,6 +134,7 @@ const char* const HealthAttributeName = "health";
 const char* const TextureAttributeName = "texture";
 const char* const AssetAttributeName = "asset";
 const char* const FireIntervalAttributeName = "fireInterval";
+const char* const NameAttributeName = "name";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -190,11 +191,13 @@ std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderabl
 /// Reads the scene described by this document.
 std::unique_ptr<Scene> SceneDescription::readScene() const
 {
+	auto name = getAttribute(this->doc.RootElement(), NameAttributeName);
+
 	// Start by reading all textures and assets (renderable view elements).
 	auto textures = this->readTextures();
 	auto assets = this->readRenderables(textures);
 
-	auto scene = std::make_unique<Scene>();
+	auto scene = std::make_unique<Scene>(name);
 
 	// Find and parse the player node, then add it to the 
 	// scene.
@@ -301,7 +304,7 @@ void SceneDescription::addPlayerToScene(
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[&](si::model::Game& game, si::duration_t)
+		[player, projectileFactory, &scene](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*player.model, projectileFactory);
 			

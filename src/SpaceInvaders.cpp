@@ -182,8 +182,10 @@ si::view::IRenderable_ptr createSprite(
 /// Plays a space invaders game, as defined by the
 /// given scene. A render window is used to
 /// render the game.
-void playGame(sf::RenderWindow& w, si::Scene& scene)
+void playGame(si::Scene& scene)
 {
+	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
+
 	(void)si::Stopwatch::instance.delta();
 
 	while (w.isOpen())
@@ -210,10 +212,11 @@ void playGame(sf::RenderWindow& w, si::Scene& scene)
 	}
 }
 
-/// The actual space invaders game.
-void spaceInvaders(sf::RenderWindow& w)
+/// Creates space invaders scene for testing purposes.
+std::unique_ptr<si::Scene> createTestScene()
 {
-	si::Scene scene;
+	auto result = std::make_unique<si::Scene>("Namespace invaders");
+	si::Scene& scene = *result;
 
 	sf::Font font;
 
@@ -239,7 +242,7 @@ void spaceInvaders(sf::RenderWindow& w)
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[&](si::model::Game& game, si::duration_t)
+		[ship, shipTex, &scene](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
 			scene.addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
@@ -256,14 +259,14 @@ void spaceInvaders(sf::RenderWindow& w)
 	scene.addEntity(other, createSprite(other, shipTex, 0.1, 0.1));
 	scene.addController(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
 
-	playGame(w, scene);
+	return result;
 }
 
 int main(int argc, char* argv[])
 {
-	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
+	auto scene = createTestScene();
 
-	spaceInvaders(w);
+	playGame(*scene);
 
 	return 0;
 }

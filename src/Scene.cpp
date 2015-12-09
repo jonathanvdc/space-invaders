@@ -18,12 +18,12 @@
 
 using namespace si;
 
-Scene::Scene()
-	: Scene(sf::Color::Black)
+Scene::Scene(const std::string& name)
+	: Scene(name, sf::Color::Black)
 { }
 
-Scene::Scene(sf::Color backgroundColor)
-	: game(), renderer(backgroundColor), controller(), associatedView()
+Scene::Scene(const std::string& name, sf::Color backgroundColor)
+	: name(name), game(), renderer(backgroundColor), controller(), associatedView()
 {
 	// Create an event handler that removes the
 	// associated view when the model is removed.

@@ -4,6 +4,7 @@
 #include <exception>
 #include <functional>
 #include <map>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "ShipEntity.h"
@@ -23,12 +24,14 @@ namespace si
 	{
 	public:
 		/// Creates a new scene, with a
-		/// black background color.
-		Scene();
+		/// black background color, and
+		/// the given name.
+		Scene(const std::string& name);
 
 		/// Creates a new scene, with the 
-		/// given background color.
-		Scene(sf::Color backgroundColor);
+		/// given background color, and the
+		/// given name.
+		Scene(const std::string& name, sf::Color backgroundColor);
 
 		Scene(const Scene& other) = delete;
 
@@ -82,6 +85,7 @@ namespace si
 		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
 
 	private:
+		std::string name;
 		si::model::Game game;
 		si::view::GameRenderer renderer;
 		si::controller::GameController controller;
