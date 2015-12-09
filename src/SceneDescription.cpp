@@ -416,7 +416,7 @@ std::string SceneDescription::convertPath(const std::string& relativePath) const
 {
 	namespace fs = std::tr2::sys;
 
-	return fs::absolute(relativePath, fs::path(this->path)).string();
+	return fs::absolute(relativePath, fs::path(this->path).parent_path()).string();
 }
 
 /// Throws an error if the XML document

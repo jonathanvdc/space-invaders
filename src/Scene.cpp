@@ -129,3 +129,9 @@ void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
 {
 	this->players.push_back(player);
 }
+
+/// Gets this scene's name.
+std::string Scene::getName() const
+{
+	return this->name;
+}

@@ -84,6 +84,9 @@ namespace si
 		/// Registers the given ship as a player ship.
 		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
 
+		/// Gets this scene's name.
+		std::string getName() const;
+
 	private:
 		std::string name;
 		si::model::Game game;

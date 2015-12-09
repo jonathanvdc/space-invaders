@@ -187,7 +187,7 @@ si::view::IRenderable_ptr createSprite(
 /// render the game.
 void playGame(si::Scene& scene)
 {
-	sf::RenderWindow w(sf::VideoMode(800, 600), "Namespace invaders");
+	sf::RenderWindow w(sf::VideoMode(800, 600), scene.getName());
 
 	(void)si::Stopwatch::instance.delta();
 
@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
 	if (argc != 2)
 	{
 		std::cout << "Expected exactly one argument, which refers to a scene description. " 
-				  << (argc < 1 ? "Got none." : "Got " + std::to_string(argc - 1) + ".")
+				  << "Got " << (argc < 2 ? "none" : std::to_string(argc - 1)) << "."
 				  << std::endl;
 		return 0;
 	}
