@@ -67,6 +67,10 @@ bool Timeline::update(Scene& target, duration_t timeDelta)
 				this->getCurrentEvent().start(target);
 			}
 		}
+
+		// Return a boolean value that tells the user
+		// whether this timeline is still running or not.
+		return this->isRunning();
 	}
 }
 
