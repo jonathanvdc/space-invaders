@@ -140,7 +140,7 @@ namespace si
 				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const;
 
 			/// Reads the scene described by this document.
-			std::shared_ptr<Scene> readScene() const;
+			std::unique_ptr<Scene> readScene() const;
 
 			/// Reads a renderable element specified by the given node.
 			static si::view::IRenderable_ptr readRenderable(
@@ -178,7 +178,7 @@ namespace si
 			static void addPlayerToScene(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, si::view::IRenderable_ptr>& assets,
-				const std::shared_ptr<Scene>& scene);
+				Scene& scene);
 
 			/// Creates a bullet that is fired from the given source. 
 			/// Momentum is transferred from the source entity to
@@ -267,6 +267,6 @@ namespace si
 		/// given path, and returns a unique pointer
 		/// to the scene it describes. An exception is
 		/// thrown is something goes wrong.
-		std::shared_ptr<Scene> parseScene(const std::string& path);
+		std::unique_ptr<Scene> parseScene(const std::string& path);
 	}
 }

@@ -189,7 +189,7 @@ std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderabl
 }
 
 /// Reads the scene described by this document.
-std::shared_ptr<Scene> SceneDescription::readScene() const
+std::unique_ptr<Scene> SceneDescription::readScene() const
 {
 	auto name = getAttribute(this->doc.RootElement(), NameAttributeName);
 
@@ -197,12 +197,12 @@ std::shared_ptr<Scene> SceneDescription::readScene() const
 	auto textures = this->readTextures();
 	auto assets = this->readRenderables(textures);
 
-	auto scene = std::make_shared<Scene>(name);
+	auto scene = std::make_unique<Scene>(name);
 
 	// Find and parse the player node, then add it to the 
 	// scene.
 	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
-	addPlayerToScene(playerNode, assets, scene);
+	addPlayerToScene(playerNode, assets, *scene);
 	
 	// Lookup the decor table.
 	auto decorNode = getSingleChild(this->doc.RootElement(), DecorTableNodeName, true);
@@ -282,33 +282,33 @@ ParsedShipFactory SceneDescription::readShipEntity(
 void SceneDescription::addPlayerToScene(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, si::view::IRenderable_ptr>& assets,
-	const std::shared_ptr<Scene>& scene)
+	Scene& scene)
 {
 	// Read the player ship node, and instantiate it.
 	auto player = readShipEntity(node, assets)();
 
 	// Add the player to the scene.
-	addToScene(player, *scene);
+	addToScene(player, scene);
 
 	// Register the player, and throw in a player 
 	// velocity controller while we're at it.
 	double playerAccel = getDoubleAttribute(node, AccelerationAttributeName);
-	scene->addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
-	scene->registerPlayer(player.model);
+	scene.addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
+	scene.registerPlayer(player.model);
 	
 	// Create a player projectile controller for this ship.
 	double fireInterval = getDoubleAttribute(node, FireIntervalAttributeName);
 	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
-	scene->addController(std::make_shared<si::controller::IntervalActionController>(si::duration_t(fireInterval),
+	scene.addController(std::make_shared<si::controller::IntervalActionController>(si::duration_t(fireInterval),
 		[](si::model::Game&, si::duration_t)
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[=](si::model::Game& game, si::duration_t)
+		[player, projectileFactory, &scene](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*player.model, projectileFactory);
 			
-			addToScene(bullet, *scene);
+			addToScene(bullet, scene);
 		},
 		[=](si::model::Game&, si::duration_t)
 		{
@@ -548,7 +548,7 @@ const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
 /// given path, and returns a unique pointer
 /// to the scene it describes. An exception is
 /// thrown is something goes wrong.
-std::shared_ptr<Scene> si::parser::parseScene(const std::string& path)
+std::unique_ptr<Scene> si::parser::parseScene(const std::string& path)
 {
 	SceneDescription description(path);
 	return description.readScene();

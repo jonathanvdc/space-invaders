@@ -216,9 +216,9 @@ void playGame(si::Scene& scene)
 }
 
 /// Creates space invaders scene for testing purposes.
-std::shared_ptr<si::Scene> createTestScene()
+std::unique_ptr<si::Scene> createTestScene()
 {
-	auto result = std::make_shared<si::Scene>("Namespace invaders");
+	auto result = std::make_unique<si::Scene>("Namespace invaders");
 	si::Scene& scene = *result;
 
 	sf::Font font;
@@ -245,12 +245,12 @@ std::shared_ptr<si::Scene> createTestScene()
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[=](si::model::Game& game, si::duration_t)
+		[ship, shipTex, &scene](si::model::Game& game, si::duration_t)
 		{
 			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
-			result->addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
-			result->addController(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
-			result->addBoundsConstraint(bullet, si::DoubleRect(-0.5, -0.5, 2.0, 2.0));
+			scene.addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
+			scene.addController(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
+			scene.addBoundsConstraint(bullet, si::DoubleRect(-0.5, -0.5, 2.0, 2.0));
 		},
 		[=](si::model::Game&, si::duration_t)
 		{
@@ -267,6 +267,7 @@ std::shared_ptr<si::Scene> createTestScene()
 
 int main(int argc, char* argv[])
 {
+	// auto scene = createTestScene();
 	if (argc != 2)
 	{
 		std::cout << "Expected exactly one argument, which refers to a scene description. " 
