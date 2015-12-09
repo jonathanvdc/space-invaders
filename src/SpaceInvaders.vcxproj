@@ -180,6 +180,7 @@
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
     <ClCompile Include="TextRenderable.cpp" />
+    <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +197,7 @@
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="ITimelineEvent.h" />
     <ClInclude Include="OutOfBoundsController.h" />
     <ClInclude Include="PathController.h" />
     <ClInclude Include="PathEntity.h" />
@@ -215,6 +217,7 @@
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="TextRenderable.h" />
+    <ClInclude Include="Timeline.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

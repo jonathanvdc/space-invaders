@@ -1,6 +1,7 @@
 // SpaceInvaders.cpp : Defines the entry point for the application.
 //
 
+#include <cstddef>
 #include <chrono>
 #include <exception>
 #include <functional>
@@ -39,7 +40,7 @@ void physicsSim(sf::RenderWindow& w)
 {
 	si::model::Game game;
 	auto& rng = si::RandomGenerator::instance;
-	for (size_t i = 0; i < 2000; i++)
+	for (std::size_t i = 0; i < 2000; i++)
 	{
 		double size = rng.nextReal<double>(0.001, 0.01);
 		double mass = size * 200;
@@ -72,12 +73,12 @@ void physicsSim(sf::RenderWindow& w)
 		auto delta = si::Stopwatch::instance.delta();
 
 		double maxVeloc = 0;
-		for (size_t i = 0; i < entities.size(); i++)
+		for (std::size_t i = 0; i < entities.size(); i++)
 		{
 			auto& outer = entities[i];
 			auto outerPos = outer->getPosition();
 			double outerMass = outer->getPhysicsProperties().mass;
-			for (size_t j = i + 1; j < entities.size(); j++)
+			for (std::size_t j = i + 1; j < entities.size(); j++)
 			{
 				auto& inner = entities[j];
 
