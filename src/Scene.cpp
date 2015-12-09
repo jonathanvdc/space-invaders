@@ -176,5 +176,5 @@ void Scene::updateEvents(duration_t timeDelta)
 		[&](const si::timeline::ITimelineEvent_ptr& item) -> bool 
 		{ 
 			return deadEvents.find(item) != deadEvents.end(); 
-		}));
+		}), this->sceneEvents.end());
 }
