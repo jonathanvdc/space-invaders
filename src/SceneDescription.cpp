@@ -258,8 +258,8 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	{
 		double x = getDoubleAttribute(node, PositionXAttributeName, 0.0);
 		double y = getDoubleAttribute(node, PositionYAttributeName, 0.0);
-		double width = getDoubleAttribute(node, WidthAttributeName);
-		double height = getDoubleAttribute(node, HeightAttributeName);
+		double width = getDoubleAttribute(node, WidthAttributeName, 1.0);
+		double height = getDoubleAttribute(node, HeightAttributeName, 1.0);
 
 		auto contents = readRenderable(getSingleChild(node), textures);
 
