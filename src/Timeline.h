@@ -15,6 +15,9 @@ namespace si
 		class Timeline final : public ITimelineEvent 
 		{
 		public:
+			/// Creates an empty timeline.
+			Timeline();
+
 			/// Creates a new timeline from the given events, which
 			/// are executed in sequence.
 			Timeline(const std::vector<ITimelineEvent_ptr>& allEvents);

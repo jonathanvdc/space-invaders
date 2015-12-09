@@ -9,6 +9,11 @@
 using namespace si;
 using namespace si::timeline;
 
+/// Creates an empty timeline.
+Timeline::Timeline()
+	: currentEventIndex(0), allEvents()
+{ }
+
 /// Creates a new timeline from the given events, which
 /// are executed in sequence.
 Timeline::Timeline(const std::vector<ITimelineEvent_ptr>& allEvents)

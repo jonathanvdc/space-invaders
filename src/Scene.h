@@ -14,6 +14,7 @@
 #include "IRenderable.h"
 #include "RenderContext.h"
 #include "GameRenderer.h"
+#include "Timeline.h"
 
 namespace si
 {
@@ -74,6 +75,13 @@ namespace si
 		void addController(
 			const si::controller::IController_ptr& item);
 
+		/// Starts the given timeline event for this 
+		/// scene. The timeline event will be updated 
+		/// on every frame, until it has ended, at 
+		/// which point its `end` method will be called.
+		void startEvent(
+			const si::timeline::ITimelineEvent_ptr& item);
+
 		/// Gets a vector containing all players that
 		/// are still alive in this scene.
 		std::vector<std::shared_ptr<si::model::ShipEntity>> getPlayers() const;
@@ -88,10 +96,15 @@ namespace si
 		std::string getName() const;
 
 	private:
+		/// Updates all events that are currently running,
+		/// and removes any events that have ended.
+		void updateEvents(duration_t timeDelta);
+
 		std::string name;
 		si::model::Game game;
 		si::view::GameRenderer renderer;
 		si::controller::GameController controller;
+		std::vector<si::timeline::ITimelineEvent_ptr> sceneEvents;
 		std::vector<std::shared_ptr<si::model::ShipEntity>> players;
 		std::map<si::model::Entity_ptr, si::view::IRenderable_ptr> associatedView;
 	};

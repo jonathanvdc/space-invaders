@@ -5,6 +5,7 @@
 #include <exception>
 #include <functional>
 #include <map>
+#include <set>
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 #include "Game.h"
@@ -15,6 +16,7 @@
 #include "RenderContext.h"
 #include "GameRenderer.h"
 #include "PathOffsetRenderable.h"
+#include "ITimelineEvent.h"
 
 using namespace si;
 
@@ -23,7 +25,7 @@ Scene::Scene(const std::string& name)
 { }
 
 Scene::Scene(const std::string& name, sf::Color backgroundColor)
-	: name(name), game(), renderer(backgroundColor), controller(), associatedView()
+	: name(name), game(), renderer(backgroundColor), controller(), sceneEvents(), associatedView()
 {
 	// Create an event handler that removes the
 	// associated view when the model is removed.
@@ -48,6 +50,7 @@ void Scene::frame(sf::RenderTarget& renderTarget, duration_t timeDelta)
 {
 	this->game.updateTime(timeDelta);
 	this->controller.update(this->game, timeDelta);
+	this->updateEvents(timeDelta);
 	auto context = si::view::RenderContext(renderTarget, timeDelta);
 	this->renderer.render(context, context.getBounds());
 }
@@ -102,6 +105,19 @@ void Scene::addController(
 	this->controller.add(item);
 }
 
+/// Starts the given timeline event for this 
+/// scene. The timeline event will be updated 
+/// on every frame, until it has ended, at 
+/// which point its `end` method will be called.
+void Scene::startEvent(
+	const si::timeline::ITimelineEvent_ptr& item)
+{
+	// Add the event to the events vector.
+	this->sceneEvents.push_back(item);
+	// Start the event.
+	item->start(*this);
+}
+
 /// Gets a vector containing all players that
 /// are still alive in this scene.
 std::vector<std::shared_ptr<si::model::ShipEntity>> Scene::getPlayers() const
@@ -134,4 +150,31 @@ void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
 std::string Scene::getName() const
 {
 	return this->name;
+}
+
+void Scene::updateEvents(duration_t timeDelta)
+{
+	// Create a copy of the events vector, because updating events could result
+	// in changes to the events vector.
+	std::vector<si::timeline::ITimelineEvent_ptr> eventsCopy = this->sceneEvents;
+	// Maintain a set of dead events.
+	std::set<si::timeline::ITimelineEvent_ptr> deadEvents;
+	
+	// Iterate over all events.
+	for (const auto& item : eventsCopy)
+	{
+		// Update the scene based on this event.
+		if (!item->update(*this, timeDelta))
+		{
+			// If the event told us it's dead, then
+			// insert it in the dead events set.
+			deadEvents.insert(item);
+		}
+	}
+	// Remove all events that were marked dead in the previous pass.
+	this->sceneEvents.erase(std::remove_if(this->sceneEvents.begin(), this->sceneEvents.end(), 
+		[&](const si::timeline::ITimelineEvent_ptr& item) -> bool 
+		{ 
+			return deadEvents.find(item) != deadEvents.end(); 
+		}));
 }

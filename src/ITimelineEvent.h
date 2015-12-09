@@ -2,10 +2,16 @@
 
 #include <memory>
 #include "Common.h"
-#include "Scene.h"
 
 namespace si
 {
+	// Insert a forward declaration for the scene class 
+	// here, because si::timeline::ITimelineEvent 
+	// and si::Scene are cyclically dependent: 
+	// a scene manages a number of events, and any given
+	// event acts on the scene that contains it.
+	class Scene;
+
 	namespace timeline
 	{
 		/// A base class for events on a timeline.
