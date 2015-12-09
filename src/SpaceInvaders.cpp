@@ -4,7 +4,9 @@
 #include <chrono>
 #include <exception>
 #include <functional>
+#include <iostream>
 #include <map>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include "Common.h"
 #include "RandomGenerator.h"
@@ -28,6 +30,7 @@
 #include "ProjectileCollisionController.h"
 #include "ShipCollisionController.h"
 #include "Scene.h"
+#include "SceneDescription.h"
 
 using namespace std::chrono_literals;
 
@@ -264,9 +267,31 @@ std::unique_ptr<si::Scene> createTestScene()
 
 int main(int argc, char* argv[])
 {
-	auto scene = createTestScene();
+	// auto scene = createTestScene();
+	if (argc != 2)
+	{
+		std::cout << "Expected exactly one argument, which refers to a scene description. " 
+				  << (argc < 1 ? "Got none." : "Got " + std::to_string(argc - 1) + ".")
+				  << std::endl;
+		return 0;
+	}
 
-	playGame(*scene);
+	try
+	{
+		auto scene = si::parser::parseScene(argv[1]);
+
+		playGame(*scene);
+	}
+	catch (si::parser::XMLParseException& ex)
+	{
+		std::cout << "The given file is not valid XML. Here's what went wrong: " << std::endl
+			<< ex.what() << std::endl;
+	}
+	catch (si::parser::SceneDescriptionException& ex)
+	{
+		std::cout << "The given scene description contains an error. To be exact: " << std::endl
+			<< ex.what() << std::endl;
+	}
 
 	return 0;
 }

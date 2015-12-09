@@ -262,5 +262,11 @@ namespace si
 			tinyxml2::XMLDocument doc;
 			std::string path;
 		};
+
+		/// Parses the scene description XML document at the
+		/// given path, and returns a unique pointer
+		/// to the scene it describes. An exception is
+		/// thrown is something goes wrong.
+		std::unique_ptr<Scene> parseScene(const std::string& path);
 	}
 }

@@ -543,3 +543,13 @@ const tinyxml2::XMLElement* SceneDescription::getRenderablesNode() const
 {
 	return getSingleChild(this->doc.RootElement(), AssetsTableNodeName, true);
 }
+
+/// Parses the scene description XML document at the
+/// given path, and returns a unique pointer
+/// to the scene it describes. An exception is
+/// thrown is something goes wrong.
+std::unique_ptr<Scene> si::parser::parseScene(const std::string& path)
+{
+	SceneDescription description(path);
+	return description.readScene();
+}
