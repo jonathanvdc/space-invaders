@@ -340,9 +340,9 @@ void SceneDescription::addPlayerToScene(
 			
 			addToScene(bullet, scene);
 		},
-		[=](si::model::Game&, si::duration_t)
+		[=](si::model::Game& game, si::duration_t)
 		{
-			return player.model->isAlive();
+			return game.contains(player.model);
 		}));
 }
 

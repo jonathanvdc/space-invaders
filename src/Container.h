@@ -51,6 +51,13 @@ namespace si
 			}
 		}
 
+		/// Tests if the given item is currently in
+		/// this container.
+		bool contains(const std::shared_ptr<T>& item) 
+		{
+			return std::find(this->items.begin(), this->items.end(), item) != this->items.end();
+		}
+
 		/// Gets all items in this container that
 		/// are of the given type.
 		template<typename V>

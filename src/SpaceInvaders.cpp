@@ -128,61 +128,6 @@ void physicsSim(sf::RenderWindow& w)
 	}
 }
 
-/// Creates a simple projectile with the given characteristics.
-std::shared_ptr<si::model::ProjectileEntity> createProjectile(
-	const si::model::PhysicsEntity& origin, 
-	double mass, double radius, si::Vector2d veloc)
-{
-	auto bulletOffset = (origin.getPhysicsProperties().radius + radius) * si::normalizeVec(veloc);
-	auto bulletPos = origin.getPosition() + bulletOffset;
-	return std::make_shared<si::model::ProjectileEntity>(
-		si::model::PhysicsProperties(mass, radius),
-		bulletPos, origin.getVelocity() + veloc);
-}
-
-/// Fires a simple projectile with the given characteristics
-/// from the given origin. Momentum is conserved.
-std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
-	si::model::DriftingEntity& origin,
-	double mass, double radius, si::Vector2d veloc)
-{
-	auto result = createProjectile(origin, mass, radius, veloc);
-	origin.accelerate(-si::Vector2d(veloc));
-	return result;
-}
-
-/// Fires a simple projectile with the given characteristics
-/// from the given origin. Momentum is conserved.
-std::shared_ptr<si::model::ProjectileEntity> fireProjectile(
-	si::model::DriftingEntity& origin,
-	double mass, double radius, double speed)
-{
-	auto veloc = speed * origin.getOrientation();
-	return fireProjectile(origin, mass, radius, veloc);
-}
-
-/// Creates a sprite view for the given texture and dimensions
-/// that follows the given entity around.
-si::view::IRenderable_ptr createSprite(
-	const si::model::Entity_ptr& model,
-	const std::shared_ptr<sf::Texture>& texture,
-	si::DoubleRect relativeSize)
-{
-	auto sprite = std::make_shared<si::view::SpriteRenderable>(texture);
-	auto box = std::make_shared<si::view::RelativeBoxRenderable>(sprite, relativeSize);
-	return std::make_shared<si::view::PathOffsetRenderable>(box, [=]() { return model->getPosition(); });
-}
-
-/// Creates a sprite view for the given texture and dimensions
-/// that follows the given entity around.
-si::view::IRenderable_ptr createSprite(
-	const si::model::Entity_ptr& model,
-	const std::shared_ptr<sf::Texture>& texture,
-	double width, double height)
-{
-	return createSprite(model, texture, si::DoubleRect(0.0, 0.0, width, height));
-}
-
 /// Plays a space invaders game, as defined by the
 /// given scene. A render window is used to
 /// render the game.
@@ -216,59 +161,8 @@ void playGame(si::Scene& scene)
 	}
 }
 
-/// Creates space invaders scene for testing purposes.
-std::unique_ptr<si::Scene> createTestScene()
-{
-	auto result = std::make_unique<si::Scene>("Namespace invaders");
-	si::Scene& scene = *result;
-
-	sf::Font font;
-
-	if (!font.loadFromFile("arial.ttf"))
-	{
-		throw std::runtime_error("Couldn't load 'arial.ttf'.");
-	}
-
-	auto shipTex = std::make_shared<sf::Texture>();
-	if (!shipTex->loadFromFile("ship_cpp.png"))
-	{
-		throw std::runtime_error("Couldn't load 'ship_cpp.png'.");
-	}
-
-	scene.addRenderable(std::make_shared<si::view::FramecounterRenderable>(font, sf::Color::Red));
-
-	auto ship = std::make_shared<si::model::ShipEntity>(
-		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
-	scene.addEntity(ship, createSprite(ship, shipTex, 0.1, 0.1));
-	scene.addController(std::make_shared<si::controller::PlayerController>(ship, 0.05));
-	scene.addController(std::make_shared<si::controller::IntervalActionController>(0.5s,
-		[](si::model::Game&, si::duration_t)
-		{
-			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-		},
-		[ship, shipTex, &scene](si::model::Game& game, si::duration_t)
-		{
-			auto bullet = fireProjectile(*ship, 5.0, 0.05, 0.1);
-			scene.addEntity(bullet, createSprite(bullet, shipTex, 0.05, 0.05));
-			scene.addController(std::make_shared<si::controller::ProjectileCollisionController>(bullet));
-			scene.addBoundsConstraint(bullet, si::DoubleRect(-0.5, -0.5, 2.0, 2.0));
-		},
-		[=](si::model::Game&, si::duration_t)
-		{
-			return ship->isAlive();
-		}));
-
-	auto other = std::make_shared<si::model::ShipEntity>(
-		si::model::PhysicsProperties(20.0, 0.1), si::Vector2d(0.5, 0.5), 40.0);
-	scene.addEntity(other, createSprite(other, shipTex, 0.1, 0.1));
-	scene.addController(std::make_shared<si::controller::PathController>(other, 5.0, [=](si::duration_t t) { return si::Vector2d(std::cos(t.count()) / 2.0 + 0.5, std::sin(t.count()) / 2.0 + 0.5); }));
-
-	return result;
-}
-
 int main(int argc, char* argv[])
 {
-	// auto scene = createTestScene();
 	if (argc != 2)
 	{
 		std::cout << "Expected exactly one argument, which refers to a scene description. " 
