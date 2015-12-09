@@ -24,6 +24,7 @@
 #include "Scene.h"
 #include "SpriteRenderable.h"
 #include "RelativeBoxRenderable.h"
+#include "GroupRenderable.h"
 #include "ITimelineEvent.h"
 #include "Timeline.h"
 
@@ -115,6 +116,7 @@ std::string SceneDescription::getPath() const
 const char* const PlayerNodeName = "Player";
 const char* const SpriteNodeName = "Sprite";
 const char* const BoxNodeName = "Box";
+const char* const GroupNodeName = "Group";
 const char* const ProjectileNodeName = "Projectile";
 const char* const ShipNodeName = "Ship";
 const char* const AssetsTableNodeName = "Assets";
@@ -264,6 +266,19 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 		auto contents = readRenderable(getSingleChild(node), textures);
 
 		return std::make_shared<si::view::RelativeBoxRenderable>(contents, DoubleRect(x, y, width, height));
+	}
+	else if (nodeName == GroupNodeName)
+	{
+		std::vector<si::view::IRenderable_ptr> children;
+
+		for (auto child = node->FirstChildElement();
+			 child != nullptr;
+			 child = child->NextSiblingElement())
+		{
+			children.push_back(readRenderable(child, textures));
+		}
+
+		return std::make_shared<si::view::GroupRenderable>(std::move(children));
 	}
 	else
 	{

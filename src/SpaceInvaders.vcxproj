@@ -160,6 +160,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
+    <ClCompile Include="GroupRenderable.cpp" />
     <ClCompile Include="IntervalActionController.cpp" />
     <ClCompile Include="OutOfBoundsController.cpp" />
     <ClCompile Include="PathController.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="FramecounterRenderable.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="GameRenderer.h" />
+    <ClInclude Include="GroupRenderable.h" />
     <ClInclude Include="IController.h" />
     <ClInclude Include="IntervalActionController.h" />
     <ClInclude Include="IRenderable.h" />
