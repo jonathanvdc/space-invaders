@@ -173,10 +173,10 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 
 /// Reads all renderable elements definitions in this
 /// scene description document.
-std::map<std::string, si::view::IRenderable_ptr> SceneDescription::readRenderables(
+std::map<std::string, Factory<si::view::IRenderable_ptr>> SceneDescription::readRenderables(
 	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const
 {
-	std::map<std::string, si::view::IRenderable_ptr> results;
+	std::map<std::string, Factory<si::view::IRenderable_ptr>> results;
 	auto node = this->getRenderablesNode();
 	if (node == nullptr)
 	{
@@ -238,15 +238,41 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 }
 
 /// Reads an entity node's associated view.
-si::view::IRenderable_ptr SceneDescription::readAssociatedView(
+Factory<si::view::IRenderable_ptr> SceneDescription::readAssociatedView(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	return getReferenceAttribute(node, AssetAttributeName, assets);
 }
 
+/// Reads a renderable group element specified by the given node.
+Factory<si::view::IRenderable_ptr> SceneDescription::readGroupRenderable(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures)
+{
+	std::vector<Factory<si::view::IRenderable_ptr>> children;
+
+	for (auto child = node->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		children.push_back(readRenderable(child, textures));
+	}
+
+	return [children]()
+	{
+		std::vector<si::view::IRenderable_ptr> childInsts;
+		for (const auto& fact : children)
+		{
+			childInsts.push_back(fact());
+		}
+
+		return std::make_shared<si::view::GroupRenderable>(std::move(childInsts));
+	};
+}
+
 /// Reads a renderable element specified by the given node.
-si::view::IRenderable_ptr SceneDescription::readRenderable(
+Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures)
 {
@@ -254,7 +280,9 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 	if (nodeName == SpriteNodeName)
 	{
 		auto tex = getReferenceAttribute(node, TextureAttributeName, textures);
-		return std::make_shared<si::view::SpriteRenderable>(tex);
+		auto result = std::make_shared<si::view::SpriteRenderable>(tex);
+
+		return [result]() { return result; };
 	}
 	else if (nodeName == BoxNodeName)
 	{
@@ -265,20 +293,14 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 
 		auto contents = readRenderable(getSingleChild(node), textures);
 
-		return std::make_shared<si::view::RelativeBoxRenderable>(contents, DoubleRect(x, y, width, height));
+		return [=]()
+		{
+			return std::make_shared<si::view::RelativeBoxRenderable>(contents(), DoubleRect(x, y, width, height));
+		};
 	}
 	else if (nodeName == GroupNodeName)
 	{
-		std::vector<si::view::IRenderable_ptr> children;
-
-		for (auto child = node->FirstChildElement();
-			 child != nullptr;
-			 child = child->NextSiblingElement())
-		{
-			children.push_back(readRenderable(child, textures));
-		}
-
-		return std::make_shared<si::view::GroupRenderable>(std::move(children));
+		return readGroupRenderable(node, textures);
 	}
 	else
 	{
@@ -289,7 +311,7 @@ si::view::IRenderable_ptr SceneDescription::readRenderable(
 /// Reads a ship entity as specified by the given node.
 ParsedShipFactory SceneDescription::readShipEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
@@ -304,14 +326,14 @@ ParsedShipFactory SceneDescription::readShipEntity(
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::ShipEntity>(model, view, controllers);
+		return ParsedEntity<si::model::ShipEntity>(model, view(), controllers);
 	};
 }
 
 /// Reads a player entity as specified by the given node.
 void SceneDescription::addPlayerToScene(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
 	Scene& scene)
 {
 	// Read the player ship node, and instantiate it.
@@ -384,7 +406,7 @@ ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
 /// on-demand.
 ParsedProjectileFactory SceneDescription::readProjectileEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
@@ -401,14 +423,14 @@ ParsedProjectileFactory SceneDescription::readProjectileEntity(
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::ProjectileEntity>(model, view, controllers);
+		return ParsedEntity<si::model::ProjectileEntity>(model, view(), controllers);
 	};
 }
 
 /// Reads a model entity specified by the given node.
 ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == ShipNodeName)
@@ -428,7 +450,7 @@ ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 /// Reads a timeline as specified by the given node.
 si::timeline::Timeline SceneDescription::parseTimeline(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	std::vector<si::timeline::ITimelineEvent_ptr> events;
 	for (auto child = node->FirstChildElement();
@@ -444,7 +466,7 @@ si::timeline::Timeline SceneDescription::parseTimeline(
 /// Reads a timeline event as specified by the given node.
 si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, si::view::IRenderable_ptr>& assets)
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == TimelineNodeName)

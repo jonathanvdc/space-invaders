@@ -115,7 +115,10 @@ namespace si
 		};
 
 		template<typename T>
-		using ParsedEntityFactory = std::function<ParsedEntity<T>()>;
+		using Factory = std::function<T()>;
+
+		template<typename T>
+		using ParsedEntityFactory = Factory<ParsedEntity<T>>;
 
 		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
 		using ParsedProjectileFactory = ParsedEntityFactory<si::model::ProjectileEntity>;
@@ -138,46 +141,51 @@ namespace si
 
 			/// Reads all renderable elements definitions in this
 			/// scene description document.
-			std::map<std::string, si::view::IRenderable_ptr> readRenderables(
+			std::map<std::string, Factory<si::view::IRenderable_ptr>> readRenderables(
 				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const;
 
 			/// Reads the scene described by this document.
 			std::unique_ptr<Scene> readScene() const;
 
+			/// Reads a renderable group element specified by the given node.
+			static Factory<si::view::IRenderable_ptr> readGroupRenderable(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
+
 			/// Reads a renderable element specified by the given node.
-			static si::view::IRenderable_ptr readRenderable(
+			static Factory<si::view::IRenderable_ptr> readRenderable(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
 
 			/// Reads an entity node's associated view.
-			static si::view::IRenderable_ptr readAssociatedView(
+			static Factory<si::view::IRenderable_ptr> readAssociatedView(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a projectile entity as specified by the given node.
 			static ParsedProjectileFactory readProjectileEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads an unknown entity as specified by the given node.
 			static ParsedEntityFactory<si::model::Entity> readEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a timeline as specified by the given node.
 			static si::timeline::Timeline parseTimeline(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 			
 			/// Reads a timeline event as specified by the given node.
 			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets);
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Adds the given entity's model, view and
 			/// controllers to the given scene.
@@ -189,7 +197,7 @@ namespace si
 			/// to the scene.
 			static void addPlayerToScene(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, si::view::IRenderable_ptr>& assets,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
 				Scene& scene);
 
 			/// Creates a bullet that is fired from the given source. 
