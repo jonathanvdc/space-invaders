@@ -39,12 +39,13 @@ void RibbonParticleRenderable::render(RenderContext& target, DoubleRect bounds)
 	if (this->prevPositions.size() > 1)
 	{
 		auto prevPts = getPositions(0);
+		auto totalLifetime = this->totalElapsedTime - std::get<2>(this->prevPositions.at(0));
 		for (std::size_t i = 1; i < this->prevPositions.size(); i++)
 		{
 			auto curPts = getPositions(i);
 
 			// Fade segments as they get older.
-			double alpha = 1.0 - (this->totalElapsedTime - std::get<2>(this->prevPositions.at(i))) / this->pointLifetime;
+			double alpha = 1.0 - (this->totalElapsedTime - std::get<2>(this->prevPositions.at(i))) / totalLifetime;
 
 			sf::ConvexShape shape;
 
@@ -54,8 +55,8 @@ void RibbonParticleRenderable::render(RenderContext& target, DoubleRect bounds)
 			shape.setPoint(0, sf::Vector2f(std::get<0>(prevPts)));
 			shape.setPoint(1, sf::Vector2f(std::get<1>(prevPts)));
 
-			shape.setPoint(2, sf::Vector2f(std::get<0>(curPts)));
-			shape.setPoint(3, sf::Vector2f(std::get<1>(curPts)));
+			shape.setPoint(2, sf::Vector2f(std::get<1>(curPts)));
+			shape.setPoint(3, sf::Vector2f(std::get<0>(curPts)));
 
 			target.getTarget().draw(shape);
 
