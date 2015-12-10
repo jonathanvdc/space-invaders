@@ -26,6 +26,7 @@
 #include "RelativeBoxRenderable.h"
 #include "GroupRenderable.h"
 #include "RibbonParticleRenderable.h"
+#include "FramecounterRenderable.h"
 #include "ITimelineEvent.h"
 #include "Timeline.h"
 
@@ -122,9 +123,12 @@ const char* const ProjectileNodeName = "Projectile";
 const char* const ShipNodeName = "Ship";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
+const char* const FontsTableNodeName = "Fonts";
 const char* const DecorTableNodeName = "Decor";
+const char* const BackgroundTableNodeName = "Background";
 const char* const TimelineNodeName = "Timeline";
 const char* const RibbonParticleNodeName = "RibbonParticle";
+const char* const FramecounterNodeName = "Framecounter";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -149,6 +153,7 @@ const char* const BlueAttributeName = "b";
 const char* const AlphaAttributeName = "a";
 const char* const IntervalAttributeName = "interval";
 const char* const LifetimeAttributeName = "lifetime";
+const char* const FontAttributeName = "font";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -179,10 +184,42 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 	return results;
 }
 
+/// Reads all font assets defined in this
+/// scene description document.
+std::map<std::string, sf::Font> SceneDescription::readFonts() const
+{
+	std::map<std::string, sf::Font> results;
+	auto fontsNode = getSingleChild(this->doc.RootElement(), FontsTableNodeName, true);
+	if (fontsNode == nullptr)
+		return results;
+	for (auto child = fontsNode->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		std::string name = getAttribute(child, IdAttributeName);
+		std::string path = getAttribute(child, PathAttributeName);
+		auto newPath = this->convertPath(path);
+		sf::Font fnt;
+		if (!fnt.loadFromFile(newPath))
+		{
+			throw SceneDescriptionException("Couldn't load font file '" + newPath + "'.");
+		}
+		results[name] = fnt;
+	}
+	return results;
+}
+
+/// Reads all resources defined in this
+/// scene description document.
+SceneResources SceneDescription::readResources() const
+{
+	return{ this->readTextures(), this->readFonts() };
+}
+
 /// Reads all renderable elements definitions in this
 /// scene description document.
 std::map<std::string, Factory<si::view::IRenderable_ptr>> SceneDescription::readRenderables(
-	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const
+	const SceneResources& resources) const
 {
 	std::map<std::string, Factory<si::view::IRenderable_ptr>> results;
 	auto node = this->getRenderablesNode();
@@ -196,7 +233,7 @@ std::map<std::string, Factory<si::view::IRenderable_ptr>> SceneDescription::read
 		 child = child->NextSiblingElement())
 	{
 		auto name = getAttribute(child, IdAttributeName);
-		results[name] = readRenderable(child, textures);
+		results[name] = readRenderable(child, resources);
 	}
 	
 	return results;
@@ -207,9 +244,9 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 {
 	auto name = getAttribute(this->doc.RootElement(), NameAttributeName);
 
-	// Start by reading all textures and assets (renderable view elements).
-	auto textures = this->readTextures();
-	auto assets = this->readRenderables(textures);
+	// Start by reading all resources and assets (renderable view elements).
+	auto resources = this->readResources();
+	auto assets = this->readRenderables(resources);
 
 	auto scene = std::make_unique<Scene>(name);
 
@@ -217,8 +254,21 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 	// scene.
 	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
 	addPlayerToScene(playerNode, assets, *scene);
+
+	// Lookup the (optional) background table.
+	auto backgroundNode = getSingleChild(this->doc.RootElement(), BackgroundTableNodeName, true);
+	if (backgroundNode != nullptr)
+	{
+		for (auto child = backgroundNode->FirstChildElement();
+			 child != nullptr;
+			 child = child->NextSiblingElement())
+		{
+			// Add all background renderables to the scene.
+			scene->addRenderable(readAssociatedView(child, assets)());
+		}
+	}
 	
-	// Lookup the decor table.
+	// Lookup the (optional) decor table.
 	auto decorNode = getSingleChild(this->doc.RootElement(), DecorTableNodeName, true);
 	if (decorNode != nullptr)
 	{
@@ -256,7 +306,7 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readAssociatedView(
 /// Reads a renderable group element specified by the given node.
 Factory<si::view::IRenderable_ptr> SceneDescription::readGroupRenderable(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures)
+	const SceneResources& resources)
 {
 	std::vector<Factory<si::view::IRenderable_ptr>> children;
 
@@ -264,7 +314,7 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readGroupRenderable(
 		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
-		children.push_back(readRenderable(child, textures));
+		children.push_back(readRenderable(child, resources));
 	}
 
 	return [children]()
@@ -282,29 +332,35 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readGroupRenderable(
 /// Reads a renderable element specified by the given node.
 Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, std::shared_ptr<sf::Texture>>& textures)
+	const SceneResources& resources)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == SpriteNodeName)
 	{
-		auto tex = getReferenceAttribute(node, TextureAttributeName, textures);
+		auto tex = getReferenceAttribute(node, TextureAttributeName, resources.textures);
 		auto result = std::make_shared<si::view::SpriteRenderable>(tex);
 
 		return [result]() { return result; };
 	}
 	else if (nodeName == RibbonParticleNodeName)
 	{
-		auto r = sf::Uint8(getDoubleAttribute(node, RedAttributeName, 0.0) * 255);
-		auto g = sf::Uint8(getDoubleAttribute(node, GreenAttributeName, 0.0) * 255);
-		auto b = sf::Uint8(getDoubleAttribute(node, BlueAttributeName, 0.0) * 255);
-		auto a = sf::Uint8(getDoubleAttribute(node, AlphaAttributeName, 1.0) * 255);
-
+		auto color = getColorAttribute(node);
 		duration_t interval(getDoubleAttribute(node, IntervalAttributeName, 0.01));
 		duration_t lifetime(getDoubleAttribute(node, LifetimeAttributeName, 0.5));
 
 		return [=]()
 		{
-			return std::make_shared<si::view::RibbonParticleRenderable>(sf::Color(r, g, b, a), interval, lifetime);
+			return std::make_shared<si::view::RibbonParticleRenderable>(color, interval, lifetime);
+		};
+	}
+	else if (nodeName == FramecounterNodeName)
+	{
+		auto color = getColorAttribute(node);
+		auto font = getReferenceAttribute(node, FontAttributeName, resources.fonts);
+
+		return [=]()
+		{
+			return std::make_shared<si::view::FramecounterRenderable>(font, color);
 		};
 	}
 	else if (nodeName == BoxNodeName)
@@ -314,7 +370,7 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 		double width = getDoubleAttribute(node, WidthAttributeName, 1.0);
 		double height = getDoubleAttribute(node, HeightAttributeName, 1.0);
 
-		auto contents = readRenderable(getSingleChild(node), textures);
+		auto contents = readRenderable(getSingleChild(node), resources);
 
 		return [=]()
 		{
@@ -323,7 +379,7 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	}
 	else if (nodeName == GroupNodeName)
 	{
-		return readGroupRenderable(node, textures);
+		return readGroupRenderable(node, resources);
 	}
 	else
 	{
@@ -598,6 +654,18 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 	default:
 		return result;
 	}
+}
+
+/// Gets the given node's color, which is defined by
+/// its 'r', 'g', 'b' and 'a' attributes.
+sf::Color SceneDescription::getColorAttribute(const tinyxml2::XMLElement* node)
+{
+	auto r = sf::Uint8(getDoubleAttribute(node, RedAttributeName, 0.0) * 255);
+	auto g = sf::Uint8(getDoubleAttribute(node, GreenAttributeName, 0.0) * 255);
+	auto b = sf::Uint8(getDoubleAttribute(node, BlueAttributeName, 0.0) * 255);
+	auto a = sf::Uint8(getDoubleAttribute(node, AlphaAttributeName, 1.0) * 255);
+
+	return sf::Color(r, g, b, a);
 }
 
 /// Reads the given node's physics properties.

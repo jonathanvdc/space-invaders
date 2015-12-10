@@ -123,6 +123,16 @@ namespace si
 		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
 		using ParsedProjectileFactory = ParsedEntityFactory<si::model::ProjectileEntity>;
 
+		/// Defines a data structure that contains 
+		/// external resources for scenes.
+		struct SceneResources
+		{
+			/// The scene's texture map.
+			std::map<std::string, std::shared_ptr<sf::Texture>> textures;
+			/// The scene's font map.
+			std::map<std::string, sf::Font> fonts;
+		};
+
 		/// Defines a scene description class.
 		class SceneDescription final
 		{
@@ -138,11 +148,19 @@ namespace si
 			/// Reads all texture assets defined in this
 			/// scene description document.
 			std::map<std::string, std::shared_ptr<sf::Texture>> readTextures() const;
+			
+			/// Reads all font assets defined in this
+			/// scene description document.
+			std::map<std::string, sf::Font> readFonts() const;
+
+			/// Reads all resources defined in this
+			/// scene description document.
+			SceneResources readResources() const;
 
 			/// Reads all renderable elements definitions in this
 			/// scene description document.
 			std::map<std::string, Factory<si::view::IRenderable_ptr>> readRenderables(
-				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures) const;
+				const SceneResources& resources) const;
 
 			/// Reads the scene described by this document.
 			std::unique_ptr<Scene> readScene() const;
@@ -150,12 +168,12 @@ namespace si
 			/// Reads a renderable group element specified by the given node.
 			static Factory<si::view::IRenderable_ptr> readGroupRenderable(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
+				const SceneResources& resources);
 
 			/// Reads a renderable element specified by the given node.
 			static Factory<si::view::IRenderable_ptr> readRenderable(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, std::shared_ptr<sf::Texture>>& textures);
+				const SceneResources& resources);
 
 			/// Reads an entity node's associated view.
 			static Factory<si::view::IRenderable_ptr> readAssociatedView(
@@ -246,6 +264,10 @@ namespace si
 			/// If no such attribute can be found, the given default
 			/// value is returned as a result.
 			static double getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name, double defaultValue);
+
+			/// Gets the given node's color, which is defined by
+			/// its 'r', 'g', 'b' and 'a' attributes.
+			static sf::Color getColorAttribute(const tinyxml2::XMLElement* node);
 
 			/// Reads the given node's physics properties.
 			static si::model::PhysicsProperties getPhysicsProperties(
