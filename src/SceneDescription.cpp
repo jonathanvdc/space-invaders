@@ -129,6 +129,7 @@ const char* const BackgroundTableNodeName = "Background";
 const char* const TimelineNodeName = "Timeline";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
+const char* const TextNodeName = "Text";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -154,6 +155,7 @@ const char* const AlphaAttributeName = "a";
 const char* const IntervalAttributeName = "interval";
 const char* const LifetimeAttributeName = "lifetime";
 const char* const FontAttributeName = "font";
+const char* const TextAttributeName = "text";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -361,6 +363,17 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 		return [=]()
 		{
 			return std::make_shared<si::view::FramecounterRenderable>(font, color);
+		};
+	}
+	else if (nodeName == TextNodeName)
+	{
+		auto color = getColorAttribute(node);
+		auto font = getReferenceAttribute(node, FontAttributeName, resources.fonts);
+		auto text = getAttribute(node, TextAttributeName);
+
+		return [=]()
+		{
+			return std::make_shared<si::view::TextRenderable>(text, font, color);
 		};
 	}
 	else if (nodeName == BoxNodeName)

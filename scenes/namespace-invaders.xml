@@ -25,12 +25,16 @@
         <Box id="framecounter" width="0.5" height="0.5" >
             <Framecounter font="arial" r="1.0" g="0.0" b="0.0" />
         </Box>
+        <Box id="hello-world" width="0.5" height="0.1" posY="0.1">
+            <Text text="Namespace invaders" font="arial" r="1.0" g="1.0" b="1.0" />
+        </Box>
     </Assets>
     <Player mass="200" radius="0.1" health="20" asset="cpp-ship" accel="0.2" fireInterval="0.1">
         <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
     <Background>
         <Asset asset="framecounter" />
+        <Asset asset="hello-world" />
     </Background>
     <Decor>
         <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
