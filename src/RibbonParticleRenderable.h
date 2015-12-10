@@ -42,7 +42,7 @@ namespace si
 
 			/// Gets the polygon points for the position at
 			/// the given index. The deque of points
-			/// is assumed to be nonempty.
+			/// is assumed to contain at least two elements.
 			std::tuple<Vector2d, Vector2d> getPositions(std::size_t index);
 
 			const sf::Color color;

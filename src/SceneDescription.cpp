@@ -25,6 +25,7 @@
 #include "SpriteRenderable.h"
 #include "RelativeBoxRenderable.h"
 #include "GroupRenderable.h"
+#include "RibbonParticleRenderable.h"
 #include "ITimelineEvent.h"
 #include "Timeline.h"
 
@@ -123,6 +124,7 @@ const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
 const char* const DecorTableNodeName = "Decor";
 const char* const TimelineNodeName = "Timeline";
+const char* const RibbonParticleNodeName = "RibbonParticle";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -141,6 +143,12 @@ const char* const TextureAttributeName = "texture";
 const char* const AssetAttributeName = "asset";
 const char* const FireIntervalAttributeName = "fireInterval";
 const char* const NameAttributeName = "name";
+const char* const RedAttributeName = "r";
+const char* const GreenAttributeName = "g";
+const char* const BlueAttributeName = "b";
+const char* const AlphaAttributeName = "a";
+const char* const IntervalAttributeName = "interval";
+const char* const LifetimeAttributeName = "lifetime";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -283,6 +291,21 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 		auto result = std::make_shared<si::view::SpriteRenderable>(tex);
 
 		return [result]() { return result; };
+	}
+	else if (nodeName == RibbonParticleNodeName)
+	{
+		auto r = sf::Uint8(getDoubleAttribute(node, RedAttributeName, 0.0) * 255);
+		auto g = sf::Uint8(getDoubleAttribute(node, GreenAttributeName, 0.0) * 255);
+		auto b = sf::Uint8(getDoubleAttribute(node, BlueAttributeName, 0.0) * 255);
+		auto a = sf::Uint8(getDoubleAttribute(node, AlphaAttributeName, 1.0) * 255);
+
+		duration_t interval(getDoubleAttribute(node, IntervalAttributeName, 0.01));
+		duration_t lifetime(getDoubleAttribute(node, LifetimeAttributeName, 0.5));
+
+		return [=]()
+		{
+			return std::make_shared<si::view::RibbonParticleRenderable>(sf::Color(r, g, b, a), interval, lifetime);
+		};
 	}
 	else if (nodeName == BoxNodeName)
 	{
