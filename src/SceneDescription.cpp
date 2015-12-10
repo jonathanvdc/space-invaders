@@ -152,7 +152,7 @@ const char* const LifetimeAttributeName = "lifetime";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
-const DoubleRect GameBounds{ -0.1, -0.1, 1.2, 1.2 };
+const DoubleRect GameBounds{ -0.25, -0.25, 1.5, 1.5 };
 
 /// Reads all texture assets defined in this
 /// scene description document.

@@ -9,7 +9,7 @@
         <Box id="cpp-projectile" width="0.05" height="0.05">
             <Group>
                 <Sprite texture="cpp-ship-tex" />
-                <Box posX="0.33" width="0.33">
+                <Box posX="0.45" width="0.1">
                     <RibbonParticle r="0.0" g="1.0" b="1.0" />
                 </Box>
             </Group>
