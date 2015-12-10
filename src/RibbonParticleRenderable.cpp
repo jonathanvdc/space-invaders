@@ -72,7 +72,7 @@ void RibbonParticleRenderable::logPosition(DoubleRect bounds)
 	{
 		// The current position is the position in the middle
 		// of the current bounding rectangle.
-		auto pos = Vector2d(bounds.left + bounds.width, bounds.top + bounds.height) / 2.0;
+		Vector2d pos(bounds.left + bounds.width / 2.0, bounds.top + bounds.height / 2.0);
 
 		// Size of the ribbon is equal to the geomean of the 
 		// bounds' width and height.
