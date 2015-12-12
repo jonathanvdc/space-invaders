@@ -58,7 +58,8 @@ XMLParseException::XMLParseException(
 XMLParseException::XMLParseException(const tinyxml2::XMLDocument& doc)
 	: XMLParseException(
 		doc.ErrorName(),
-		doc.GetErrorStr1(), doc.GetErrorStr2())
+		doc.GetErrorStr1() ? doc.GetErrorStr1() : "", 
+		doc.GetErrorStr2() ? doc.GetErrorStr2() : "")
 { }
 
 /// Gets this XML parsing exception's
