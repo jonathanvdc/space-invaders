@@ -95,6 +95,24 @@ namespace si
 		/// Gets this scene's name.
 		std::string getName() const;
 
+		/// Gets this scene's game.
+		si::model::Game& getGame();
+
+		/// Gets this scene's game.
+		const si::model::Game& getGame() const;
+
+		/// Gets this scene's renderer.
+		si::view::GameRenderer& getRenderer();
+
+		/// Gets this scene's renderer.
+		const si::view::GameRenderer& getRenderer() const;
+
+		/// Gets this scene's controller.
+		si::controller::GameController& getController();
+
+		/// Gets this scene's controller.
+		const si::controller::GameController& getController() const;
+
 	private:
 		/// Updates all events that are currently running,
 		/// and removes any events that have ended.

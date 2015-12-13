@@ -176,6 +176,7 @@
     <ClCompile Include="SceneDescription.cpp" />
     <ClCompile Include="ShipCollisionController.cpp" />
     <ClCompile Include="ShipEntity.cpp" />
+    <ClCompile Include="SpawnEvent.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="RenderContext.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="ITimelineEvent.h" />
     <ClInclude Include="OutOfBoundsController.h" />
+    <ClInclude Include="ParsedEntity.h" />
     <ClInclude Include="PathController.h" />
     <ClInclude Include="PathEntity.h" />
     <ClInclude Include="PhysicsEntity.h" />
@@ -215,6 +217,7 @@
     <ClInclude Include="SceneDescription.h" />
     <ClInclude Include="ShipCollisionController.h" />
     <ClInclude Include="ShipEntity.h" />
+    <ClInclude Include="SpawnEvent.h" />
     <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="RenderContext.h" />

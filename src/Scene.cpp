@@ -152,6 +152,42 @@ std::string Scene::getName() const
 	return this->name;
 }
 
+/// Gets this scene's game.
+si::model::Game& Scene::getGame()
+{
+	return this->game;
+}
+
+/// Gets this scene's game.
+const si::model::Game& Scene::getGame() const
+{
+	return this->game;
+}
+
+/// Gets this scene's renderer.
+si::view::GameRenderer& Scene::getRenderer()
+{
+	return this->renderer;
+}
+
+/// Gets this scene's renderer.
+const si::view::GameRenderer& Scene::getRenderer() const
+{
+	return this->renderer;
+}
+
+/// Gets this scene's controller.
+si::controller::GameController& Scene::getController()
+{
+	return this->controller;
+}
+
+/// Gets this scene's controller.
+const si::controller::GameController& Scene::getController() const
+{
+	return this->controller;
+}
+
 void Scene::updateEvents(duration_t timeDelta)
 {
 	// Create a copy of the events vector, because updating events could result
