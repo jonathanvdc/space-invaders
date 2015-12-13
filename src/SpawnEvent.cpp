@@ -24,7 +24,7 @@ void SpawnEvent::start(Scene& target)
 
 	// Create a new entity, add it to the scene.
 	this->entity = std::make_unique<si::parser::ParsedEntity<si::model::Entity>>(factory());
-	target.addEntity(this->entity->model, this->entity->view);
+	target.addTrackedEntity(this->entity->model, this->entity->view);
 	for (const auto& item : this->entity->controllers)
 	{
 		target.addController(item);

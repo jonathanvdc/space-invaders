@@ -29,6 +29,7 @@
 #include "FramecounterRenderable.h"
 #include "ITimelineEvent.h"
 #include "Timeline.h"
+#include "SpawnEvent.h"
 
 using namespace si;
 using namespace si::parser;
@@ -128,6 +129,7 @@ const char* const FontsTableNodeName = "Fonts";
 const char* const DecorTableNodeName = "Decor";
 const char* const BackgroundTableNodeName = "Background";
 const char* const TimelineNodeName = "Timeline";
+const char* const SpawnNodeName = "Spawn";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
@@ -565,6 +567,11 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	if (nodeName == TimelineNodeName)
 	{
 		return std::make_shared<si::timeline::Timeline>(parseTimeline(node, assets));
+	}
+	else if (nodeName == SpawnNodeName)
+	{
+		auto factory = readEntity(getSingleChild(node), assets);
+		return std::make_shared<si::timeline::SpawnEvent>(factory);
 	}
 	else
 	{
