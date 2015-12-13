@@ -51,15 +51,23 @@ void TextRenderable::setColor(sf::Color color)
 
 void TextRenderable::render(RenderContext& context, DoubleRect bounds)
 {
-	double widthFit = bounds.width / this->text.size();
-	double heightFit = bounds.height;
-	double minDim = std::min(widthFit, heightFit);
+	const unsigned int defaultCharSize = 32;
 
 	sf::Text elem;
 	elem.setString(this->text);
 	elem.setFont(this->font);
 	elem.setPosition(static_cast<float>(bounds.left), static_cast<float>(bounds.top));
-	elem.setCharacterSize(static_cast<unsigned int>(minDim));
+	elem.setCharacterSize(defaultCharSize);
 	elem.setColor(this->textColor);
+
+	auto localBounds = elem.getLocalBounds();
+
+	double widthRatio = bounds.width / localBounds.width;
+	double heightRatio = bounds.height / localBounds.height;
+	double ratio = std::min(widthRatio, heightRatio);
+	unsigned int charSize = static_cast<unsigned int>(defaultCharSize * ratio);
+
+	elem.setCharacterSize(charSize);
+
 	context.getTarget().draw(elem);
 }

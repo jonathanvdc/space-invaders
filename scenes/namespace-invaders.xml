@@ -28,7 +28,7 @@
         <Box id="framecounter" width="0.5" height="0.5" >
             <Framecounter font="arial" r="1.0" g="0.0" b="0.0" />
         </Box>
-        <Box id="victory" width="0.5" height="0.5" posY="0.4" posX="0.4">
+        <Box id="victory" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
     </Assets>
