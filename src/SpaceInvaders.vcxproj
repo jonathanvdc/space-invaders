@@ -163,6 +163,7 @@
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GroupRenderable.cpp" />
     <ClCompile Include="IntervalActionController.cpp" />
+    <ClCompile Include="InvaderWaveEvent.cpp" />
     <ClCompile Include="OutOfBoundsController.cpp" />
     <ClCompile Include="PathController.cpp" />
     <ClCompile Include="PathEntity.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="GroupRenderable.h" />
     <ClInclude Include="IController.h" />
     <ClInclude Include="IntervalActionController.h" />
+    <ClInclude Include="InvaderWaveEvent.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="DriftingEntity.h" />
     <ClInclude Include="Entity.h" />

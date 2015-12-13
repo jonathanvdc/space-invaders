@@ -32,6 +32,7 @@
 #include "SpawnEvent.h"
 #include "ShowEvent.h"
 #include "DeadlineEvent.h"
+#include "InvaderWaveEvent.h"
 
 using namespace si;
 using namespace si::parser;
@@ -135,6 +136,7 @@ const char* const SpawnNodeName = "Spawn";
 const char* const DeadlineNodeName = "Deadline";
 const char* const ConcurrentNodeName = "Concurrent";
 const char* const ShowNodeName = "Show";
+const char* const WaveNodeName = "Wave";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
@@ -165,6 +167,8 @@ const char* const LifetimeAttributeName = "lifetime";
 const char* const FontAttributeName = "font";
 const char* const TextAttributeName = "text";
 const char* const DurationAttributeName = "duration";
+const char* const RowsAttributeName = "rows";
+const char* const ColumnsAttributeName = "columns";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -571,13 +575,26 @@ si::timeline::ConcurrentEvent SceneDescription::parseConcurrentEvent(
 {
 	std::vector<si::timeline::ITimelineEvent_ptr> events;
 	for (auto child = node->FirstChildElement();
-	child != nullptr;
-		child = child->NextSiblingElement())
+		 child != nullptr;
+		 child = child->NextSiblingElement())
 	{
 		// Parse all events in the timeline.
 		events.push_back(parseTimelineEvent(child, assets));
 	}
 	return si::timeline::ConcurrentEvent(std::move(events));
+}
+
+/// Reads an invader wave event as specified by the given node.
+si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+{
+	auto shipFactory = readShipEntity(getSingleChild(node, ShipNodeName), assets);
+	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
+	int rows = getIntAttribute(node, RowsAttributeName);
+	int cols = getIntAttribute(node, ColumnsAttributeName);
+
+	return std::make_shared<si::timeline::InvaderWaveEvent>(shipFactory, projectileFactory, rows, cols);
 }
 
 /// Reads a timeline event as specified by the given node.
@@ -609,6 +626,10 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	{
 		auto factory = getReferenceAttribute(node, AssetAttributeName, assets);
 		return std::make_shared<si::timeline::ShowEvent>(factory);
+	}
+	else if (nodeName == WaveNodeName)
+	{
+		return parseWaveEvent(node, assets);
 	}
 	else
 	{
@@ -671,6 +692,29 @@ std::string SceneDescription::getAttribute(const tinyxml2::XMLElement* node, con
 }
 
 /// Gets the value of the integer attribute with the
+/// given name in the given XML node. 
+/// If no such attribute can be found, an
+/// exception is thrown.
+int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const char* name)
+{
+	int result;
+	switch (node->QueryIntAttribute(name, &result))
+	{
+	case tinyxml2::XML_NO_ATTRIBUTE:
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node did not have a '" + name + "' attribute.");
+	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node did have a '" + name +
+			"' attribute, but its value was not formatted as an integer number.");
+	default:
+		return result;
+	}
+}
+
+/// Gets the value of the floating-point attribute with the
 /// given name in the given XML node. 
 /// If no such attribute can be found, an
 /// exception is thrown.

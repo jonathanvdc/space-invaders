@@ -155,6 +155,11 @@ namespace si
 			static si::timeline::ConcurrentEvent parseConcurrentEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+
+			/// Reads an invader wave event as specified by the given node.
+			static si::timeline::ITimelineEvent_ptr parseWaveEvent(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 			
 			/// Reads a timeline event as specified by the given node.
 			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
@@ -208,6 +213,12 @@ namespace si
 			/// in the given XML node. If no such attribute can be 
 			/// found, an exception is thrown.
 			static std::string getAttribute(const tinyxml2::XMLElement* node, const char* name);
+
+			/// Gets the value of the integer attribute with the
+			/// given name in the given XML node. 
+			/// If no such attribute can be found, an
+			/// exception is thrown.
+			static int getIntAttribute(const tinyxml2::XMLElement* node, const char* name);
 
 			/// Gets the value of the floating-point attribute with the
 			/// given name in the given XML node. 

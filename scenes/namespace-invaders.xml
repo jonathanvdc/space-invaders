@@ -52,6 +52,10 @@
         <Spawn>
             <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
         </Spawn>
+        <Wave rows="3" columns="2">
+            <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" />
+            <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
+        </Wave>
         <Show asset="victory" />
     </Timeline>
 </Scene>

@@ -53,7 +53,7 @@ namespace si
 
 		/// Tests if the given item is currently in
 		/// this container.
-		bool contains(const std::shared_ptr<T>& item) 
+		bool contains(const std::shared_ptr<T>& item) const
 		{
 			return std::find(this->items.begin(), this->items.end(), item) != this->items.end();
 		}
