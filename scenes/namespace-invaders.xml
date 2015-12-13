@@ -9,8 +9,11 @@
         <Box id="cpp-ship" width="0.1" height="0.1">
             <Group>
                 <Sprite texture="cpp-ship-tex" />
-                <Box posX="0.45" posY="0.4" width="0.1">
-                    <RibbonParticle r="0.0" g="1.0" b="1.0" />
+                <Box posX="0.4" posY="0.4" width="0.01">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+                <Box posX="0.6" posY="0.4" width="0.01">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
                 </Box>
             </Group>
         </Box>
@@ -25,8 +28,8 @@
         <Box id="framecounter" width="0.5" height="0.5" >
             <Framecounter font="arial" r="1.0" g="0.0" b="0.0" />
         </Box>
-        <Box id="hello-world" width="0.5" height="0.1" posY="0.1">
-            <Text text="Namespace invaders" font="arial" r="1.0" g="1.0" b="1.0" />
+        <Box id="victory" width="0.5" height="0.5" posY="0.4" posX="0.4">
+            <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
     </Assets>
     <Player mass="200" radius="0.1" health="20" asset="cpp-ship" accel="0.2" fireInterval="0.1">
@@ -34,12 +37,21 @@
     </Player>
     <Background>
         <Asset asset="framecounter" />
-        <Asset asset="hello-world" />
     </Background>
-    <Decor>
-        <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
-    </Decor>
     <Timeline>
-
+        <Concurrent>
+            <Deadline duration="2.5">
+                <Spawn>
+                    <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
+                </Spawn>
+            </Deadline>
+            <Spawn>
+                <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.3" posY="0.1" />
+            </Spawn>
+        </Concurrent>
+        <Spawn>
+            <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
+        </Spawn>
+        <Show asset="victory" />
     </Timeline>
 </Scene>

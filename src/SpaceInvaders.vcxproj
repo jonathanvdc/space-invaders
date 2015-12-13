@@ -177,6 +177,7 @@
     <ClCompile Include="SceneDescription.cpp" />
     <ClCompile Include="ShipCollisionController.cpp" />
     <ClCompile Include="ShipEntity.cpp" />
+    <ClCompile Include="ShowEvent.cpp" />
     <ClCompile Include="SpawnEvent.cpp" />
     <ClCompile Include="SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="SceneDescription.h" />
     <ClInclude Include="ShipCollisionController.h" />
     <ClInclude Include="ShipEntity.h" />
+    <ClInclude Include="ShowEvent.h" />
     <ClInclude Include="SpawnEvent.h" />
     <ClInclude Include="SpriteRenderable.h" />
     <ClInclude Include="RandomGenerator.h" />

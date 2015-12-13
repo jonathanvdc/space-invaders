@@ -1,23 +1,23 @@
 #pragma once
 
-#include <memory>
 #include "Common.h"
-#include "Entity.h"
 #include "ITimelineEvent.h"
-#include "ParsedEntity.h"
+#include "IRenderable.h"
 #include "Scene.h"
+#include "ParsedEntity.h"
 
 namespace si
 {
 	namespace timeline
 	{
-		/// A class for timeline events that spawn an entity.
-		class SpawnEvent final : public ITimelineEvent
+		/// Defines a show-event: an event that adds
+		/// a renderable object to the view.
+		class ShowEvent final : public ITimelineEvent
 		{
 		public:
-			/// Creates a new entity-spawning event from the given
-			/// entity factory.
-			SpawnEvent(const si::parser::ParsedEntityFactory<si::model::Entity>& factory);
+			/// Creates an event that adds a renderable 
+			/// object to the view.
+			ShowEvent(const si::parser::Factory<si::view::IRenderable_ptr>& factory);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -40,8 +40,8 @@ namespace si
 			/// has been started.
 			void end(Scene& target) final override;
 		private:
-			const si::parser::ParsedEntityFactory<si::model::Entity> factory;
-			std::unique_ptr<si::parser::ParsedEntity<si::model::Entity>> entity;
+			const si::parser::Factory<si::view::IRenderable_ptr> factory;
+			si::view::IRenderable_ptr renderable;
 		};
 	}
 }

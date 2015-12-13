@@ -30,6 +30,7 @@
 #include "ITimelineEvent.h"
 #include "Timeline.h"
 #include "SpawnEvent.h"
+#include "ShowEvent.h"
 #include "DeadlineEvent.h"
 
 using namespace si;
@@ -133,6 +134,7 @@ const char* const TimelineNodeName = "Timeline";
 const char* const SpawnNodeName = "Spawn";
 const char* const DeadlineNodeName = "Deadline";
 const char* const ConcurrentNodeName = "Concurrent";
+const char* const ShowNodeName = "Show";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
@@ -162,6 +164,7 @@ const char* const IntervalAttributeName = "interval";
 const char* const LifetimeAttributeName = "lifetime";
 const char* const FontAttributeName = "font";
 const char* const TextAttributeName = "text";
+const char* const DurationAttributeName = "duration";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -594,13 +597,18 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	}
 	else if (nodeName == DeadlineNodeName)
 	{
-		duration_t duration(getDoubleAttribute(node, "duration"));
+		duration_t duration(getDoubleAttribute(node, DurationAttributeName));
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
 		return std::make_shared<si::timeline::DeadlineEvent>(inner, duration);
 	}
 	else if (nodeName == ConcurrentNodeName)
 	{
 		return std::make_shared<si::timeline::ConcurrentEvent>(parseConcurrentEvent(node, assets));
+	}
+	else if (nodeName == ShowNodeName)
+	{
+		auto factory = getReferenceAttribute(node, AssetAttributeName, assets);
+		return std::make_shared<si::timeline::ShowEvent>(factory);
 	}
 	else
 	{
