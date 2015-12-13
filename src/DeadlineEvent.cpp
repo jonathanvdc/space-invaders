@@ -31,8 +31,8 @@ bool DeadlineEvent::update(Scene& target, duration_t timeDelta)
 
 	if (this->elapsed > this->deadline)
 		return false;
-
-	return this->innerEvent->update(target, timeDelta);
+	else
+		return this->innerEvent->update(target, timeDelta);
 }
 
 /// Applies this timeline event's finalization 

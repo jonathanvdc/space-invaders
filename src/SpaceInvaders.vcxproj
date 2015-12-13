@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CollisionControllerBase.cpp" />
+    <ClCompile Include="ConcurrentEvent.cpp" />
     <ClCompile Include="DriftingEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="ActionController.cpp" />
@@ -189,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CollisionControllerBase.h" />
+    <ClInclude Include="ConcurrentEvent.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="ActionController.h" />
     <ClInclude Include="Event.h" />

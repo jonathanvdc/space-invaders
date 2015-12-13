@@ -19,6 +19,7 @@
 #include "ITimelineEvent.h"
 #include "Timeline.h"
 #include "ParsedEntity.h"
+#include "ConcurrentEvent.h"
 
 namespace si
 {
@@ -147,6 +148,11 @@ namespace si
 
 			/// Reads a timeline as specified by the given node.
 			static si::timeline::Timeline parseTimeline(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+
+			/// Reads a concurrent event as specified by the given node.
+			static si::timeline::ConcurrentEvent parseConcurrentEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 			

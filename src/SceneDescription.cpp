@@ -132,6 +132,7 @@ const char* const BackgroundTableNodeName = "Background";
 const char* const TimelineNodeName = "Timeline";
 const char* const SpawnNodeName = "Spawn";
 const char* const DeadlineNodeName = "Deadline";
+const char* const ConcurrentNodeName = "Concurrent";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
@@ -560,6 +561,22 @@ si::timeline::Timeline SceneDescription::parseTimeline(
 	return si::timeline::Timeline(std::move(events));
 }
 
+/// Reads a concurrent event as specified by the given node.
+si::timeline::ConcurrentEvent SceneDescription::parseConcurrentEvent(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+{
+	std::vector<si::timeline::ITimelineEvent_ptr> events;
+	for (auto child = node->FirstChildElement();
+	child != nullptr;
+		child = child->NextSiblingElement())
+	{
+		// Parse all events in the timeline.
+		events.push_back(parseTimelineEvent(child, assets));
+	}
+	return si::timeline::ConcurrentEvent(std::move(events));
+}
+
 /// Reads a timeline event as specified by the given node.
 si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
@@ -580,6 +597,10 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 		duration_t duration(getDoubleAttribute(node, "duration"));
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
 		return std::make_shared<si::timeline::DeadlineEvent>(inner, duration);
+	}
+	else if (nodeName == ConcurrentNodeName)
+	{
+		return std::make_shared<si::timeline::ConcurrentEvent>(parseConcurrentEvent(node, assets));
 	}
 	else
 	{
