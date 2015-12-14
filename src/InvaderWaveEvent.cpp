@@ -22,10 +22,11 @@ using namespace si::timeline;
 InvaderWaveEvent::InvaderWaveEvent(
 	const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
 	const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
-	int rowCount, int columnCount)
+	int rowCount, int columnCount, Vector2d invaderVelocity, double invaderSpringConstant)
 	: shipFactory(shipFactory), projectileFactory(projectileFactory), 
-	  rowCount(rowCount), columnCount(columnCount),
-	  ships()
+	  rowCount(rowCount), columnCount(columnCount), 
+	  invaderVelocity(invaderVelocity), 
+	  invaderSpringConstant(invaderSpringConstant), ships()
 { }
 
 /// Starts the timeline event.
@@ -43,6 +44,8 @@ void InvaderWaveEvent::start(Scene& target)
 			// Create a new ship entity.
 			auto entity = this->shipFactory();
 
+			const double pi = 3.1415;
+
 			// Now compute the entity's initial position in the game.
 			// We want to position ships like this, where the columns
 			// are placed in the middle of the screen, and the nth row
@@ -57,11 +60,16 @@ void InvaderWaveEvent::start(Scene& target)
 			//     row 1 |       |     |       |
 			//
 			double radius = entity.model->getPhysicsProperties().radius;
-			double spacing = radius / 2.0;
-			double totalX = radius * this->rowCount + spacing * (this->rowCount - 1);
-			double totalY = radius * this->columnCount + spacing * (this->columnCount - 1);
-			double offsetX = radius * j + spacing * j;
-			double offsetY = radius * i + spacing * i;
+			// Make sure the invader ships are positioned at safe distances, so
+			// they don't crash into each other. Note: due to the nature of their
+			// movements, inserting some empty space in the Y-direction is far
+			// more important than inserting empty space in the X-direction.
+			double spacingX = radius / 2.0 + 0.5 * radius * pi * this->invaderVelocity.x;
+			double spacingY = radius / 2.0 + 2.0 * radius * pi * this->invaderVelocity.y;
+			double totalX = radius * this->rowCount + spacingX * (this->rowCount - 1);
+			double totalY = radius * this->columnCount + spacingY * (this->columnCount - 1);
+			double offsetX = radius * j + spacingX * j;
+			double offsetY = radius * i + spacingY * i;
 
 			double posX = 0.5 - totalX / 2.0 + offsetX;
 			double posY = totalY - offsetY;
@@ -75,6 +83,26 @@ void InvaderWaveEvent::start(Scene& target)
 			{
 				target.addController(item);
 			}
+
+			// Now sketch out a path for the ships to follow.
+			// We'll have them follow a gentle sine curve, by
+			// attaching them to a critically dampened spring
+			// controller.
+			//
+			// We'll use the Y-axis component of their
+			// velocity to determine how quickly they move
+			// toward the bottom of the screen.
+			double velY = this->invaderVelocity.y;
+			// The X-axis component of their velocity will
+			// determine how quickly they zig-zag.
+			double velX = this->invaderVelocity.x;
+			
+			auto path = [=](duration_t time) -> Vector2d
+			{
+				return Vector2d(posX + radius * std::sin(velX * pi * time.count()), posY + velY * time.count());
+			};
+
+			target.addController(std::make_shared<si::controller::PathController>(entity.model, this->invaderSpringConstant, path));
 
 			column.push_back(entity.model);
 		}

@@ -150,6 +150,7 @@ const char* const WidthAttributeName = "width";
 const char* const HeightAttributeName = "height";
 const char* const VelocityXAttributeName = "velX";
 const char* const VelocityYAttributeName = "velY";
+const char* const SpringConstantAttributeName = "springConstant";
 const char* const AccelerationAttributeName = "accel";
 const char* const MassAttributeName = "mass";
 const char* const RadiusAttributeName = "radius";
@@ -593,12 +594,18 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
-	auto shipFactory = readShipEntity(getSingleChild(node, ShipNodeName), assets);
+	auto shipNode = getSingleChild(node, ShipNodeName);
+	auto shipFactory = readShipEntity(shipNode, assets);
 	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
 	int rows = getIntAttribute(node, RowsAttributeName);
 	int cols = getIntAttribute(node, ColumnsAttributeName);
+	double velX = getDoubleAttribute(shipNode, VelocityXAttributeName, 0.05);
+	double velY = getDoubleAttribute(shipNode, VelocityYAttributeName, 0.05);
+	double springConst = getDoubleAttribute(shipNode, SpringConstantAttributeName, 5.0);
 
-	return std::make_shared<si::timeline::InvaderWaveEvent>(shipFactory, projectileFactory, rows, cols);
+	return std::make_shared<si::timeline::InvaderWaveEvent>(
+		shipFactory, projectileFactory, rows, 
+		cols, Vector2d(velX, velY), springConst);
 }
 
 /// Reads a timeline event as specified by the given node.

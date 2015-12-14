@@ -24,10 +24,12 @@ namespace si
 		public:
 			/// Creates an invader wave event from the given ship factory,
 			/// projectile factory, row count and column count.
+			/// A velocity and spring constant are also provided. They
+			/// determine which path invaders follow.
 			InvaderWaveEvent(
 				const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
 				const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
-				int rowCount, int columnCount);
+				int rowCount, int columnCount, Vector2d invaderVelocity, double invaderSpringConstant);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -57,6 +59,8 @@ namespace si
 			const si::parser::ParsedEntityFactory<si::model::ProjectileEntity> projectileFactory;
 			const int rowCount;
 			const int columnCount;
+			const Vector2d invaderVelocity;
+			const double invaderSpringConstant;
 
 			// Stores the wave event's ships as a vector of vectors of
 			// pointers to ships. Essentially, every nested vector contains
