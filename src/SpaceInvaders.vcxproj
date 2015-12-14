@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libs\SFML-2.3.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\SFML-2.3.2\include;.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libs\SFML-2.3.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\SFML-2.3.2\include;.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,89 +152,83 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CollisionControllerBase.cpp" />
-    <ClCompile Include="ConcurrentEvent.cpp" />
-    <ClCompile Include="DriftingEntity.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="ActionController.cpp" />
-    <ClCompile Include="FramecounterRenderable.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameController.cpp" />
-    <ClCompile Include="GameRenderer.cpp" />
-    <ClCompile Include="GroupRenderable.cpp" />
-    <ClCompile Include="IntervalActionController.cpp" />
-    <ClCompile Include="InvaderWaveEvent.cpp" />
-    <ClCompile Include="OutOfBoundsController.cpp" />
-    <ClCompile Include="ParsedEntity.cpp" />
-    <ClCompile Include="PathController.cpp" />
-    <ClCompile Include="PathEntity.cpp" />
-    <ClCompile Include="PhysicsEntity.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="ProjectileCollisionController.cpp" />
-    <ClCompile Include="ProjectileEntity.cpp" />
-    <ClCompile Include="RelativeBoxRenderable.cpp" />
-    <ClCompile Include="PathOffsetRenderable.cpp" />
-    <ClCompile Include="RibbonParticleRenderable.cpp" />
+    <ClCompile Include="controller\CollisionControllerBase.cpp" />
+    <ClCompile Include="timeline\ConcurrentEvent.cpp" />
+    <ClCompile Include="model\DriftingEntity.cpp" />
+    <ClCompile Include="model\Entity.cpp" />
+    <ClCompile Include="controller\ActionController.cpp" />
+    <ClCompile Include="view\FramecounterRenderable.cpp" />
+    <ClCompile Include="model\Game.cpp" />
+    <ClCompile Include="controller\GameController.cpp" />
+    <ClCompile Include="view\GameRenderer.cpp" />
+    <ClCompile Include="view\GroupRenderable.cpp" />
+    <ClCompile Include="controller\IntervalActionController.cpp" />
+    <ClCompile Include="timeline\InvaderWaveEvent.cpp" />
+    <ClCompile Include="controller\OutOfBoundsController.cpp" />
+    <ClCompile Include="parser\ParsedEntity.cpp" />
+    <ClCompile Include="controller\PathController.cpp" />
+    <ClCompile Include="model\PathEntity.cpp" />
+    <ClCompile Include="model\PhysicsEntity.cpp" />
+    <ClCompile Include="controller\PlayerController.cpp" />
+    <ClCompile Include="controller\ProjectileCollisionController.cpp" />
+    <ClCompile Include="model\ProjectileEntity.cpp" />
+    <ClCompile Include="view\RelativeBoxRenderable.cpp" />
+    <ClCompile Include="view\PathOffsetRenderable.cpp" />
+    <ClCompile Include="view\RibbonParticleRenderable.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneDescription.cpp" />
-    <ClCompile Include="ShipCollisionController.cpp" />
-    <ClCompile Include="ShipEntity.cpp" />
-    <ClCompile Include="ShowEvent.cpp" />
-    <ClCompile Include="SpawnEvent.cpp" />
-    <ClCompile Include="SpriteRenderable.cpp" />
+    <ClCompile Include="parser\SceneDescription.cpp" />
+    <ClCompile Include="controller\ShipCollisionController.cpp" />
+    <ClCompile Include="model\ShipEntity.cpp" />
+    <ClCompile Include="timeline\ShowEvent.cpp" />
+    <ClCompile Include="timeline\SpawnEvent.cpp" />
+    <ClCompile Include="view\SpriteRenderable.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
-    <ClCompile Include="RenderContext.cpp" />
+    <ClCompile Include="view\RenderContext.cpp" />
     <ClCompile Include="SpaceInvaders.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
-    <ClCompile Include="TextRenderable.cpp" />
-    <ClCompile Include="DeadlineEvent.cpp" />
-    <ClCompile Include="Timeline.cpp" />
+    <ClCompile Include="view\TextRenderable.cpp" />
+    <ClCompile Include="timeline\DeadlineEvent.cpp" />
+    <ClCompile Include="timeline\Timeline.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CollisionControllerBase.h" />
-    <ClInclude Include="ConcurrentEvent.h" />
-    <ClInclude Include="Container.h" />
-    <ClInclude Include="ActionController.h" />
-    <ClInclude Include="Event.h" />
-    <ClInclude Include="FramecounterRenderable.h" />
-    <ClInclude Include="GameController.h" />
-    <ClInclude Include="GameRenderer.h" />
-    <ClInclude Include="GroupRenderable.h" />
-    <ClInclude Include="IController.h" />
-    <ClInclude Include="IntervalActionController.h" />
-    <ClInclude Include="InvaderWaveEvent.h" />
-    <ClInclude Include="IRenderable.h" />
-    <ClInclude Include="DriftingEntity.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="ITimelineEvent.h" />
-    <ClInclude Include="OutOfBoundsController.h" />
-    <ClInclude Include="ParsedEntity.h" />
-    <ClInclude Include="PathController.h" />
-    <ClInclude Include="PathEntity.h" />
-    <ClInclude Include="PhysicsEntity.h" />
-    <ClInclude Include="PlayerController.h" />
-    <ClInclude Include="ProjectileCollisionController.h" />
-    <ClInclude Include="ProjectileEntity.h" />
-    <ClInclude Include="RelativeBoxRenderable.h" />
-    <ClInclude Include="PathOffsetRenderable.h" />
-    <ClInclude Include="RibbonParticleRenderable.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneDescription.h" />
-    <ClInclude Include="ShipCollisionController.h" />
-    <ClInclude Include="ShipEntity.h" />
-    <ClInclude Include="ShowEvent.h" />
-    <ClInclude Include="SpawnEvent.h" />
-    <ClInclude Include="SpriteRenderable.h" />
-    <ClInclude Include="RandomGenerator.h" />
-    <ClInclude Include="RenderContext.h" />
-    <ClInclude Include="Stopwatch.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="TextRenderable.h" />
-    <ClInclude Include="DeadlineEvent.h" />
-    <ClInclude Include="Timeline.h" />
+    <ClInclude Include="controller\ActionController.h" />
+    <ClInclude Include="controller\CollisionControllerBase.h" />
+    <ClInclude Include="controller\GameController.h" />
+    <ClInclude Include="controller\IController.h" />
+    <ClInclude Include="controller\IntervalActionController.h" />
+    <ClInclude Include="controller\OutOfBoundsController.h" />
+    <ClInclude Include="controller\PathController.h" />
+    <ClInclude Include="controller\PlayerController.h" />
+    <ClInclude Include="controller\ProjectileCollisionController.h" />
+    <ClInclude Include="controller\ShipCollisionController.h" />
+    <ClInclude Include="model\DriftingEntity.h" />
+    <ClInclude Include="model\Entity.h" />
+    <ClInclude Include="model\Game.h" />
+    <ClInclude Include="model\PathEntity.h" />
+    <ClInclude Include="model\PhysicsEntity.h" />
+    <ClInclude Include="model\ProjectileEntity.h" />
+    <ClInclude Include="model\ShipEntity.h" />
+    <ClInclude Include="parser\ParsedEntity.h" />
+    <ClInclude Include="parser\SceneDescription.h" />
+    <ClInclude Include="timeline\ConcurrentEvent.h" />
+    <ClInclude Include="timeline\DeadlineEvent.h" />
+    <ClInclude Include="timeline\InvaderWaveEvent.h" />
+    <ClInclude Include="timeline\ITimelineEvent.h" />
+    <ClInclude Include="timeline\ShowEvent.h" />
+    <ClInclude Include="timeline\SpawnEvent.h" />
+    <ClInclude Include="timeline\Timeline.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
+    <ClInclude Include="view\FramecounterRenderable.h" />
+    <ClInclude Include="view\GameRenderer.h" />
+    <ClInclude Include="view\GroupRenderable.h" />
+    <ClInclude Include="view\IRenderable.h" />
+    <ClInclude Include="view\PathOffsetRenderable.h" />
+    <ClInclude Include="view\RelativeBoxRenderable.h" />
+    <ClInclude Include="view\RenderContext.h" />
+    <ClInclude Include="view\RibbonParticleRenderable.h" />
+    <ClInclude Include="view\SpriteRenderable.h" />
+    <ClInclude Include="view\TextRenderable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

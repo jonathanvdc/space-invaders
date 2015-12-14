@@ -6,15 +6,15 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "Entity.h"
-#include "ShipEntity.h"
-#include "Game.h"
-#include "IController.h"
-#include "GameController.h"
-#include "IRenderable.h"
-#include "RenderContext.h"
-#include "GameRenderer.h"
-#include "Timeline.h"
+#include "model/Entity.h"
+#include "model/ShipEntity.h"
+#include "model/Game.h"
+#include "controller/IController.h"
+#include "controller/GameController.h"
+#include "view/IRenderable.h"
+#include "view/RenderContext.h"
+#include "view/GameRenderer.h"
+#include "timeline/Timeline.h"
 
 namespace si
 {

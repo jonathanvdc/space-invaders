@@ -7,16 +7,17 @@
 #include <map>
 #include <set>
 #include <SFML/Graphics.hpp>
-#include "Entity.h"
-#include "Game.h"
-#include "IController.h"
-#include "GameController.h"
-#include "OutOfBoundsController.h"
-#include "IRenderable.h"
-#include "RenderContext.h"
-#include "GameRenderer.h"
-#include "PathOffsetRenderable.h"
-#include "ITimelineEvent.h"
+#include "model/Entity.h"
+#include "model/ShipEntity.h"
+#include "model/Game.h"
+#include "controller/IController.h"
+#include "controller/GameController.h"
+#include "controller/OutOfBoundsController.h"
+#include "view/IRenderable.h"
+#include "view/RenderContext.h"
+#include "view/GameRenderer.h"
+#include "view/PathOffsetRenderable.h"
+#include "timeline/Timeline.h"
 
 using namespace si;
 
