@@ -458,56 +458,18 @@ void SceneDescription::addPlayerToScene(
 	double fireInterval = getDoubleAttribute(node, FireIntervalAttributeName);
 	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
 	scene.addController(std::make_shared<si::controller::IntervalActionController>(si::duration_t(fireInterval),
-		[](si::model::Game&, si::duration_t)
+		[](const si::model::Game&, si::duration_t) -> bool
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[player, projectileFactory, &scene](si::model::Game& game, si::duration_t)
+		[player, projectileFactory, &scene](si::model::Game& game, si::duration_t) -> void
 		{
-			auto bullet = fireProjectile(*player.model, projectileFactory);
-			
-			addToScene(bullet, scene);
+			fireAndAddProjectile(*player.model, projectileFactory, scene);
 		},
-		[=](si::model::Game& game, si::duration_t)
+		[=](const si::model::Game& game, si::duration_t) -> bool
 		{
 			return game.contains(player.model);
 		}));
-}
-
-/// Creates a bullet that is fired from the given source. 
-/// Momentum is transferred from the source entity to
-/// the projectile, but the bullet is not added to the
-/// scene.
-ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
-	si::model::DriftingEntity& source,
-	const ParsedProjectileFactory& projectileFactory)
-{
-	// Create a new projectile.
-	auto projectile = projectileFactory();
-
-	auto sourcePhysProps = source.getPhysicsProperties();
-	auto projPhysProps = projectile.model->getPhysicsProperties();
-
-	// Compute the projectile's position and velocity,
-	// relative to its source.
-	auto veloc = vecLength(projectile.model->getVelocity()) * source.getOrientation();
-	auto bulletOffset = (sourcePhysProps.radius + projPhysProps.radius) * si::normalizeVec(veloc);
-	
-	// Set the projectile's position and velocity.
-	projectile.model->setPosition(source.getPosition() + bulletOffset);
-	projectile.model->setVelocity(source.getVelocity() + veloc);
-
-	// Firing a projectile in space should make ships
-	// accelerate in the opposite direction.
-	// We want to preserve momentum, though, so we'll
-	// multiply that acceleration by the projectile's mass,
-	// and divide it by the ship's.
-	source.accelerate(-si::Vector2d(veloc * projPhysProps.mass / sourcePhysProps.mass));
-
-	// We're done here. Adding the 
-	// projectile to the scene is some
-	// other function's problem.
-	return projectile;
 }
 
 /// Reads a projectile entity as specified by the given node.
@@ -602,10 +564,13 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 	double velX = getDoubleAttribute(shipNode, VelocityXAttributeName, 0.05);
 	double velY = getDoubleAttribute(shipNode, VelocityYAttributeName, 0.05);
 	double springConst = getDoubleAttribute(shipNode, SpringConstantAttributeName, 5.0);
+	si::duration_t fireInterval(getDoubleAttribute(shipNode, FireIntervalAttributeName, 1.0));
+	
+	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval };
 
 	return std::make_shared<si::timeline::InvaderWaveEvent>(
 		shipFactory, projectileFactory, rows, 
-		cols, Vector2d(velX, velY), springConst);
+		cols, behavior);
 }
 
 /// Reads a timeline event as specified by the given node.
@@ -645,19 +610,6 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	else
 	{
 		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
-	}
-}
-
-/// Adds the given entity's model, view and
-/// controllers to the given scene.
-void SceneDescription::addToScene(
-	const ParsedEntity<si::model::Entity>& entity,
-	Scene& target)
-{
-	target.addTrackedEntity(entity.model, entity.view);
-	for (const auto& item : entity.controllers)
-	{
-		target.addController(item);
 	}
 }
 

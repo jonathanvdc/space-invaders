@@ -29,7 +29,7 @@ IntervalActionController::IntervalActionController(
 	const ActionFunction& performAction,
 	const LivelinessPredicate& livelinessPredicate)
 	: IntervalActionController(interval, 
-		PerformActionPredicate([](si::model::Game&, duration_t) { return true; }),
+		PerformActionPredicate([](const si::model::Game&, duration_t) { return true; }),
 		performAction, livelinessPredicate)
 { }
 

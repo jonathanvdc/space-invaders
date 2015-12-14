@@ -20,14 +20,14 @@ namespace si
 		public:
 			/// A type for functions that check if an action
 			/// should be performed.
-			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> PerformActionPredicate;
+			typedef std::function<bool(const si::model::Game& game, duration_t timeDelta)> PerformActionPredicate;
 
 			/// A type for functions that perform some action.
 			typedef std::function<void(si::model::Game& game, duration_t timeDelta)> ActionFunction;
 
 			/// A type for functions that check if a controller
 			/// is still alive.
-			typedef std::function<bool(si::model::Game& game, duration_t timeDelta)> LivelinessPredicate;
+			typedef std::function<bool(const si::model::Game& game, duration_t timeDelta)> LivelinessPredicate;
 
 			/// Creates a new action controller from the given
 			/// perform-action predicate, perform-action

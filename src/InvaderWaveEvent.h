@@ -17,6 +17,22 @@ namespace si
 {
 	namespace timeline
 	{
+		/// A data structure that contains information
+		/// that pertains to invader ship behavior.
+		struct InvaderBehavior
+		{
+			/// The velocity of the invader ship's path
+			/// (which need not always coincide with the
+			/// invader ship's actual velocity)
+			Vector2d velocity;
+			/// The spring constant that the invader ship's
+			/// controller uses to trace its path.
+			double springConstant;
+			/// The rate at which invader ships are allowed 
+			/// to launch projectiles.
+			duration_t fireInterval;
+		};
+
 		/// Defines a type of event that spawns a wave of invaders.
 		/// The event ends when all invaders have been eliminated.
 		class InvaderWaveEvent final : public ITimelineEvent
@@ -29,7 +45,7 @@ namespace si
 			InvaderWaveEvent(
 				const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
 				const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
-				int rowCount, int columnCount, Vector2d invaderVelocity, double invaderSpringConstant);
+				int rowCount, int columnCount, const InvaderBehavior& invaderBehavior);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -59,8 +75,7 @@ namespace si
 			const si::parser::ParsedEntityFactory<si::model::ProjectileEntity> projectileFactory;
 			const int rowCount;
 			const int columnCount;
-			const Vector2d invaderVelocity;
-			const double invaderSpringConstant;
+			const InvaderBehavior invaderBehavior;
 
 			// Stores the wave event's ships as a vector of vectors of
 			// pointers to ships. Essentially, every nested vector contains

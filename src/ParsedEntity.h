@@ -4,6 +4,10 @@
 #include "Entity.h"
 #include "IController.h"
 #include "IRenderable.h"
+#include "ShipEntity.h"
+#include "ProjectileEntity.h"
+#include "DriftingEntity.h"
+#include "Scene.h"
 
 namespace si
 {
@@ -59,5 +63,31 @@ namespace si
 
 		template<typename T>
 		using ParsedEntityFactory = Factory<ParsedEntity<T>>;
+
+		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
+		using ParsedProjectileFactory = ParsedEntityFactory<si::model::ProjectileEntity>;
+
+		/// Adds the given entity's model, view and
+		/// controllers to the given scene.
+		void addToScene(
+			const ParsedEntity<si::model::Entity>& entity,
+			Scene& target);
+
+		/// Creates a bullet that is fired from the given source. 
+		/// Momentum is transferred from the source entity to
+		/// the projectile, but the bullet is not added to the
+		/// scene.
+		ParsedEntity<si::model::ProjectileEntity> fireProjectile(
+			si::model::DriftingEntity& source,
+			const ParsedProjectileFactory& projectileFactory);
+
+		/// Creates a bullet that is fired from the given source. 
+		/// Momentum is transferred from the source entity to
+		/// the projectile, after which the projectile is added
+		/// to the scene.
+		void fireAndAddProjectile(
+			si::model::DriftingEntity& source,
+			const ParsedProjectileFactory& projectileFactory,
+			Scene& target);
 	}
 }

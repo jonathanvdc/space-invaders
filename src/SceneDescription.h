@@ -71,9 +71,6 @@ namespace si
 			SceneDescriptionException(const char* message);
 		};
 
-		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
-		using ParsedProjectileFactory = ParsedEntityFactory<si::model::ProjectileEntity>;
-
 		/// Defines a data structure that contains 
 		/// external resources for scenes.
 		struct SceneResources
@@ -166,26 +163,12 @@ namespace si
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
-			/// Adds the given entity's model, view and
-			/// controllers to the given scene.
-			static void addToScene(
-				const ParsedEntity<si::model::Entity>& entity,
-				Scene& target);
-
 			/// Adds a player entity, as specified by the given node,
 			/// to the scene.
 			static void addPlayerToScene(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
 				Scene& scene);
-
-			/// Creates a bullet that is fired from the given source. 
-			/// Momentum is transferred from the source entity to
-			/// the projectile, but the bullet is not added to the
-			/// scene.
-			static ParsedEntity<si::model::ProjectileEntity> fireProjectile(
-				si::model::DriftingEntity& source,
-				const ParsedProjectileFactory& projectileFactory);
 
 		private:
 			/// Gets this scene description's texture definitions node.
