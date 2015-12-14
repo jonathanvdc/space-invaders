@@ -14,6 +14,7 @@
 #include "ProjectileEntity.h"
 #include "ConcurrentEvent.h"
 #include "SpawnEvent.h"
+#include "RandomGenerator.h"
 
 using namespace si;
 using namespace si::timeline;
@@ -55,13 +56,13 @@ void InvaderWaveEvent::start(Scene& target)
 			// are placed in the middle of the screen, and the nth row
 			// is placed at the top of the screen:
 			//
-			//           | col 1 | ... | col n |
-			//     ------|---------------------|
-			//     row n |       |     |       |
-			//     ------|---------------------|
-			//     ...   |       |     |       |
-			//     ------|---------------------|
-			//     row 1 |       |     |       |
+			//           | col 1 |  ...  | col n |
+			//     ------|-----------------------|
+			//     row n |       |       |       |
+			//     ------|-----------------------|
+			//     ...   |       |       |       |
+			//     ------|-----------------------|
+			//     row 1 |       |       |       |
 			//
 			double radius = model->getPhysicsProperties().radius;
 			// Make sure the invader ships are positioned at safe distances, so
@@ -118,7 +119,8 @@ void InvaderWaveEvent::start(Scene& target)
 			// Let's get the invaders to fire some projectiles
 			// at us by creating an interval action controller.
 			target.addController(std::make_shared<si::controller::IntervalActionController>(
-				this->invaderBehavior.fireInterval,
+				this->invaderBehavior.fireInterval + 
+					si::RandomGenerator::instance.nextReal<double>(-1.0, 1.0) * this->invaderBehavior.fireIntervalDeviation,
 				[=](const si::model::Game& game, duration_t) -> bool
 				{
 					for (std::size_t k = 0; k < static_cast<std::size_t>(j); k++)

@@ -57,11 +57,11 @@
             <Show asset="namespace-invaders" />
         </Deadline>
         <Wave rows="3" columns="2">
-            <Ship mass="200" radius="0.05" health="5" velX="1.0" velY="0.1" asset="cpp-invader" />
+            <Ship mass="200" radius="0.05" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" />
             <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
         </Wave>
         <Wave rows="1" columns="3">
-            <Ship mass="200" radius="0.05" health="5" velX="0.5" velY="0.1" asset="cpp-invader" />
+            <Ship mass="200" radius="0.05" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" />
             <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
         </Wave>
         <Show asset="victory" />

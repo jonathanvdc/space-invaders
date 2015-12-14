@@ -158,6 +158,7 @@ const char* const HealthAttributeName = "health";
 const char* const TextureAttributeName = "texture";
 const char* const AssetAttributeName = "asset";
 const char* const FireIntervalAttributeName = "fireInterval";
+const char* const FireIntervalDeviationAttributeName = "fireIntervalDeviation";
 const char* const NameAttributeName = "name";
 const char* const RedAttributeName = "r";
 const char* const GreenAttributeName = "g";
@@ -565,8 +566,9 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 	double velY = getDoubleAttribute(shipNode, VelocityYAttributeName, 0.05);
 	double springConst = getDoubleAttribute(shipNode, SpringConstantAttributeName, 5.0);
 	si::duration_t fireInterval(getDoubleAttribute(shipNode, FireIntervalAttributeName, 1.0));
+	si::duration_t maxDeviation(getDoubleAttribute(shipNode, FireIntervalDeviationAttributeName, 0.0));
 	
-	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval };
+	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval, maxDeviation };
 
 	return std::make_shared<si::timeline::InvaderWaveEvent>(
 		shipFactory, projectileFactory, rows, 

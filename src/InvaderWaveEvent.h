@@ -31,6 +31,12 @@ namespace si
 			/// The rate at which invader ships are allowed 
 			/// to launch projectiles.
 			duration_t fireInterval;
+			/// A maximal deviation from the standard fire 
+			/// interval for this type of invader.
+			/// If this is set to a nonzero value, then 
+			/// some invaders will fire projectiles at 
+			/// a higher pace than others.
+			duration_t fireIntervalDeviation;
 		};
 
 		/// Defines a type of event that spawns a wave of invaders.
