@@ -484,12 +484,13 @@ ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
 	// Create a new projectile.
 	auto projectile = projectileFactory();
 
+	auto sourcePhysProps = source.getPhysicsProperties();
+	auto projPhysProps = projectile.model->getPhysicsProperties();
+
 	// Compute the projectile's position and velocity,
 	// relative to its source.
 	auto veloc = vecLength(projectile.model->getVelocity()) * source.getOrientation();
-	double sourceRadius = source.getPhysicsProperties().radius;
-	double projectileRadius = projectile.model->getPhysicsProperties().radius;
-	auto bulletOffset = (sourceRadius + projectileRadius) * si::normalizeVec(veloc);
+	auto bulletOffset = (sourcePhysProps.radius + projPhysProps.radius) * si::normalizeVec(veloc);
 	
 	// Set the projectile's position and velocity.
 	projectile.model->setPosition(source.getPosition() + bulletOffset);
@@ -497,7 +498,10 @@ ParsedEntity<si::model::ProjectileEntity> SceneDescription::fireProjectile(
 
 	// Firing a projectile in space should make ships
 	// accelerate in the opposite direction.
-	source.accelerate(-si::Vector2d(veloc));
+	// We want to preserve momentum, though, so we'll
+	// multiply that acceleration by the projectile's mass,
+	// and divide it by the ship's.
+	source.accelerate(-si::Vector2d(veloc * projPhysProps.mass / sourcePhysProps.mass));
 
 	// We're done here. Adding the 
 	// projectile to the scene is some

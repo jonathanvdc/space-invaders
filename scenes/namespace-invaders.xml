@@ -17,6 +17,17 @@
                 </Box>
             </Group>
         </Box>
+        <Box id="cpp-invader" width="0.05" height="0.05">
+            <Group>
+                <Sprite texture="cpp-ship-tex" />
+                <Box posX="0.4" posY="0.4" width="0.01">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+                <Box posX="0.6" posY="0.4" width="0.01">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+            </Group>
+        </Box>
         <Box id="cpp-projectile" width="0.05" height="0.05">
             <Group>
                 <Sprite texture="cpp-ship-tex" />
@@ -32,14 +43,14 @@
             <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
     </Assets>
-    <Player mass="200" radius="0.1" health="20" asset="cpp-ship" accel="0.2" fireInterval="0.1">
+    <Player mass="200" radius="0.1" health="20" asset="cpp-ship" accel="0.2" fireInterval="0.2">
         <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
     <Background>
         <Asset asset="framecounter" />
     </Background>
     <Timeline>
-        <Concurrent>
+        <!--<Concurrent>
             <Deadline duration="2.5">
                 <Spawn>
                     <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
@@ -51,9 +62,13 @@
         </Concurrent>
         <Spawn>
             <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" posX="0.5" posY="0.1" />
-        </Spawn>
+        </Spawn>-->
         <Wave rows="3" columns="2">
-            <Ship mass="200" radius="0.1" health="20" asset="cpp-ship" />
+            <Ship mass="200" radius="0.05" health="20" asset="cpp-invader" />
+            <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
+        </Wave>
+        <Wave rows="1" columns="3">
+            <Ship mass="200" radius="0.05" health="20" asset="cpp-invader" />
             <Projectile mass="10" radius="0.05" velX="0.2" velY="0.2" asset="cpp-projectile" />
         </Wave>
         <Show asset="victory" />
