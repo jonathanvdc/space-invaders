@@ -3,7 +3,7 @@ project(SpaceInvaders)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14 -O4")
 
-include_directories ("${CMAKE_SOURCE_DIR}")
+include_directories("${CMAKE_SOURCE_DIR}")
 
 set(SOURCE
     RandomGenerator.cpp
@@ -12,12 +12,12 @@ set(SOURCE
     SpaceInvaders.cpp
 )
 
-add_subdirectory (model)
-add_subdirectory (view)
-add_subdirectory (controller)
-add_subdirectory (timeline)
-add_subdirectory (parser)
-add_subdirectory (tinyxml2)
+add_subdirectory(model)
+add_subdirectory(view)
+add_subdirectory(controller)
+add_subdirectory(timeline)
+add_subdirectory(parser)
+add_subdirectory(tinyxml2)
 
 # add the executable
 set(EXECUTABLE_NAME "SpaceInvaders")
