@@ -1,6 +1,10 @@
 #include "SceneDescription.h"
 
+#ifdef _MSC_VER
 #include <experimental/filesystem>
+#else
+#include <boost/filesystem.hpp>
+#endif
 #include <exception>
 #include <fstream>
 #include <map>
@@ -45,27 +49,16 @@ using namespace si::parser;
 XMLParseException::XMLParseException(
 	const std::string& errorName,
 	const std::string& errorStr1, const std::string& errorStr2)
-	: errorName(errorName),
-	errorStr1(errorStr1), errorStr2(errorStr2)
-{
-	std::string msg = this->errorName;
-	if (this->errorStr1.size() > 0)
-	{
-		msg += " - " + this->errorStr1;
-	}
-	if (this->errorStr2.size() > 0)
-	{
-		msg += " - " + this->errorStr2;
-	}
-	this->std::exception::exception(msg.c_str());
-}
+	: std::runtime_error(createErrorMessage(errorName, errorStr1, errorStr2)),
+	  errorName(errorName), errorStr1(errorStr1), errorStr2(errorStr2)
+{ }
 
 /// Creates an XML parsing exception from the error in the
 /// given XML document.
 XMLParseException::XMLParseException(const tinyxml2::XMLDocument& doc)
 	: XMLParseException(
 		doc.ErrorName(),
-		doc.GetErrorStr1() ? doc.GetErrorStr1() : "", 
+		doc.GetErrorStr1() ? doc.GetErrorStr1() : "",
 		doc.GetErrorStr2() ? doc.GetErrorStr2() : "")
 { }
 
@@ -98,12 +91,28 @@ std::string XMLParseException::getErrorMessage() const
 	return std::string(this->what());
 }
 
+std::string XMLParseException::createErrorMessage(
+	const std::string& errorName,
+	const std::string& errorStr1, const std::string& errorStr2)
+{
+	std::string msg = errorName;
+	if (errorStr1.size() > 0)
+	{
+		msg += " - " + errorStr1;
+	}
+	if (errorStr2.size() > 0)
+	{
+		msg += " - " + errorStr2;
+	}
+	return msg;
+}
+
 SceneDescriptionException::SceneDescriptionException(const char* message)
-	: std::exception(message)
+	: std::runtime_error(message)
 { }
 
 SceneDescriptionException::SceneDescriptionException(const std::string& message)
-	: std::exception(message.c_str())
+	: std::runtime_error(message)
 { }
 
 /// Creates a new scene description from the
@@ -255,7 +264,7 @@ std::map<std::string, Factory<si::view::IRenderable_ptr>> SceneDescription::read
 		auto name = getAttribute(child, IdAttributeName);
 		results[name] = readRenderable(child, resources);
 	}
-	
+
 	return results;
 }
 
@@ -270,7 +279,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	auto scene = std::make_unique<Scene>(name);
 
-	// Find and parse the player node, then add it to the 
+	// Find and parse the player node, then add it to the
 	// scene.
 	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
 	addPlayerToScene(playerNode, assets, *scene);
@@ -287,7 +296,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 			scene->addRenderable(readAssociatedView(child, assets)());
 		}
 	}
-	
+
 	// Lookup the (optional) decor table.
 	auto decorNode = getSingleChild(this->doc.RootElement(), DecorTableNodeName, true);
 	if (decorNode != nullptr)
@@ -425,7 +434,7 @@ ParsedShipFactory SceneDescription::readShipEntity(
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
-		getDoubleAttribute(node, PositionXAttributeName, 0.5), 
+		getDoubleAttribute(node, PositionXAttributeName, 0.5),
 		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
@@ -452,12 +461,12 @@ void SceneDescription::addPlayerToScene(
 	// Add the player to the scene.
 	addToScene(player, scene);
 
-	// Register the player, and throw in a player 
+	// Register the player, and throw in a player
 	// velocity controller while we're at it.
 	double playerAccel = getDoubleAttribute(node, AccelerationAttributeName);
 	scene.addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
 	scene.registerPlayer(player.model);
-	
+
 	// Create a player projectile controller for this ship.
 	double fireInterval = getDoubleAttribute(node, FireIntervalAttributeName);
 	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
@@ -486,10 +495,10 @@ ParsedProjectileFactory SceneDescription::readProjectileEntity(
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
-		getDoubleAttribute(node, PositionXAttributeName, 0.0), 
+		getDoubleAttribute(node, PositionXAttributeName, 0.0),
 		getDoubleAttribute(node, PositionYAttributeName, 0.0));
 	Vector2d veloc(
-		getDoubleAttribute(node, VelocityXAttributeName), 
+		getDoubleAttribute(node, VelocityXAttributeName),
 		getDoubleAttribute(node, VelocityYAttributeName));
 	auto view = readAssociatedView(node, assets);
 
@@ -570,11 +579,11 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 	double springConst = getDoubleAttribute(shipNode, SpringConstantAttributeName, 5.0);
 	si::duration_t fireInterval(getDoubleAttribute(shipNode, FireIntervalAttributeName, 1.0));
 	si::duration_t maxDeviation(getDoubleAttribute(shipNode, FireIntervalDeviationAttributeName, 0.0));
-	
+
 	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval, maxDeviation };
 
 	return std::make_shared<si::timeline::InvaderWaveEvent>(
-		shipFactory, projectileFactory, rows, 
+		shipFactory, projectileFactory, rows,
 		cols, behavior);
 }
 
@@ -624,7 +633,11 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 /// path.
 std::string SceneDescription::convertPath(const std::string& relativePath) const
 {
+	#ifdef _MSC_VER
 	namespace fs = std::tr2::sys;
+	#else
+	namespace fs = boost::filesystem;
+	#endif
 
 	return fs::absolute(relativePath, fs::path(this->path).parent_path()).string();
 }
@@ -650,8 +663,8 @@ void SceneDescription::ensureAttributePresent(const tinyxml2::XMLElement* node, 
 	}
 }
 
-/// Gets the value of the attribute with the given name 
-/// in the given XML node. If no such attribute can be 
+/// Gets the value of the attribute with the given name
+/// in the given XML node. If no such attribute can be
 /// found, an exception is thrown.
 std::string SceneDescription::getAttribute(const tinyxml2::XMLElement* node, const char* name)
 {
@@ -660,7 +673,7 @@ std::string SceneDescription::getAttribute(const tinyxml2::XMLElement* node, con
 }
 
 /// Gets the value of the integer attribute with the
-/// given name in the given XML node. 
+/// given name in the given XML node.
 /// If no such attribute can be found, an
 /// exception is thrown.
 int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const char* name)
@@ -683,7 +696,7 @@ int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const ch
 }
 
 /// Gets the value of the floating-point attribute with the
-/// given name in the given XML node. 
+/// given name in the given XML node.
 /// If no such attribute can be found, an
 /// exception is thrown.
 double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name)
@@ -693,12 +706,12 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 	{
 	case tinyxml2::XML_NO_ATTRIBUTE:
 		throw SceneDescriptionException(
-			"'" + std::string(node->Name()) + 
+			"'" + std::string(node->Name()) +
 			"' node did not have a '" + name + "' attribute.");
 	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
 		throw SceneDescriptionException(
-			"'" + std::string(node->Name()) + 
-			"' node did have a '" + name + 
+			"'" + std::string(node->Name()) +
+			"' node did have a '" + name +
 			"' attribute, but its value was not formatted as a floating-point number.");
 	default:
 		return result;
@@ -706,7 +719,7 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 }
 
 /// Gets the value of the floating-point attribute with the
-/// given name in the given XML node. 
+/// given name in the given XML node.
 /// If no such attribute can be found, the given default
 /// value is returned as a result.
 double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name, double defaultValue)
@@ -719,7 +732,7 @@ double SceneDescription::getDoubleAttribute(const tinyxml2::XMLElement* node, co
 	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
 		throw SceneDescriptionException(
 			"'" + std::string(node->Name()) +
-			"' node did have a '" + name + 
+			"' node did have a '" + name +
 			"' attribute, but its value was not formatted as a floating-point number.");
 	default:
 		return result;

@@ -26,7 +26,7 @@ namespace si
 	namespace parser
 	{
 		/// An exception class for XML parsing exceptions.
-		class XMLParseException : public std::exception
+		class XMLParseException : public std::runtime_error
 		{
 		public:
 			/// Creates an XML parsing exception from the given
@@ -57,21 +57,25 @@ namespace si
 			std::string getErrorMessage() const;
 
 		private:
-			std::string errorName;
-			std::string errorStr1;
-			std::string errorStr2;
+			static std::string createErrorMessage(
+				const std::string& errorName,
+				const std::string& errorStr1, const std::string& errorStr2);
+
+			const std::string errorName;
+			const std::string errorStr1;
+			const std::string errorStr2;
 		};
 
 		/// An exception class for semantic errors in scene
 		/// description documents.
-		class SceneDescriptionException : public std::exception
+		class SceneDescriptionException : public std::runtime_error
 		{
 		public:
 			SceneDescriptionException(const std::string& message);
 			SceneDescriptionException(const char* message);
 		};
 
-		/// Defines a data structure that contains 
+		/// Defines a data structure that contains
 		/// external resources for scenes.
 		struct SceneResources
 		{
@@ -96,7 +100,7 @@ namespace si
 			/// Reads all texture assets defined in this
 			/// scene description document.
 			std::map<std::string, std::shared_ptr<sf::Texture>> readTextures() const;
-			
+
 			/// Reads all font assets defined in this
 			/// scene description document.
 			std::map<std::string, sf::Font> readFonts() const;
@@ -157,7 +161,7 @@ namespace si
 			static si::timeline::ITimelineEvent_ptr parseWaveEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
-			
+
 			/// Reads a timeline event as specified by the given node.
 			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
@@ -192,25 +196,25 @@ namespace si
 			/// in the given XML node. Otherwise, an exception is thrown.
 			static void ensureAttributePresent(const tinyxml2::XMLElement* node, const char* name);
 
-			/// Gets the value of the attribute with the given name 
-			/// in the given XML node. If no such attribute can be 
+			/// Gets the value of the attribute with the given name
+			/// in the given XML node. If no such attribute can be
 			/// found, an exception is thrown.
 			static std::string getAttribute(const tinyxml2::XMLElement* node, const char* name);
 
 			/// Gets the value of the integer attribute with the
-			/// given name in the given XML node. 
+			/// given name in the given XML node.
 			/// If no such attribute can be found, an
 			/// exception is thrown.
 			static int getIntAttribute(const tinyxml2::XMLElement* node, const char* name);
 
 			/// Gets the value of the floating-point attribute with the
-			/// given name in the given XML node. 
+			/// given name in the given XML node.
 			/// If no such attribute can be found, an
 			/// exception is thrown.
 			static double getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name);
 
 			/// Gets the value of the floating-point attribute with the
-			/// given name in the given XML node. 
+			/// given name in the given XML node.
 			/// If no such attribute can be found, the given default
 			/// value is returned as a result.
 			static double getDoubleAttribute(const tinyxml2::XMLElement* node, const char* name, double defaultValue);
