@@ -124,7 +124,7 @@ void InvaderWaveEvent::start(Scene& target)
 					si::RandomGenerator::instance.nextReal<double>(-1.0, 1.0) * this->invaderBehavior.fireIntervalDeviation,
 				[=](const si::model::Game& game, duration_t) -> bool
 				{
-					for (std::size_t k = 0; k < static_cast<std::size_t>(j); k++)
+					for (std::size_t k = 0; k < column.size(); k++)
 					{
 						if (game.contains(column.at(k)))
 							// Don't open fire if there is another invader

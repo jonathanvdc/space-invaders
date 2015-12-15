@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(SpaceInvaders)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++14 -O4")
 
 include_directories ("${CMAKE_SOURCE_DIR}")
 
