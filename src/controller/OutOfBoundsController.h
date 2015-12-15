@@ -19,7 +19,7 @@ namespace si
 			/// removing it from the game if its
 			/// position exceeds the given bounds.
 			OutOfBoundsController(
-				const si::model::Entity_ptr& entity, 
+				const si::model::Entity_ptr& entity,
 				si::DoubleRect bounds);
 
 			/// Checks if this controller is still "alive".
@@ -31,8 +31,7 @@ namespace si
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 		private:
 			si::model::Entity_ptr entity;
-			si::DoubleRect bounds;
+			const si::DoubleRect bounds;
 		};
 	}
 }
-

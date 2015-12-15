@@ -22,7 +22,9 @@ std::shared_ptr<si::model::PhysicsEntity> ShipCollisionController::getEntity() c
 }
 
 /// Handles a collision with another entity.
-void ShipCollisionController::handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other)
+void ShipCollisionController::handleCollision(
+	si::model::Game& game,
+	const std::shared_ptr<si::model::PhysicsEntity>& other)
 {
 	if (this->isAlive())
 	{
@@ -32,19 +34,19 @@ void ShipCollisionController::handleCollision(si::model::Game& game, const std::
 		//
 		// so, a projectile that can traverse the entire
 		// board in one second, and has a weight of one,
-		// has a momentum of one. 
+		// has a momentum of one.
 		//
 		// Since a ship's health is defined
-		// in terms of momentum, we can subtract the 
+		// in terms of momentum, we can subtract the
 		// ship's momentum from the projectile's momentum,
 		// and then subtract the length of the resulting
 		// momentum vector from the current ship's health.
 		//
-		// This design makes colliding with a projectile 
+		// This design makes colliding with a projectile
 		// head-on really dangerous. If, on the other hand,
 		// the ship is moving in the same direction
 		// as the projectile it's colliding with, and they
-		// have approximately the same momentum, then 
+		// have approximately the same momentum, then
 		// it will barely do any damage.
 
 		auto collisionMomentum = this->ship->getMomentum() - other->getMomentum();
@@ -54,7 +56,7 @@ void ShipCollisionController::handleCollision(si::model::Game& game, const std::
 
 		if (!this->ship->isAlive())
 		{
-			// We may have killed the ship by decrementing 
+			// We may have killed the ship by decrementing
 			// its health. I know this kind of sucks for
 			// whoever was on board of the ship, but we
 			// have to do our job and remove them from

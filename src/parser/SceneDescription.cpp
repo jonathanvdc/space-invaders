@@ -475,7 +475,7 @@ void SceneDescription::addPlayerToScene(
 		{
 			return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		},
-		[player, projectileFactory, &scene](si::model::Game& game, si::duration_t) -> void
+		[player, projectileFactory, &scene](si::model::Game&, si::duration_t) -> void
 		{
 			fireAndAddProjectile(*player.model, projectileFactory, scene);
 		},

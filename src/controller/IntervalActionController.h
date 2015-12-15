@@ -9,7 +9,7 @@ namespace si
 {
 	namespace controller
 	{
-		/// Defines a type of controller that performs some action 
+		/// Defines a type of controller that performs some action
 		/// every frame, provided that a set amount of time
 		/// has elapsed since the last time that the action
 		/// was performed. Said action is performed by calling
@@ -41,7 +41,7 @@ namespace si
 				const ActionFunction& performAction,
 				const LivelinessPredicate& livelinessPredicate);
 
-			/// Creates a new action controller from 
+			/// Creates a new action controller from
 			/// the given perform-action
 			/// function and liveliness predicate.
 			/// A duration determines how much time
@@ -64,9 +64,9 @@ namespace si
 			bool isStillAlive;
 			const duration_t interval;
 			duration_t elapsed;
-			PerformActionPredicate actionPredicate;
-			ActionFunction performAction;
-			LivelinessPredicate livelinessPredicate;
+			const PerformActionPredicate actionPredicate;
+			const ActionFunction performAction;
+			const LivelinessPredicate livelinessPredicate;
 		};
 
 	}

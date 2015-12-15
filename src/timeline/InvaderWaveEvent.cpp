@@ -26,8 +26,8 @@ InvaderWaveEvent::InvaderWaveEvent(
 	const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
 	const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
 	int rowCount, int columnCount, const InvaderBehavior& invaderBehavior)
-	: shipFactory(shipFactory), projectileFactory(projectileFactory), 
-	  rowCount(rowCount), columnCount(columnCount), 
+	: shipFactory(shipFactory), projectileFactory(projectileFactory),
+	  rowCount(rowCount), columnCount(columnCount),
 	  invaderBehavior(invaderBehavior), ships()
 { }
 
@@ -101,12 +101,12 @@ void InvaderWaveEvent::start(Scene& target)
 			//
 			// The X-axis component of their velocity will
 			// determine how quickly they zig-zag.
-			
-			
+
+
 			auto path = [=](duration_t time) -> Vector2d
 			{
 				return Vector2d(
-					posX + radius * std::sin(velX * pi * time.count()), 
+					posX + radius * std::sin(velX * pi * time.count()),
 					posY + velY * time.count());
 			};
 
@@ -120,14 +120,14 @@ void InvaderWaveEvent::start(Scene& target)
 			// Let's get the invaders to fire some projectiles
 			// at us by creating an interval action controller.
 			target.addController(std::make_shared<si::controller::IntervalActionController>(
-				this->invaderBehavior.fireInterval + 
+				this->invaderBehavior.fireInterval +
 					si::RandomGenerator::instance.nextReal<double>(-1.0, 1.0) * this->invaderBehavior.fireIntervalDeviation,
 				[=](const si::model::Game& game, duration_t) -> bool
 				{
 					for (std::size_t k = 0; k < static_cast<std::size_t>(j); k++)
 					{
 						if (game.contains(column.at(k)))
-							// Don't open fire if there is another invader 
+							// Don't open fire if there is another invader
 							// in front of this ship.
 							return false;
 					}
@@ -147,12 +147,12 @@ void InvaderWaveEvent::start(Scene& target)
 }
 
 /// Has this timeline event update the given scene.
-bool InvaderWaveEvent::update(Scene& target, duration_t timeDelta)
+bool InvaderWaveEvent::update(Scene& target, duration_t)
 {
 	return this->isRunning(target.getGame());
 }
 
-/// Applies this timeline event's finalization 
+/// Applies this timeline event's finalization
 /// logic to the given scene.
 void InvaderWaveEvent::end(Scene& target)
 {
@@ -163,15 +163,15 @@ void InvaderWaveEvent::end(Scene& target)
 		{
 			// Remove the entity itself (the model)
 			// from the scene.
-			// Note: we don't have to remove the 
+			// Note: we don't have to remove the
 			//       view or controllers here.
 			//       The scene will do that for us.
 			target.getGame().remove(item);
 		}
 	}
-	
+
 	// Clear the ships vector, to make sure
-	// we don't hang on to the chunks of 
+	// we don't hang on to the chunks of
 	// memory occupied by the ships.
 	this->ships.clear();
 }

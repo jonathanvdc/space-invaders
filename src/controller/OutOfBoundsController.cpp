@@ -22,13 +22,13 @@ bool OutOfBoundsController::isAlive() const
 }
 
 /// Updates the game model based on the given time delta.
-void OutOfBoundsController::update(si::model::Game& game, duration_t timeDelta)
+void OutOfBoundsController::update(si::model::Game& game, duration_t)
 {
 	if (this->isAlive() && !bounds.contains(this->entity->getPosition()))
 	{
 		// If this out-of-bounds controller is still
 		// alive, and the entity it manages is out-of-bounds,
-		// then we'll remove the entity from the game, 
+		// then we'll remove the entity from the game,
 		// and mark this controller as dead, by
 		// setting the entity pointer to null.
 		game.remove(this->entity);

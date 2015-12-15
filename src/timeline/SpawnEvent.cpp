@@ -32,7 +32,7 @@ void SpawnEvent::start(Scene& target)
 }
 
 /// Has this timeline event update the given scene.
-bool SpawnEvent::update(Scene& target, duration_t timeDelta)
+bool SpawnEvent::update(Scene& target, duration_t)
 {
 	if (this->entity != nullptr)
 	{
@@ -46,7 +46,7 @@ bool SpawnEvent::update(Scene& target, duration_t timeDelta)
 	}
 }
 
-/// Applies this timeline event's finalization 
+/// Applies this timeline event's finalization
 /// logic to the given scene.
 void SpawnEvent::end(Scene& target)
 {

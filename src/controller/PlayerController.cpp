@@ -19,7 +19,7 @@ bool PlayerController::isAlive() const
 }
 
 /// Updates the game model based on the given time delta.
-void PlayerController::update(si::model::Game& game, duration_t timeDelta)
+void PlayerController::update(si::model::Game&, duration_t timeDelta)
 {
 	Vector2d accel;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))

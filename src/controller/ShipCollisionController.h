@@ -22,7 +22,9 @@ namespace si
 			std::shared_ptr<si::model::PhysicsEntity> getEntity() const final override;
 		protected:
 			/// Handles a collision with another entity.
-			void handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other) final override;
+			void handleCollision(
+				si::model::Game& game,
+				const std::shared_ptr<si::model::PhysicsEntity>& other) final override;
 		private:
 			std::shared_ptr<si::model::ShipEntity> ship;
 		};

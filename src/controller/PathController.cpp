@@ -24,7 +24,7 @@ bool PathController::isAlive() const
 }
 
 /// Updates the game model based on the given time delta.
-void PathController::update(si::model::Game& game, duration_t timeDelta) 
+void PathController::update(si::model::Game&, duration_t timeDelta) 
 {
 	// To make an entity trace a path, we will model
 	// a critically dampened spring. This kind of spring
@@ -38,7 +38,7 @@ void PathController::update(si::model::Game& game, duration_t timeDelta)
 	// Compute the direction in which the entity should travel.
 	// Our spring simulation will apply a force in this direction.
 	auto direction = targetPos - this->target->getPosition();
-	
+
 	// Calculate the force exerted by the spring.
 	auto springForce = this->springConstant * direction;
 	// Compute the damping force.

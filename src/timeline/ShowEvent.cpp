@@ -9,7 +9,7 @@
 using namespace si;
 using namespace si::timeline;
 
-/// Creates an event that adds a renderable 
+/// Creates an event that adds a renderable
 /// object to the view.
 ShowEvent::ShowEvent(const si::parser::Factory<si::view::IRenderable_ptr>& factory)
 	: factory(factory), renderable(nullptr)
@@ -28,7 +28,7 @@ void ShowEvent::start(Scene& target)
 }
 
 /// Has this timeline event update the given scene.
-bool ShowEvent::update(Scene& target, duration_t timeDelta)
+bool ShowEvent::update(Scene& target, duration_t)
 {
 	// This event is running if the renderable it
 	// created is still in the scene, if
@@ -39,7 +39,7 @@ bool ShowEvent::update(Scene& target, duration_t timeDelta)
 		return target.getRenderer().contains(this->renderable);
 }
 
-/// Applies this timeline event's finalization 
+/// Applies this timeline event's finalization
 /// logic to the given scene.
 void ShowEvent::end(Scene& target)
 {

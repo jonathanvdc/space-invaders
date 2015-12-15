@@ -9,7 +9,7 @@ namespace si
 {
 	namespace controller
 	{
-		/// Defines a type of controller that performs some action 
+		/// Defines a type of controller that performs some action
 		/// every frame. Said action is performed by calling
 		/// a function, which tells if this action controller
 		/// is still alive.
@@ -34,10 +34,10 @@ namespace si
 			/// Updates the game model based on the given time delta.
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 
-			
+
 		private:
 			bool isStillAlive;
-			ActionFunction performAction;
+			const ActionFunction performAction;
 		};
 
 	}

@@ -10,7 +10,7 @@
 
 namespace si
 {
-	namespace controller 
+	namespace controller
 	{
 		/// Defines a base class for collision controllers:
 		/// controllers that detect and handle collisions.
@@ -31,16 +31,18 @@ namespace si
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 		protected:
 			/// Handles a collision with another entity.
-			virtual void handleCollision(si::model::Game& game, const std::shared_ptr<si::model::PhysicsEntity>& other) = 0;
+			virtual void handleCollision(
+				si::model::Game& game,
+				const std::shared_ptr<si::model::PhysicsEntity>& other) = 0;
 		private:
-			/// Defines a vector of collisions which were detected in the 
+			/// Defines a vector of collisions which were detected in the
 			/// previous frame. Collisions are not handled immediately, because
 			/// that could result in objects getting removed from the
 			/// game because of a collision before others have a chance
 			/// of detecting the collision. For example, a bullet could
 			/// bump into a ship, get removed from the board, and the ship
-			/// would be none the wiser. 
-			/// To avoid this kind of awkward situation, collisions are handled 
+			/// would be none the wiser.
+			/// To avoid this kind of awkward situation, collisions are handled
 			/// the next frame.
 			std::vector<std::shared_ptr<si::model::PhysicsEntity>> collisionTargets;
 		};

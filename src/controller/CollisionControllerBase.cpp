@@ -20,7 +20,7 @@ bool CollisionControllerBase::isAlive() const
 }
 
 /// Updates the game model based on the given time delta.
-void CollisionControllerBase::update(si::model::Game& game, duration_t timeDelta)
+void CollisionControllerBase::update(si::model::Game& game, duration_t)
 {
 	// First, handle any collisions detected in the previous frame.
 	for (const auto& item : this->collisionTargets)

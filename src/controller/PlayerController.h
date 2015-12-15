@@ -16,7 +16,9 @@ namespace si
 		public:
 			/// Creates a player controller from the given player and
 			/// acceleration multiplier.
-			PlayerController(const std::shared_ptr<si::model::ShipEntity>& player, double acceleration);
+			PlayerController(
+				const std::shared_ptr<si::model::ShipEntity>& player,
+				double acceleration);
 
 			/// Checks if this player controller is still alive.
 			bool isAlive() const final override;
@@ -25,9 +27,9 @@ namespace si
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 		private:
 			/// The player entity.
-			std::shared_ptr<si::model::ShipEntity> player;
+			const std::shared_ptr<si::model::ShipEntity> player;
 			/// An acceleration multiplier.
-			double accelConst;
+			const double accelConst;
 		};
 	}
 }
