@@ -10,7 +10,7 @@ namespace si
 {
 	namespace view
 	{
-		/// Defines a renderable object that 
+		/// Defines a renderable object that
 		/// draws its child renderable in
 		/// a box equivalent to the enclosing box
 		/// displaced by a certain offset,
@@ -30,8 +30,8 @@ namespace si
 			std::shared_ptr<IRenderable> getContents() const;
 
 		private:
-			std::function<Vector2d()> getPosition;
-			std::shared_ptr<IRenderable> contents;
+			const std::shared_ptr<IRenderable> contents;
+			const std::function<Vector2d()> getPosition;
 		};
 	}
 }

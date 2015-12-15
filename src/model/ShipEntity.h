@@ -38,9 +38,8 @@ namespace si
 			bool isAlive() const;
 
 		private:
+			const double maxHealth;
 			double health;
-			double maxHealth;
 		};
 	}
 }
-

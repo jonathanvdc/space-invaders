@@ -8,7 +8,7 @@
 using namespace si;
 using namespace si::view;
 
-RelativeBoxRenderable::RelativeBoxRenderable(const std::shared_ptr<IRenderable>& contents, DoubleRect box)
+RelativeBoxRenderable::RelativeBoxRenderable(const IRenderable_ptr& contents, DoubleRect box)
 	: contents(contents), box(box)
 { }
 
@@ -31,7 +31,7 @@ std::shared_ptr<IRenderable> RelativeBoxRenderable::getContents() const
 	return this->contents;
 }
 
-/// Gets the relative box that is used to 
+/// Gets the relative box that is used to
 /// render contents in.
 DoubleRect RelativeBoxRenderable::getRelativeBox() const
 {

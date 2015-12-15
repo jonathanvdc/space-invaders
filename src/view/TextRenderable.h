@@ -25,32 +25,32 @@ namespace si
 			/// Renders this text object.
 			void render(RenderContext& target, DoubleRect bounds) final override;
 
-			/// Gets the text that this 
+			/// Gets the text that this
 			/// object renders.
 			std::string getText() const;
 
 			/// Sets this renderable text object's text.
 			void setText(const std::string& text);
 
-			/// Gets the font that this 
+			/// Gets the font that this
 			/// object renders text in.
 			sf::Font getFont() const;
 
-			/// Sets this renderable text object's 
+			/// Sets this renderable text object's
 			/// font.
 			void setFont(sf::Font font);
 
-			/// Gets the color that this 
+			/// Gets the color that this
 			/// object renders text in.
 			sf::Color getColor() const;
 
-			/// Sets this renderable text object's 
+			/// Sets this renderable text object's
 			/// text color.
 			void setColor(sf::Color color);
 		private:
 			std::string text;
-			sf::Color textColor;
 			sf::Font font;
+			sf::Color textColor;
 		};
 	}
 }
