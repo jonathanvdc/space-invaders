@@ -39,6 +39,7 @@
 #include "timeline/DeadlineEvent.h"
 #include "timeline/InvaderWaveEvent.h"
 #include "timeline/ConditionalEvent.h"
+#include "timeline/PermanentEvent.h"
 #include "Scene.h"
 #include "ParsedEntity.h"
 
@@ -147,6 +148,7 @@ const char* const BackgroundTableNodeName = "Background";
 const char* const TimelineNodeName = "Timeline";
 const char* const SpawnNodeName = "Spawn";
 const char* const DeadlineNodeName = "Deadline";
+const char* const PermanentNodeName = "Permanent";
 const char* const ConcurrentNodeName = "Concurrent";
 const char* const ShowNodeName = "Show";
 const char* const WaveNodeName = "Wave";
@@ -635,14 +637,19 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
 		return std::make_shared<si::timeline::DeadlineEvent>(inner, duration);
 	}
-	else if (nodeName == ConcurrentNodeName)
+	else if (nodeName == PermanentNodeName)
 	{
-		return std::make_shared<si::timeline::ConcurrentEvent>(parseConcurrentEvent(node, assets));
+		auto inner = parseTimelineEvent(getSingleChild(node), assets);
+		return std::make_shared<si::timeline::PermanentEvent>(inner);
 	}
 	else if (nodeName == ShowNodeName)
 	{
 		auto factory = getReferenceAttribute(node, AssetAttributeName, assets);
 		return std::make_shared<si::timeline::ShowEvent>(factory);
+	}
+	else if (nodeName == ConcurrentNodeName)
+	{
+		return std::make_shared<si::timeline::ConcurrentEvent>(parseConcurrentEvent(node, assets));
 	}
 	else if (nodeName == WaveNodeName)
 	{
