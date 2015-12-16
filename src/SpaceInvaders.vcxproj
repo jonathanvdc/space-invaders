@@ -157,6 +157,7 @@
     <ClCompile Include="model\DriftingEntity.cpp" />
     <ClCompile Include="model\Entity.cpp" />
     <ClCompile Include="controller\ActionController.cpp" />
+    <ClCompile Include="timeline\ConditionalEvent.cpp" />
     <ClCompile Include="view\FramecounterRenderable.cpp" />
     <ClCompile Include="model\Game.cpp" />
     <ClCompile Include="controller\GameController.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="parser\ParsedEntity.h" />
     <ClInclude Include="parser\SceneDescription.h" />
     <ClInclude Include="timeline\ConcurrentEvent.h" />
+    <ClInclude Include="timeline\ConditionalEvent.h" />
     <ClInclude Include="timeline\DeadlineEvent.h" />
     <ClInclude Include="timeline\InvaderWaveEvent.h" />
     <ClInclude Include="timeline\ITimelineEvent.h" />
