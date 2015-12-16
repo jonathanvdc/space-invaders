@@ -21,22 +21,25 @@ bool PlayerController::isAlive() const
 /// Updates the game model based on the given time delta.
 void PlayerController::update(si::model::Game&, duration_t timeDelta)
 {
+	auto forward = normalizeVec(this->player->getOrientation());
+	auto right = normalizeVec(si::Vector2d(-forward.y, forward.x));
+
 	Vector2d accel;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	{
-		accel += Vector2d(0.0, -1.0);
+		accel += forward;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{
-		accel += Vector2d(0.0, 1.0);
+		accel -= forward;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		accel += Vector2d(-1.0, 0.0);
+		accel -= right;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		accel += Vector2d(1.0, 0.0);
+		accel += right;
 	}
 	double accelLength = vecLength(accel);
 	if (accelLength > 0.0)
