@@ -46,7 +46,7 @@
             <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
     </Assets>
-    <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" fireInterval="0.2">
+    <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <Projectile mass="10" radius="0.01275" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
     <Background>

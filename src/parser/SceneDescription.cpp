@@ -458,6 +458,11 @@ void SceneDescription::addPlayerToScene(
 	// Read the player ship node, and instantiate it.
 	auto player = readShipEntity(node, assets)();
 
+	double velX = getDoubleAttribute(node, VelocityXAttributeName, 0.0);
+	double velY = getDoubleAttribute(node, VelocityYAttributeName, 0.0);
+
+	player.model->accelerate(si::Vector2d(velX, velY));
+
 	// Add the player to the scene.
 	addToSceneDirected(player, scene);
 
