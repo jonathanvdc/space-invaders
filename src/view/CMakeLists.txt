@@ -10,5 +10,7 @@ set(SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/RibbonParticleRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SpriteRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextRenderable.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Transformation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TransformedRenderable.cpp
     PARENT_SCOPE
 )
