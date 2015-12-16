@@ -25,6 +25,19 @@ void si::parser::addToScene(
 	}
 }
 
+/// Adds the given entity's model, view and
+/// controllers to the given scene.
+void si::parser::addToSceneDirected(
+	const ParsedEntity<si::model::PhysicsEntity>& entity,
+	Scene& target)
+{
+	target.addDirectedEntity(entity.model, entity.view);
+	for (const auto& item : entity.controllers)
+	{
+		target.addController(item);
+	}
+}
+
 /// Creates a bullet that is fired from the given source. 
 /// Momentum is transferred from the source entity to
 /// the projectile, but the bullet is not added to the
@@ -71,5 +84,5 @@ void si::parser::fireAndAddProjectile(
 	Scene& target)
 {
 	auto entity = fireProjectile(source, projectileFactory);
-	addToScene(entity, target);
+	addToSceneDirected(entity, target);
 }

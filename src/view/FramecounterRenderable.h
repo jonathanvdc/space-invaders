@@ -3,6 +3,7 @@
 #include <memory>
 #include "IRenderable.h"
 #include "TextRenderable.h"
+#include "Transformation.h"
 
 namespace si
 {
@@ -21,7 +22,9 @@ namespace si
 			/// given render context, within the given
 			/// bounds, which is given in absolute 
 			/// coordinates.
-			void render(RenderContext& target, DoubleRect bounds) final override;
+			void render(
+				RenderContext& target, DoubleRect bounds,
+				const Transformation& transform) final override;
 		private:
 			int framecount;
 			duration_t elapsed;

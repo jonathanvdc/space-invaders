@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "Common.h"
 #include "IRenderable.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -29,12 +30,14 @@ RibbonParticleRenderable::RibbonParticleRenderable(
 /// given render context, within the given
 /// bounds, which is given in absolute 
 /// coordinates.
-void RibbonParticleRenderable::render(RenderContext& target, DoubleRect bounds)
+void RibbonParticleRenderable::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	// Update elapsed time, previous position list
 	this->updateTime(target.getTimeDelta());
 	// Log current position.
-	this->logPosition(bounds);
+	this->logPosition(bounds, transform);
 
 	if (this->prevPositions.size() > 1)
 	{
@@ -67,13 +70,16 @@ void RibbonParticleRenderable::render(RenderContext& target, DoubleRect bounds)
 
 /// Logs the current position, given rectangular
 /// bounds.
-void RibbonParticleRenderable::logPosition(DoubleRect bounds)
+void RibbonParticleRenderable::logPosition(
+	DoubleRect bounds, const Transformation& transform)
 {
 	if (this->elapsedTime > this->pointInterval)
 	{
 		// The current position is the position in the middle
 		// of the current bounding rectangle.
 		Vector2d pos(bounds.left + bounds.width / 2.0, bounds.top + bounds.height / 2.0);
+
+		pos = transform.transformPoint(pos);
 
 		// Size of the ribbon is equal to the geomean of the 
 		// bounds' width and height.

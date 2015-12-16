@@ -4,6 +4,7 @@
 #include <memory>
 #include "IRenderable.h"
 #include "TextRenderable.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -19,7 +20,9 @@ FramecounterRenderable::FramecounterRenderable(const sf::Font& font, sf::Color t
 /// given render context, within the given
 /// bounds, which is given in absolute 
 /// coordinates.
-void FramecounterRenderable::render(RenderContext& target, DoubleRect bounds)
+void FramecounterRenderable::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	this->elapsed += target.getTimeDelta();
 	this->framecount++;
@@ -31,5 +34,5 @@ void FramecounterRenderable::render(RenderContext& target, DoubleRect bounds)
 		this->elapsed -= 1.0s;
 	}
 
-	this->text.render(target, bounds);
+	this->text.render(target, bounds, transform);
 }

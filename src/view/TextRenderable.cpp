@@ -7,6 +7,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -49,7 +50,9 @@ void TextRenderable::setColor(sf::Color color)
 	this->textColor = color;
 }
 
-void TextRenderable::render(RenderContext& context, DoubleRect bounds)
+void TextRenderable::render(
+	RenderContext& context, DoubleRect bounds,
+	const Transformation& transform)
 {
 	const unsigned int defaultCharSize = 32;
 
@@ -67,7 +70,7 @@ void TextRenderable::render(RenderContext& context, DoubleRect bounds)
 	double ratio = std::min(widthRatio, heightRatio);
 	unsigned int charSize = static_cast<unsigned int>(defaultCharSize * ratio);
 
-	elem.setCharacterSize(charSize);
+	elem.setCharacterSize(charSize);	
 
-	context.getTarget().draw(elem);
+	context.getTarget().draw(elem, transform.toRenderState());
 }

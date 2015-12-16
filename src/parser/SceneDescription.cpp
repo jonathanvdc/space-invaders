@@ -459,7 +459,7 @@ void SceneDescription::addPlayerToScene(
 	auto player = readShipEntity(node, assets)();
 
 	// Add the player to the scene.
-	addToScene(player, scene);
+	addToSceneDirected(player, scene);
 
 	// Register the player, and throw in a player
 	// velocity controller while we're at it.

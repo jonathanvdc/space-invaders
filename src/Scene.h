@@ -55,6 +55,14 @@ namespace si
 			const si::model::Entity_ptr& model,
 			const si::view::IRenderable_ptr& view);
 
+		/// Adds an entity that is associated with as
+		/// view to this scene. The view will
+		/// be wired to track the entity's position 
+		/// and orientation.
+		void addDirectedEntity(
+			const std::shared_ptr<si::model::PhysicsEntity>& model,
+			const si::view::IRenderable_ptr& view);
+
 		/// Adds a renderable (view) element to 
 		/// this scene that is not associated 
 		/// with anything in the model. This

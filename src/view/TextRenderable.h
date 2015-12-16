@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 namespace si
 {
@@ -23,7 +24,9 @@ namespace si
 			TextRenderable(const std::string& text, const sf::Font& font, sf::Color textColor);
 
 			/// Renders this text object.
-			void render(RenderContext& target, DoubleRect bounds) final override;
+			void render(
+				RenderContext& target, DoubleRect bounds,
+				const Transformation& transform) final override;
 
 			/// Gets the text that this
 			/// object renders.

@@ -58,6 +58,12 @@ namespace si
 			std::vector<si::controller::IController_ptr> controllers;
 		};
 
+		template<typename T, typename V>
+		ParsedEntity<T> dynamic_entity_cast(const ParsedEntity<V>& entity)
+		{
+			return ParsedEntity<T>(std::dynamic_pointer_cast<T>(entity.model), entity.view, entity.controllers);
+		}
+
 		template<typename T>
 		using Factory = std::function<T()>;
 
@@ -71,6 +77,12 @@ namespace si
 		/// controllers to the given scene.
 		void addToScene(
 			const ParsedEntity<si::model::Entity>& entity,
+			Scene& target);
+
+		/// Adds the given directed entity's model, view and
+		/// controllers to the given scene.
+		void addToSceneDirected(
+			const ParsedEntity<si::model::PhysicsEntity>& entity,
 			Scene& target);
 
 		/// Creates a bullet that is fired from the given source. 

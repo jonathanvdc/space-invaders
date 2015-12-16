@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -14,7 +15,9 @@ RelativeBoxRenderable::RelativeBoxRenderable(const IRenderable_ptr& contents, Do
 
 /// Renders the relative box renderable's child
 /// within a relative box in the given outer bounds.
-void RelativeBoxRenderable::render(RenderContext& target, DoubleRect bounds)
+void RelativeBoxRenderable::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	DoubleRect innerBox(
 		bounds.left + bounds.width * this->box.left,
@@ -22,7 +25,7 @@ void RelativeBoxRenderable::render(RenderContext& target, DoubleRect bounds)
 		bounds.width * this->box.width,
 		bounds.height * this->box.height);
 
-	this->contents->render(target, innerBox);
+	this->contents->render(target, innerBox, transform);
 }
 
 /// Gets this renderable relative box' contents.

@@ -84,7 +84,7 @@ void InvaderWaveEvent::start(Scene& target)
 
 			// Add the entity to the game, along with its
 			// view and controllers.
-			target.addTrackedEntity(model, entity.view);
+			target.addDirectedEntity(model, entity.view);
 			for (const auto& item : entity.controllers)
 			{
 				target.addController(item);

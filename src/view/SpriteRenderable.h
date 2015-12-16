@@ -6,6 +6,7 @@
 #include "Common.h"
 #include "RenderContext.h"
 #include "IRenderable.h"
+#include "Transformation.h"
 
 namespace si
 {
@@ -19,7 +20,9 @@ namespace si
 			SpriteRenderable(const std::shared_ptr<sf::Texture>& texture);
 
 			/// Renders this sprite.
-			void render(RenderContext& target, DoubleRect bounds) final override;
+			void render(
+				RenderContext& target, DoubleRect bounds,
+				const Transformation& transform) final override;
 		private:
 			std::shared_ptr<sf::Texture> texture;
 		};

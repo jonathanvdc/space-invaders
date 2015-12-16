@@ -17,6 +17,7 @@
 #include "view/RenderContext.h"
 #include "view/GameRenderer.h"
 #include "view/PathOffsetRenderable.h"
+#include "view/TransformedRenderable.h"
 #include "timeline/Timeline.h"
 
 using namespace si;
@@ -53,7 +54,7 @@ void Scene::frame(sf::RenderTarget& renderTarget, duration_t timeDelta)
 	this->controller.update(this->game, timeDelta);
 	this->updateEvents(timeDelta);
 	auto context = si::view::RenderContext(renderTarget, timeDelta);
-	this->renderer.render(context, context.getBounds());
+	this->renderer.render(context, context.getBounds(), si::view::Transformation());
 }
 
 /// Adds an entity that is associated with
@@ -74,7 +75,40 @@ void Scene::addTrackedEntity(
 	const si::model::Entity_ptr& model,
 	const si::view::IRenderable_ptr& view)
 {
-	this->addEntity(model, std::make_shared<si::view::PathOffsetRenderable>(view, [=]() { return model->getPosition(); }));
+	this->addEntity(model, 
+		std::make_shared<si::view::PathOffsetRenderable>(
+			view,
+			[=]() { return model->getPosition(); }));
+}
+
+/// Adds an entity that is associated with as
+/// view to this scene. The view will
+/// be wired to track the entity's position 
+/// and orientation.
+void Scene::addDirectedEntity(
+	const std::shared_ptr<si::model::PhysicsEntity>& model,
+	const si::view::IRenderable_ptr& view)
+{
+	this->addEntity(model,
+		std::make_shared<si::view::TransformedRenderable>(
+			view,
+			[=](DoubleRect bounds)
+			{
+				auto pos = model->getPosition();
+				auto radius = model->getPhysicsProperties().radius;
+				DoubleRect rect(
+					pos.x * bounds.width + bounds.top,
+					pos.y * bounds.height + bounds.left,
+					bounds.width * radius * 2.0,
+					bounds.height * radius * 2.0);
+
+				Vector2d center(rect.left + rect.width / 2.0, rect.top + rect.height / 2.0);
+				return std::make_pair(
+					si::view::Transformation::rotate(
+						model->getOrientationAngle() + si::view::Transformation::pi / 2.0, 
+						center),
+					rect);
+			}));
 }
 
 /// Adds a renderable (view) element to 

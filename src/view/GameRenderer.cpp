@@ -2,6 +2,7 @@
 
 #include "IRenderable.h"
 #include "Container.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -10,7 +11,9 @@ GameRenderer::GameRenderer(sf::Color backgroundColor)
 	: backgroundColor(backgroundColor)
 { }
 
-void GameRenderer::render(RenderContext& target, DoubleRect bounds)
+void GameRenderer::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	// First, clear the render target.
 	target.getTarget().clear(backgroundColor);
@@ -18,7 +21,7 @@ void GameRenderer::render(RenderContext& target, DoubleRect bounds)
 	// Then render the game by rendering all sub-objects.
 	for (const auto& item : this->items)
 	{
-		item->render(target, bounds);
+		item->render(target, bounds, transform);
 	}
 }
 

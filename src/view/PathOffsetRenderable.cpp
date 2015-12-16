@@ -5,17 +5,21 @@
 #include "Common.h"
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
 
-PathOffsetRenderable::PathOffsetRenderable(const std::shared_ptr<IRenderable>& contents, const std::function<Vector2d()>& path)
+PathOffsetRenderable::PathOffsetRenderable(
+	const std::shared_ptr<IRenderable>& contents, 
+	const std::function<Vector2d()>& path)
 	: contents(contents), getPosition(path)
 { }
 
-/// Renders the relative box renderable's child
-/// within a relative box in the given outer bounds.
-void PathOffsetRenderable::render(RenderContext& target, DoubleRect bounds)
+/// Renders this renderable object.
+void PathOffsetRenderable::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	auto pos = this->getPosition();
 
@@ -25,10 +29,10 @@ void PathOffsetRenderable::render(RenderContext& target, DoubleRect bounds)
 		bounds.width,
 		bounds.height);
 
-	this->contents->render(target, innerBox);
+	this->contents->render(target, innerBox, transform);
 }
 
-/// Gets this renderable relative box' contents.
+/// Gets this path offset renderable's contents.
 std::shared_ptr<IRenderable> PathOffsetRenderable::getContents() const
 {
 	return this->contents;

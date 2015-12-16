@@ -3,6 +3,7 @@
 #include <vector>
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 using namespace si;
 using namespace si::view;
@@ -29,10 +30,12 @@ GroupRenderable::GroupRenderable(std::vector<IRenderable_ptr>&& children)
 /// given render context, within the given
 /// bounds, which is given in absolute 
 /// coordinates.
-void GroupRenderable::render(RenderContext& target, DoubleRect bounds)
+void GroupRenderable::render(
+	RenderContext& target, DoubleRect bounds,
+	const Transformation& transform)
 {
 	for (const auto& item : this->children)
 	{
-		item->render(target, bounds);
+		item->render(target, bounds, transform);
 	}
 }

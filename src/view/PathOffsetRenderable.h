@@ -5,6 +5,7 @@
 #include "Common.h"
 #include "IRenderable.h"
 #include "RenderContext.h"
+#include "Transformation.h"
 
 namespace si
 {
@@ -18,15 +19,18 @@ namespace si
 		class PathOffsetRenderable final : public IRenderable
 		{
 		public:
-			/// Creates a renderable relative box from the
-			/// given contents and relative box.
-			PathOffsetRenderable(const std::shared_ptr<IRenderable>& contents, const std::function<Vector2d()>& path);
+			/// Creates a path offset renderable from the
+			/// given contents and path.
+			PathOffsetRenderable(
+				const std::shared_ptr<IRenderable>& contents,
+				const std::function<Vector2d()>& path);
 
-			/// Renders the relative box renderable's child
-			/// within a relative box in the given outer bounds.
-			void render(RenderContext& target, DoubleRect bounds) final override;
+			/// Renders this renderable object.
+			void render(
+				RenderContext& target, DoubleRect bounds,
+				const Transformation& transform) final override;
 
-			/// Gets this renderable relative box' contents.
+			/// Gets this path offset renderable's contents.
 			std::shared_ptr<IRenderable> getContents() const;
 
 		private:

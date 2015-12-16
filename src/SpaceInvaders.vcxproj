@@ -190,6 +190,8 @@
     <ClCompile Include="timeline\DeadlineEvent.cpp" />
     <ClCompile Include="timeline\Timeline.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="view\Transformation.cpp" />
+    <ClCompile Include="view\TransformedRenderable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controller\ActionController.h" />
@@ -229,6 +231,8 @@
     <ClInclude Include="view\RibbonParticleRenderable.h" />
     <ClInclude Include="view\SpriteRenderable.h" />
     <ClInclude Include="view\TextRenderable.h" />
+    <ClInclude Include="view\Transformation.h" />
+    <ClInclude Include="view\TransformedRenderable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
