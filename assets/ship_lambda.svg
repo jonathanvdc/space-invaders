@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="ship_lambda.svg"
+   inkscape:export-filename="/home/jonathan/Documents/space-invaders/scenes/ship_lambda.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs2987" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.8890873"
+     inkscape:cx="37.120367"
+     inkscape:cy="18.73732"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1295"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <g
+       style="font-style:normal;font-weight:normal;font-size:81.8789444px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#82ec84;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text3396-8"
+       transform="matrix(0.89744822,0,0,1.126946,-1.0911758,-9.1574728)">
+      <path
+         d="M 23.736282,9.33314 36.569578,32.728527 15.909689,63.068406 6.4641324,63.000001 27.635959,32.33315 14.681228,9.5091365 Z"
+         id="path3401-0"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccc"
+         style="fill:#82ec84;fill-opacity:1" />
+    </g>
+    <g
+       style="font-style:normal;font-weight:normal;font-size:81.8789444px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#1be71e;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text3396"
+       transform="matrix(0.89744822,0,0,1.126946,9.4058405,-9.0025933)">
+      <path
+         d="M 23.736282,9.33314 56.587736,63.181819 46.518918,63.09091 32.206745,40.213769 16.532951,63.181819 6.4641324,63.000001 27.635959,32.33315 14.681228,9.5091365 Z"
+         id="path3401"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccccc"
+         style="fill:#1be71e;fill-opacity:1" />
+    </g>
+  </g>
+</svg>

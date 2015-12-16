@@ -4,6 +4,7 @@
     </Fonts>
     <Textures>
         <Texture id="cpp-ship-tex" path="ship_cpp.png" />
+        <Texture id="lambda-ship-tex" path="ship_lambda.png" />
     </Textures>
     <Assets>
         <Box id="cpp-ship">
@@ -21,10 +22,21 @@
             <Group>
                 <Sprite texture="cpp-ship-tex" />
                 <Box posX="0.4" posY="0.4" width="0.01">
-                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                    <RibbonParticle r="0.0" g="1.0" b="0.0" />
                 </Box>
                 <Box posX="0.6" posY="0.4" width="0.01">
-                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                    <RibbonParticle r="0.0" g="1.0" b="0.0" />
+                </Box>
+            </Group>
+        </Box>
+        <Box id="cpp-invader-2">
+            <Group>
+                <Sprite texture="lambda-ship-tex" />
+                <Box posX="0.2" posY="0.4" width="0.02">
+                    <RibbonParticle r="0.0" g="1.0" b="0.0" />
+                </Box>
+                <Box posX="0.8" posY="0.4" width="0.02">
+                    <RibbonParticle r="0.0" g="1.0" b="0.0" />
                 </Box>
             </Group>
         </Box>
@@ -50,7 +62,7 @@
         </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
-        <Projectile mass="10" radius="0.01275" velX="0.2" velY="0.2" asset="cpp-projectile" />
+        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
     <Background>
         <Asset asset="framecounter" />
@@ -64,11 +76,11 @@
                 <Timeline>
                     <Wave rows="3" columns="2">
                         <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" />
-                        <Projectile mass="10" radius="0.01275" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Wave rows="1" columns="3">
-                        <Ship mass="200" radius="0.025" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" />
-                        <Projectile mass="10" radius="0.01275" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                        <Ship mass="200" radius="0.025" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" />
+                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Permanent>
                         <Show asset="victory" />
