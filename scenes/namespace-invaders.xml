@@ -45,6 +45,9 @@
         <Box id="victory" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
+        <Box id="loss" width="0.4" height="0.4" posY="0.4" posX="0.3">
+            <Text text="You died :/" font="arial" r="1.0" g="1.0" b="1.0" />
+        </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <Projectile mass="10" radius="0.01275" velX="0.2" velY="0.2" asset="cpp-projectile" />
@@ -71,7 +74,7 @@
                 </Timeline>
             </Then>
             <Else>
-                <Show asset="victory" />
+                <Show asset="loss" />
             </Else>
         </Condition>
     </Timeline>
