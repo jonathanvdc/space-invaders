@@ -71,7 +71,7 @@ void InvaderWaveEvent::start(Scene& target)
 			// movements, inserting some empty space in the Y-direction is far
 			// more important than inserting empty space in the X-direction.
 			double spacingX = radius / 2.0 + 0.5 * pi * radius * velX;
-			double spacingY = radius / 2.0 + 2.0 * pi * radius * velY;
+			double spacingY = radius / 2.0 + 3.0 * pi * radius * velY;
 			double totalX = radius * this->columnCount + spacingX * (this->columnCount - 1);
 			double totalY = radius * this->rowCount + spacingY * (this->rowCount - 1);
 			double offsetX = radius * i + spacingX * i;
