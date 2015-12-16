@@ -75,7 +75,7 @@ void Scene::addTrackedEntity(
 	const si::model::Entity_ptr& model,
 	const si::view::IRenderable_ptr& view)
 {
-	this->addEntity(model, 
+	this->addEntity(model,
 		std::make_shared<si::view::PathOffsetRenderable>(
 			view,
 			[=]() { return model->getPosition(); }));
@@ -83,7 +83,7 @@ void Scene::addTrackedEntity(
 
 /// Adds an entity that is associated with as
 /// view to this scene. The view will
-/// be wired to track the entity's position 
+/// be wired to track the entity's position
 /// and orientation.
 void Scene::addDirectedEntity(
 	const std::shared_ptr<si::model::PhysicsEntity>& model,
@@ -105,16 +105,16 @@ void Scene::addDirectedEntity(
 				Vector2d center(rect.left + rect.width / 2.0, rect.top + rect.height / 2.0);
 				return std::make_pair(
 					si::view::Transformation::rotate(
-						model->getOrientationAngle() + si::view::Transformation::pi / 2.0, 
+						model->getOrientationAngle() + si::view::Transformation::pi / 2.0,
 						center),
 					rect);
 			}));
 }
 
-/// Adds a renderable (view) element to 
-/// this scene that is not associated 
+/// Adds a renderable (view) element to
+/// this scene that is not associated
 /// with anything in the model. This
-/// can be useful when constructing a 
+/// can be useful when constructing a
 /// background, or an HUD.
 void Scene::addRenderable(
 	const si::view::IRenderable_ptr& view)
@@ -140,9 +140,9 @@ void Scene::addController(
 	this->controller.add(item);
 }
 
-/// Starts the given timeline event for this 
-/// scene. The timeline event will be updated 
-/// on every frame, until it has ended, at 
+/// Starts the given timeline event for this
+/// scene. The timeline event will be updated
+/// on every frame, until it has ended, at
 /// which point its `end` method will be called.
 void Scene::startEvent(
 	const si::timeline::ITimelineEvent_ptr& item)
@@ -172,7 +172,10 @@ std::vector<std::shared_ptr<si::model::ShipEntity>> Scene::getPlayers() const
 bool Scene::anyPlayersAlive() const
 {
 	return std::any_of(this->players.begin(), this->players.end(),
-		[](const std::shared_ptr<si::model::ShipEntity>& item) { return item->isAlive(); });
+		[&](const std::shared_ptr<si::model::ShipEntity>& item)
+		{
+			return item->isAlive() && this->game.contains(item);
+		});
 }
 
 /// Registers the given ship as a player ship.
@@ -230,7 +233,7 @@ void Scene::updateEvents(duration_t timeDelta)
 	std::vector<si::timeline::ITimelineEvent_ptr> eventsCopy = this->sceneEvents;
 	// Maintain a set of dead events.
 	std::set<si::timeline::ITimelineEvent_ptr> deadEvents;
-	
+
 	// Iterate over all events.
 	for (const auto& item : eventsCopy)
 	{
@@ -243,9 +246,9 @@ void Scene::updateEvents(duration_t timeDelta)
 		}
 	}
 	// Remove all events that were marked dead in the previous pass.
-	this->sceneEvents.erase(std::remove_if(this->sceneEvents.begin(), this->sceneEvents.end(), 
-		[&](const si::timeline::ITimelineEvent_ptr& item) -> bool 
-		{ 
-			return deadEvents.find(item) != deadEvents.end(); 
+	this->sceneEvents.erase(std::remove_if(this->sceneEvents.begin(), this->sceneEvents.end(),
+		[&](const si::timeline::ITimelineEvent_ptr& item) -> bool
+		{
+			return deadEvents.find(item) != deadEvents.end();
 		}), this->sceneEvents.end());
 }
