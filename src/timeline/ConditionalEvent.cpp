@@ -75,7 +75,7 @@ void ConditionalEvent::reevaluateCondition(Scene& target)
 }
 
 /// Gets the currently selected event.
-const ITimelineEvent_ptr& ConditionalEvent::selectedEvent() const
+ITimelineEvent_ptr ConditionalEvent::selectedEvent() const
 {
 	switch (this->state)
 	{

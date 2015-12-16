@@ -38,6 +38,7 @@
 #include "timeline/ShowEvent.h"
 #include "timeline/DeadlineEvent.h"
 #include "timeline/InvaderWaveEvent.h"
+#include "timeline/ConditionalEvent.h"
 #include "Scene.h"
 #include "ParsedEntity.h"
 
@@ -149,6 +150,9 @@ const char* const DeadlineNodeName = "Deadline";
 const char* const ConcurrentNodeName = "Concurrent";
 const char* const ShowNodeName = "Show";
 const char* const WaveNodeName = "Wave";
+const char* const ConditionNodeName = "Condition";
+const char* const ThenNodeName = "Then";
+const char* const ElseNodeName = "Else";
 const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
@@ -183,6 +187,7 @@ const char* const TextAttributeName = "text";
 const char* const DurationAttributeName = "duration";
 const char* const RowsAttributeName = "rows";
 const char* const ColumnsAttributeName = "columns";
+const char* const PredicateAttributeName = "predicate";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -592,6 +597,23 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 		cols, behavior);
 }
 
+/// A map that converts condition names to scene predicates.
+static std::map<std::string, si::timeline::ConditionalEvent::ScenePredicate> conditionMap
+{
+	std::make_pair(std::string("player.alive"), [](const Scene& scene) { return scene.anyPlayersAlive(); })
+};
+
+/// Reads a condition event as specified by the given node.
+si::timeline::ITimelineEvent_ptr SceneDescription::parseConditionalEvent(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+{
+	auto condition = getReferenceAttribute(node, PredicateAttributeName, conditionMap);
+	auto ifEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ThenNodeName)), assets);
+	auto elseEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ElseNodeName)), assets);
+	return std::make_shared<si::timeline::ConditionalEvent>(condition, ifEvent, elseEvent);
+}
+
 /// Reads a timeline event as specified by the given node.
 si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
@@ -625,6 +647,10 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	else if (nodeName == WaveNodeName)
 	{
 		return parseWaveEvent(node, assets);
+	}
+	else if (nodeName == ConditionNodeName)
+	{
+		return parseConditionalEvent(node, assets);
 	}
 	else
 	{

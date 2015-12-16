@@ -59,7 +59,7 @@ namespace si
 			void reevaluateCondition(Scene& target);
 
 			/// Gets the currently selected event.
-			const ITimelineEvent_ptr& selectedEvent() const;
+			ITimelineEvent_ptr selectedEvent() const;
 
 			const ScenePredicate condition;
 			const ITimelineEvent_ptr ifEvent;

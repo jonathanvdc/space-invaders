@@ -162,6 +162,11 @@ namespace si
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
+			/// Reads a condition event as specified by the given node.
+			static si::timeline::ITimelineEvent_ptr parseConditionalEvent(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+
 			/// Reads a timeline event as specified by the given node.
 			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
@@ -249,7 +254,7 @@ namespace si
 					throw SceneDescriptionException(
 						"This '" + std::string(node->Name()) + "' node's '" + std::string(attributeName) +
 						"' attribute has a value of '" + attr +
-						"', but no appropriate element named '" + attr + "' was found.");
+						"', but no appropriate element could be found for '" + attr + "'.");
 				}
 
 				return map.at(attr);
