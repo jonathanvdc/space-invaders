@@ -79,7 +79,7 @@
                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Wave rows="1" columns="3">
-                        <Ship mass="200" radius="0.025" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" />
+                        <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" />
                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Permanent>
