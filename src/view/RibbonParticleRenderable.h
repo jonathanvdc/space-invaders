@@ -17,19 +17,17 @@ namespace si
 		{
 		public:
 			/// Creates a new ribbon particle renderable from the
-			/// given color, a duration that represents the interval 
+			/// given color, a duration that represents the interval
 			/// at which new points are logged, and a duration
 			/// that represents the lifetime of a single point,
-			/// after it has been logged. An epsilon
-			/// value specifies that points will only be logged
-			/// if they are farther apart than this value.
+			/// after it has been logged.
 			RibbonParticleRenderable(
-				sf::Color color, duration_t pointInterval, 
+				sf::Color color, duration_t pointInterval,
 				duration_t pointLifetime);
 
-			/// Renders this renderable object on the 
+			/// Renders this renderable object on the
 			/// given render context, within the given
-			/// bounds, which is given in absolute 
+			/// bounds, which is given in absolute
 			/// coordinates.
 			void render(
 				RenderContext& target, DoubleRect bounds,
