@@ -186,12 +186,6 @@ namespace si
 			/// Gets this scene description's renderable definitions node.
 			const tinyxml2::XMLElement* getRenderablesNode() const;
 
-			/// Converts the given path, which is relative
-			/// to the scene description's path, to a
-			/// path that is relative to the program's
-			/// path.
-			std::string convertPath(const std::string& path) const;
-
 			/// Throws an error if the XML document
 			/// associated with this scene is in an error
 			/// state.

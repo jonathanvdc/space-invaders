@@ -1,10 +1,5 @@
 #include "SceneDescription.h"
 
-#ifdef _MSC_VER
-#include <experimental/filesystem>
-#else
-#include <boost/filesystem.hpp>
-#endif
 #include <exception>
 #include <fstream>
 #include <map>
@@ -209,11 +204,10 @@ std::map<std::string, std::shared_ptr<sf::Texture>> SceneDescription::readTextur
 	{
 		std::string name = getAttribute(child, IdAttributeName);
 		std::string path = getAttribute(child, PathAttributeName);
-		auto newPath = this->convertPath(path);
 		auto tex = std::make_shared<sf::Texture>();
-		if (!tex->loadFromFile(newPath))
+		if (!tex->loadFromFile(path))
 		{
-			throw SceneDescriptionException("Couldn't load texture file '" + newPath + "'.");
+			throw SceneDescriptionException("Couldn't load texture file '" + path + "'.");
 		}
 		results[name] = tex;
 	}
@@ -234,11 +228,10 @@ std::map<std::string, sf::Font> SceneDescription::readFonts() const
 	{
 		std::string name = getAttribute(child, IdAttributeName);
 		std::string path = getAttribute(child, PathAttributeName);
-		auto newPath = this->convertPath(path);
 		sf::Font fnt;
-		if (!fnt.loadFromFile(newPath))
+		if (!fnt.loadFromFile(path))
 		{
-			throw SceneDescriptionException("Couldn't load font file '" + newPath + "'.");
+			throw SceneDescriptionException("Couldn't load font file '" + path + "'.");
 		}
 		results[name] = fnt;
 	}
@@ -663,21 +656,6 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
 	{
 		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
 	}
-}
-
-/// Converts the given path, which is relative
-/// to the scene description's path, to a
-/// path that is relative to the program's
-/// path.
-std::string SceneDescription::convertPath(const std::string& relativePath) const
-{
-	#ifdef _MSC_VER
-	namespace fs = std::tr2::sys;
-	#else
-	namespace fs = boost::filesystem;
-	#endif
-
-	return fs::absolute(relativePath, fs::path(this->path).parent_path()).string();
 }
 
 /// Throws an error if the XML document
