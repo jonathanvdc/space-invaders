@@ -35,7 +35,9 @@ endif()
 
 # boost::filesystem
 #set(Boost_ADDITIONAL_VERSIONS "1.78" "1.78.0" "1.79" "1.79.0")
-find_package(Boost 1.34.0 REQUIRED system filesystem)
+set(BOOST_LIBRARYDIR "${CMAKE_SOURCE_DIR}/../libs/boost/boost_1_55_0/libs/stage")
+set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/../libs/boost/boost_1_55_0/")
+find_package(Boost REQUIRED system filesystem)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   target_link_libraries(${EXECUTABLE_NAME} ${Boost_LIBRARIES})
