@@ -12,7 +12,7 @@ namespace si
 {
 	namespace model
 	{
-		/// Defines a type of entity that represents a 
+		/// Defines a type of entity that represents a
 		/// projectile, such as a bullet.
 		class ProjectileEntity final : public DriftingEntity
 		{
@@ -20,7 +20,7 @@ namespace si
 			typedef std::function<std::vector<std::shared_ptr<ProjectileEntity>>()> ProjectileCreationFunction;
 
 			/// Creates a new projectile entity from the given physics properties,
-			/// initial position, initial velocity, and a function that creates a 
+			/// initial position, initial velocity, and a function that creates a
 			/// sequence of nested projectiles.
 			ProjectileEntity(PhysicsProperties physProps, Vector2d initialPos, Vector2d initialVeloc,
 				ProjectileCreationFunction createNestedProjectiles);
@@ -34,9 +34,7 @@ namespace si
 			std::vector<std::shared_ptr<ProjectileEntity>> createNestedProjectiles() const;
 
 		private:
-			double damage;
 			ProjectileCreationFunction nestedProjectiles;
 		};
 	}
 }
-
