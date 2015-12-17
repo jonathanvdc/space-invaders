@@ -4,6 +4,7 @@ set(SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/FramecounterRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GameRenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GroupRenderable.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ParticleEmitterRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PathOffsetRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/RelativeBoxRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/RenderContext.cpp
