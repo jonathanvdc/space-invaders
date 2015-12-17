@@ -25,6 +25,7 @@
 #include "view/RelativeBoxRenderable.h"
 #include "view/GroupRenderable.h"
 #include "view/RibbonParticleRenderable.h"
+#include "view/ParticleEmitterRenderable.h"
 #include "view/FramecounterRenderable.h"
 #include "timeline/ITimelineEvent.h"
 #include "timeline/Timeline.h"
@@ -151,6 +152,7 @@ const char* const ConditionNodeName = "Condition";
 const char* const ThenNodeName = "Then";
 const char* const ElseNodeName = "Else";
 const char* const RibbonParticleNodeName = "RibbonParticle";
+const char* const ParticleEmitterNodeName = "ParticleEmitter";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
 
@@ -185,6 +187,7 @@ const char* const DurationAttributeName = "duration";
 const char* const RowsAttributeName = "rows";
 const char* const ColumnsAttributeName = "columns";
 const char* const PredicateAttributeName = "predicate";
+const char* const SpeedAttributeName = "speed";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -380,6 +383,19 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 		return [=]()
 		{
 			return std::make_shared<si::view::RibbonParticleRenderable>(color, interval, lifetime);
+		};
+	}
+	else if (nodeName == ParticleEmitterNodeName)
+	{
+		auto particleFactory = readRenderable(getSingleChild(node), resources);
+		double speed = getDoubleAttribute(node, SpeedAttributeName, 0.01);
+		duration_t interval(getDoubleAttribute(node, IntervalAttributeName, 0.01));
+		duration_t lifetime(getDoubleAttribute(node, LifetimeAttributeName, 0.5));
+
+		return [=]()
+		{
+			return std::make_shared<si::view::ParticleEmitterRenderable>(
+				particleFactory, speed, interval, lifetime);
 		};
 	}
 	else if (nodeName == FramecounterNodeName)
