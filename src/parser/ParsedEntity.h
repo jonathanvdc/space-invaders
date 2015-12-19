@@ -67,6 +67,8 @@ namespace si
 		template<typename T>
 		using Factory = std::function<T()>;
 
+		using EventFactory = Factory<si::timeline::ITimelineEvent_ptr>;
+
 		template<typename T>
 		using ParsedEntityFactory = Factory<ParsedEntity<T>>;
 

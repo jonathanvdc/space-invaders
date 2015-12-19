@@ -322,7 +322,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 		// We found a timeline. Awesome!
 		// Now let's parse it and add it
 		// to the scene.
-		auto tLine = std::make_shared<si::timeline::Timeline>(parseTimeline(timelineNode, assets));
+		auto tLine = parseTimeline(timelineNode, assets)();
 		scene->startEvent(tLine);
 	}
 
@@ -582,11 +582,11 @@ ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 }
 
 /// Reads a timeline as specified by the given node.
-si::timeline::Timeline SceneDescription::parseTimeline(
+EventFactory SceneDescription::parseTimeline(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
-	std::vector<si::timeline::ITimelineEvent_ptr> events;
+	std::vector<EventFactory> events;
 	for (auto child = node->FirstChildElement();
 		 child != nullptr;
 		 child = child->NextSiblingElement())
@@ -594,27 +594,47 @@ si::timeline::Timeline SceneDescription::parseTimeline(
 		// Parse all events in the timeline.
 		events.push_back(parseTimelineEvent(child, assets));
 	}
-	return si::timeline::Timeline(std::move(events));
+
+	return [=]()
+	{
+		std::vector<si::timeline::ITimelineEvent_ptr> children;
+		for (const auto& factory : events)
+		{
+			children.push_back(factory());
+		}
+
+		return std::make_shared<si::timeline::Timeline>(std::move(children));
+	};
 }
 
 /// Reads a concurrent event as specified by the given node.
-si::timeline::ConcurrentEvent SceneDescription::parseConcurrentEvent(
+EventFactory SceneDescription::parseConcurrentEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
-	std::vector<si::timeline::ITimelineEvent_ptr> events;
+	std::vector<EventFactory> events;
 	for (auto child = node->FirstChildElement();
 		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
-		// Parse all events in the timeline.
+		// Parse all child events.
 		events.push_back(parseTimelineEvent(child, assets));
 	}
-	return si::timeline::ConcurrentEvent(std::move(events));
+
+	return [=]()
+	{
+		std::vector<si::timeline::ITimelineEvent_ptr> children;
+		for (const auto& factory : events)
+		{
+			children.push_back(factory());
+		}
+
+		return std::make_shared<si::timeline::ConcurrentEvent>(std::move(children));
+	};
 }
 
 /// Reads an invader wave event as specified by the given node.
-si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
+EventFactory SceneDescription::parseWaveEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
@@ -631,9 +651,12 @@ si::timeline::ITimelineEvent_ptr SceneDescription::parseWaveEvent(
 
 	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval, maxDeviation };
 
-	return std::make_shared<si::timeline::InvaderWaveEvent>(
-		shipFactory, projectileFactory, rows,
-		cols, behavior);
+	return [=]()
+	{
+		return std::make_shared<si::timeline::InvaderWaveEvent>(
+			shipFactory, projectileFactory, rows,
+			cols, behavior);
+	};
 }
 
 /// A map that converts condition names to scene predicates.
@@ -643,50 +666,66 @@ static std::map<std::string, si::timeline::ConditionalEvent::ScenePredicate> con
 };
 
 /// Reads a condition event as specified by the given node.
-si::timeline::ITimelineEvent_ptr SceneDescription::parseConditionalEvent(
+EventFactory SceneDescription::parseConditionalEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	auto condition = getReferenceAttribute(node, PredicateAttributeName, conditionMap);
 	auto ifEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ThenNodeName)), assets);
 	auto elseEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ElseNodeName)), assets);
-	return std::make_shared<si::timeline::ConditionalEvent>(condition, ifEvent, elseEvent);
+
+	return [=]()
+	{
+		return std::make_shared<si::timeline::ConditionalEvent>(condition, ifEvent(), elseEvent());
+	};
 }
 
 /// Reads a timeline event as specified by the given node.
-si::timeline::ITimelineEvent_ptr SceneDescription::parseTimelineEvent(
+EventFactory SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == TimelineNodeName)
 	{
-		return std::make_shared<si::timeline::Timeline>(parseTimeline(node, assets));
+		return parseTimeline(node, assets);
 	}
 	else if (nodeName == SpawnNodeName)
 	{
 		auto factory = readEntity(getSingleChild(node), assets);
-		return std::make_shared<si::timeline::SpawnEvent>(factory);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::SpawnEvent>(factory);
+		};
 	}
 	else if (nodeName == DeadlineNodeName)
 	{
 		duration_t duration(getDoubleAttribute(node, DurationAttributeName));
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
-		return std::make_shared<si::timeline::DeadlineEvent>(inner, duration);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::DeadlineEvent>(inner(), duration);
+		};
 	}
 	else if (nodeName == PermanentNodeName)
 	{
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
-		return std::make_shared<si::timeline::PermanentEvent>(inner);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::PermanentEvent>(inner());
+		};
 	}
 	else if (nodeName == ShowNodeName)
 	{
 		auto factory = getReferenceAttribute(node, AssetAttributeName, assets);
-		return std::make_shared<si::timeline::ShowEvent>(factory);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::ShowEvent>(factory);
+		};
 	}
 	else if (nodeName == ConcurrentNodeName)
 	{
-		return std::make_shared<si::timeline::ConcurrentEvent>(parseConcurrentEvent(node, assets));
+		return parseConcurrentEvent(node, assets);
 	}
 	else if (nodeName == WaveNodeName)
 	{

@@ -154,27 +154,27 @@ namespace si
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a timeline as specified by the given node.
-			static si::timeline::Timeline parseTimeline(
+			static EventFactory parseTimeline(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a concurrent event as specified by the given node.
-			static si::timeline::ConcurrentEvent parseConcurrentEvent(
+			static EventFactory parseConcurrentEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads an invader wave event as specified by the given node.
-			static si::timeline::ITimelineEvent_ptr parseWaveEvent(
+			static EventFactory parseWaveEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a condition event as specified by the given node.
-			static si::timeline::ITimelineEvent_ptr parseConditionalEvent(
+			static EventFactory parseConditionalEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a timeline event as specified by the given node.
-			static si::timeline::ITimelineEvent_ptr parseTimelineEvent(
+			static EventFactory parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 

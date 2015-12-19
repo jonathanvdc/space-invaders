@@ -60,6 +60,9 @@
         <Box id="loss" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="You died :/" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
+        <ParticleEmitter id="explosion">
+            <Sprite texture="cpp-ship-tex" />
+        </ParticleEmitter>
     </Assets>
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
@@ -68,7 +71,7 @@
         <Asset asset="framecounter" />
     </Background>
     <Decor>
-        
+
     </Decor>
     <Timeline>
         <Deadline duration="2.0">
@@ -82,7 +85,10 @@
                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Wave rows="1" columns="3">
-                        <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" />
+                        <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
+                            <Created asset="explosion" duration="1.0" />
+                            <Destroyed asset="explosion" duration="1.0" />
+                        </Ship>
                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                     </Wave>
                     <Permanent>
