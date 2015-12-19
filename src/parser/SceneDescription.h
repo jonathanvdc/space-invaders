@@ -12,7 +12,7 @@
 #include "model/Entity.h"
 #include "model/PhysicsEntity.h"
 #include "model/ShipEntity.h"
-#include "model/ProjectileEntity.h"
+#include "model/DriftingEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
 #include "timeline/ITimelineEvent.h"
@@ -138,7 +138,7 @@ namespace si
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a projectile entity as specified by the given node.
-			static ParsedProjectileFactory readProjectileEntity(
+			static ParsedDriftingEntityFactory readProjectileEntity(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 

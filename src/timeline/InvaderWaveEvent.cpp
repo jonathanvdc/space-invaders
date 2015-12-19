@@ -5,7 +5,7 @@
 #include "Common.h"
 #include "model/Entity.h"
 #include "model/Game.h"
-#include "model/ProjectileEntity.h"
+#include "model/DriftingEntity.h"
 #include "view/IRenderable.h"
 #include "controller/IController.h"
 #include "controller/PathController.h"
@@ -23,8 +23,8 @@ using namespace si::timeline;
 /// Creates an invader wave event from the given ship factory,
 /// projectile factory, row count and column count.
 InvaderWaveEvent::InvaderWaveEvent(
-	const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
-	const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
+	const si::parser::ParsedShipFactory& shipFactory,
+	const si::parser::ParsedDriftingEntityFactory& projectileFactory,
 	int rowCount, int columnCount, const InvaderBehavior& invaderBehavior)
 	: shipFactory(shipFactory), projectileFactory(projectileFactory),
 	  rowCount(rowCount), columnCount(columnCount),

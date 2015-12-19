@@ -4,7 +4,7 @@
 #include "Common.h"
 #include "model/Entity.h"
 #include "model/Game.h"
-#include "model/ProjectileEntity.h"
+#include "model/DriftingEntity.h"
 #include "view/IRenderable.h"
 #include "controller/IController.h"
 #include "parser/ParsedEntity.h"
@@ -49,8 +49,8 @@ namespace si
 			/// A velocity and spring constant are also provided. They
 			/// determine which path invaders follow.
 			InvaderWaveEvent(
-				const si::parser::ParsedEntityFactory<si::model::ShipEntity>& shipFactory,
-				const si::parser::ParsedEntityFactory<si::model::ProjectileEntity>& projectileFactory,
+				const si::parser::ParsedShipFactory& shipFactory,
+				const si::parser::ParsedDriftingEntityFactory& projectileFactory,
 				int rowCount, int columnCount, const InvaderBehavior& invaderBehavior);
 
 			/// Starts the timeline event.
@@ -77,8 +77,8 @@ namespace si
 			/// Checks if this event is still running.
 			bool isRunning(const si::model::Game& game) const;
 		private:
-			const si::parser::ParsedEntityFactory<si::model::ShipEntity> shipFactory;
-			const si::parser::ParsedEntityFactory<si::model::ProjectileEntity> projectileFactory;
+			const si::parser::ParsedShipFactory shipFactory;
+			const si::parser::ParsedDriftingEntityFactory projectileFactory;
 			const int rowCount;
 			const int columnCount;
 			const InvaderBehavior invaderBehavior;

@@ -173,7 +173,6 @@
     <ClCompile Include="model\PhysicsEntity.cpp" />
     <ClCompile Include="controller\PlayerController.cpp" />
     <ClCompile Include="controller\ProjectileCollisionController.cpp" />
-    <ClCompile Include="model\ProjectileEntity.cpp" />
     <ClCompile Include="view\ParticleEmitterRenderable.cpp" />
     <ClCompile Include="view\RelativeBoxRenderable.cpp" />
     <ClCompile Include="view\PathOffsetRenderable.cpp" />
@@ -212,7 +211,6 @@
     <ClInclude Include="model\Game.h" />
     <ClInclude Include="model\PathEntity.h" />
     <ClInclude Include="model\PhysicsEntity.h" />
-    <ClInclude Include="model\ProjectileEntity.h" />
     <ClInclude Include="model\ShipEntity.h" />
     <ClInclude Include="parser\ParsedEntity.h" />
     <ClInclude Include="parser\SceneDescription.h" />

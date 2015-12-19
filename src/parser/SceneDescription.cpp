@@ -13,7 +13,7 @@
 #include "model/Entity.h"
 #include "model/PhysicsEntity.h"
 #include "model/ShipEntity.h"
-#include "model/ProjectileEntity.h"
+#include "model/DriftingEntity.h"
 #include "controller/IController.h"
 #include "controller/IntervalActionController.h"
 #include "controller/PlayerController.h"
@@ -510,7 +510,7 @@ void SceneDescription::addPlayerToScene(
 /// The return type of this function is a parameterless function,
 /// which can be used to create an arbitrary number of projectiles
 /// on-demand.
-ParsedProjectileFactory SceneDescription::readProjectileEntity(
+ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
@@ -525,11 +525,11 @@ ParsedProjectileFactory SceneDescription::readProjectileEntity(
 
 	return [=]()
 	{
-		auto model = std::make_shared<si::model::ProjectileEntity>(physProps, pos, veloc);
+		auto model = std::make_shared<si::model::DriftingEntity>(physProps, pos, veloc);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::ProjectileEntity>(model, view(), controllers);
+		return ParsedEntity<si::model::DriftingEntity>(model, view(), controllers);
 	};
 }
 
