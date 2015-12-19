@@ -67,6 +67,9 @@
     <Background>
         <Asset asset="framecounter" />
     </Background>
+    <Decor>
+        
+    </Decor>
     <Timeline>
         <Deadline duration="2.0">
             <Show asset="namespace-invaders" />

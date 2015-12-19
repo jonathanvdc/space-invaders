@@ -52,7 +52,8 @@ void ShipCollisionController::handleCollision(
 		auto collisionMomentum = this->ship->getMomentum() - other->getMomentum();
 
 		// Decrement the ship's health.
-		this->ship->setHealth(this->ship->getHealth() - vecLength(collisionMomentum));
+		auto& healthbar = this->ship->getHealth();
+		healthbar.setHealth(healthbar.getHealth() - vecLength(collisionMomentum));
 
 		if (!this->ship->isAlive())
 		{

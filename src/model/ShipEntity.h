@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "Healthbar.h"
 #include "Entity.h"
 #include "DriftingEntity.h"
 
@@ -16,30 +17,17 @@ namespace si
 			/// initial position and max health.
 			ShipEntity(PhysicsProperties physProps, Vector2d initialPos, double maxHealth);
 
-			/// Gets this ship's current health.
-			/// Health is defined as the total amount of
-			/// momentum from impacts a stationary
-			/// ship can survive.
-			double getHealth() const;
+			/// Gets this ship's health bar.
+			Healthbar& getHealth();
 
-			/// Sets this ship's current health to the given value.
-			/// Health is defined as the total amount of
-			/// momentum from impacts a stationary
-			/// ship can survive.
-			void setHealth(double value);
-
-			/// Gets this ship's max health.
-			/// Health is defined as the total amount of
-			/// momentum from impacts a stationary
-			/// ship can survive.
-			double getMaxHealth() const;
+			/// Gets this ship's health bar.
+			const Healthbar& getHealth() const;
 
 			/// Tests if this ship entity is still alive.
 			bool isAlive() const;
 
 		private:
-			const double maxHealth;
-			double health;
+			Healthbar health;
 		};
 	}
 }

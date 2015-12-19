@@ -8,25 +8,22 @@ using namespace si;
 using namespace si::model;
 
 ShipEntity::ShipEntity(PhysicsProperties physProps, Vector2d initialPos, double maxHealth)
-	: DriftingEntity(physProps, initialPos), maxHealth(maxHealth), health(maxHealth)
+	: DriftingEntity(physProps, initialPos), health(maxHealth)
 { }
 
-double ShipEntity::getHealth() const
+/// Gets this ship's health bar.
+Healthbar& ShipEntity::getHealth()
 {
-	return this->health;
+    return this->health;
 }
 
-void ShipEntity::setHealth(double value)
+/// Gets this ship's health bar.
+const Healthbar& ShipEntity::getHealth() const
 {
-	this->health = value;
-}
-
-double ShipEntity::getMaxHealth() const
-{
-	return this->maxHealth;
+    return this->health;
 }
 
 bool ShipEntity::isAlive() const
 {
-	return this->health > 0.0;
+	return this->health.isAlive();
 }
