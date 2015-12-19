@@ -3,7 +3,6 @@
 #include <memory>
 #include "model/Entity.h"
 #include "model/ShipEntity.h"
-#include "model/ProjectileEntity.h"
 #include "model/DriftingEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
@@ -42,9 +41,9 @@ void si::parser::addToSceneDirected(
 /// Momentum is transferred from the source entity to
 /// the projectile, but the bullet is not added to the
 /// scene.
-ParsedEntity<si::model::ProjectileEntity> si::parser::fireProjectile(
+ParsedEntity<si::model::DriftingEntity> si::parser::fireProjectile(
 	si::model::DriftingEntity& source,
-	const ParsedProjectileFactory& projectileFactory)
+	const ParsedDriftingEntityFactory& projectileFactory)
 {
 	// Create a new projectile.
 	auto projectile = projectileFactory();
@@ -80,7 +79,7 @@ ParsedEntity<si::model::ProjectileEntity> si::parser::fireProjectile(
 /// to the scene.
 void si::parser::fireAndAddProjectile(
 	si::model::DriftingEntity& source,
-	const ParsedProjectileFactory& projectileFactory,
+	const ParsedDriftingEntityFactory& projectileFactory,
 	Scene& target)
 {
 	auto entity = fireProjectile(source, projectileFactory);

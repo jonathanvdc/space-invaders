@@ -3,7 +3,6 @@
 #include <memory>
 #include "model/Entity.h"
 #include "model/ShipEntity.h"
-#include "model/ProjectileEntity.h"
 #include "model/DriftingEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
@@ -71,7 +70,7 @@ namespace si
 		using ParsedEntityFactory = Factory<ParsedEntity<T>>;
 
 		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
-		using ParsedProjectileFactory = ParsedEntityFactory<si::model::ProjectileEntity>;
+		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
 		/// Adds the given entity's model, view and
 		/// controllers to the given scene.
@@ -89,9 +88,9 @@ namespace si
 		/// Momentum is transferred from the source entity to
 		/// the projectile, but the bullet is not added to the
 		/// scene.
-		ParsedEntity<si::model::ProjectileEntity> fireProjectile(
+		ParsedEntity<si::model::DriftingEntity> fireProjectile(
 			si::model::DriftingEntity& source,
-			const ParsedProjectileFactory& projectileFactory);
+			const ParsedDriftingEntityFactory& projectileFactory);
 
 		/// Creates a bullet that is fired from the given source. 
 		/// Momentum is transferred from the source entity to
@@ -99,7 +98,7 @@ namespace si
 		/// to the scene.
 		void fireAndAddProjectile(
 			si::model::DriftingEntity& source,
-			const ParsedProjectileFactory& projectileFactory,
+			const ParsedDriftingEntityFactory& projectileFactory,
 			Scene& target);
 	}
 }

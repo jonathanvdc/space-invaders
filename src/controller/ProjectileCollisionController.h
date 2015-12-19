@@ -3,7 +3,6 @@
 #include "Common.h"
 #include "model/Entity.h"
 #include "model/PhysicsEntity.h"
-#include "model/ProjectileEntity.h"
 #include "IController.h"
 #include "CollisionControllerBase.h"
 
@@ -16,7 +15,7 @@ namespace si
 		{
 		public:
 			ProjectileCollisionController(
-				const std::shared_ptr<si::model::ProjectileEntity>& projectile);
+				const std::shared_ptr<si::model::PhysicsEntity>& projectile);
 
 			/// Gets the entity this collision controller detects collisions
 			/// for.
@@ -27,7 +26,7 @@ namespace si
 				si::model::Game& game,
 				const std::shared_ptr<si::model::PhysicsEntity>& other) final override;
 		private:
-			std::shared_ptr<si::model::ProjectileEntity> projectile;
+			std::shared_ptr<si::model::PhysicsEntity> projectile;
 		};
 
 	}

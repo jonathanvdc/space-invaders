@@ -3,7 +3,6 @@
 #include "Common.h"
 #include "model/Entity.h"
 #include "model/PhysicsEntity.h"
-#include "model/ProjectileEntity.h"
 #include "IController.h"
 #include "CollisionControllerBase.h"
 
@@ -11,7 +10,7 @@ using namespace si;
 using namespace si::controller;
 
 ProjectileCollisionController::ProjectileCollisionController(
-	const std::shared_ptr<si::model::ProjectileEntity>& projectile)
+	const std::shared_ptr<si::model::PhysicsEntity>& projectile)
 	: projectile(projectile)
 { }
 
@@ -31,14 +30,6 @@ void ProjectileCollisionController::handleCollision(
 	{
 		// Simply remove this projectile from the game.
 		game.remove(this->projectile);
-
-		// Now create nested projectiles from the projectile we
-		// just destroyed.
-		for (const auto& item : this->projectile->createNestedProjectiles())
-		{
-			game.add(item);
-		}
-
 		this->projectile = nullptr;
 	}
 }
