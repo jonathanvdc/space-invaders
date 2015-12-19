@@ -33,7 +33,7 @@ namespace si
 				si::view::IRenderable_ptr view,
 				std::vector<si::controller::IController_ptr>&& controllers)
 				: model(model), view(view), controllers(controllers)
-			{}
+			{ }
 
 			/// Creates a parsed entity from the given components.
 			template<typename V>

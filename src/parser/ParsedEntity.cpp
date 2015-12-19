@@ -62,7 +62,7 @@ ParsedEntity<si::model::DriftingEntity> si::parser::fireProjectile(
 
 	// Firing a projectile in space should make ships
 	// accelerate in the opposite direction.
-	// We want to preserve momentum, though, so we'll
+	// To preserve momentum, we'll
 	// multiply that acceleration by the projectile's mass,
 	// and divide it by the ship's.
 	source.accelerate(-si::Vector2d(veloc * projPhysProps.mass / sourcePhysProps.mass));
