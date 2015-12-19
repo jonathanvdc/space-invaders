@@ -20,6 +20,7 @@
 #include "controller/OutOfBoundsController.h"
 #include "controller/ShipCollisionController.h"
 #include "controller/ProjectileCollisionController.h"
+#include "controller/ObstacleCollisionController.h"
 #include "view/IRenderable.h"
 #include "view/SpriteRenderable.h"
 #include "view/RelativeBoxRenderable.h"
@@ -136,6 +137,7 @@ const char* const BoxNodeName = "Box";
 const char* const GroupNodeName = "Group";
 const char* const ProjectileNodeName = "Projectile";
 const char* const ShipNodeName = "Ship";
+const char* const ObstacleNodeName = "Obstacle";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
 const char* const FontsTableNodeName = "Fonts";
@@ -465,6 +467,28 @@ ParsedShipFactory SceneDescription::readShipEntity(
 	};
 }
 
+/// Reads a obstacle entity as specified by the given node.
+ParsedObstacleFactory SceneDescription::readObstacleEntity(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+{
+	auto physProps = getPhysicsProperties(node);
+	Vector2d pos(
+		getDoubleAttribute(node, PositionXAttributeName, 0.5),
+		getDoubleAttribute(node, PositionYAttributeName, 0.5));
+	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
+	auto view = readAssociatedView(node, assets);
+
+	return [=]()
+	{
+		auto model = std::make_shared<si::model::ObstacleEntity>(physProps, pos, maxHealth);
+		std::vector<si::controller::IController_ptr> controllers;
+		controllers.push_back(std::make_shared<si::controller::ObstacleCollisionController>(model));
+		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
+		return ParsedEntity<si::model::ObstacleEntity>(model, view(), controllers);
+	};
+}
+
 /// Reads a player entity as specified by the given node.
 void SceneDescription::addPlayerToScene(
 	const tinyxml2::XMLElement* node,
@@ -546,6 +570,10 @@ ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 	else if (nodeName == ProjectileNodeName)
 	{
 		return readProjectileEntity(node, assets);
+	}
+	else if (nodeName == ObstacleNodeName)
+	{
+		return readObstacleEntity(node, assets);
 	}
 	else
 	{

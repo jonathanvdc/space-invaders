@@ -5,6 +5,7 @@ set(SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/CollisionControllerBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GameController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntervalActionController.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ObstacleCollisionController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/OutOfBoundsController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PathController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PlayerController.cpp

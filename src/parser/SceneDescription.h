@@ -13,6 +13,7 @@
 #include "model/PhysicsEntity.h"
 #include "model/ShipEntity.h"
 #include "model/DriftingEntity.h"
+#include "model/ObstacleEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
 #include "timeline/ITimelineEvent.h"
@@ -134,6 +135,11 @@ namespace si
 
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+
+			/// Reads an obstacle entity as specified by the given node.
+			static ParsedObstacleFactory readObstacleEntity(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 

@@ -4,6 +4,7 @@
 #include "model/Entity.h"
 #include "model/ShipEntity.h"
 #include "model/DriftingEntity.h"
+#include "model/ObstacleEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
 #include "Scene.h"
@@ -70,6 +71,7 @@ namespace si
 		using ParsedEntityFactory = Factory<ParsedEntity<T>>;
 
 		using ParsedShipFactory = ParsedEntityFactory<si::model::ShipEntity>;
+		using ParsedObstacleFactory = ParsedEntityFactory<si::model::ObstacleEntity>;
 		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
 		/// Adds the given entity's model, view and

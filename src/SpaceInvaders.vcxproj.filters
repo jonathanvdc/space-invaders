@@ -147,6 +147,9 @@
     <ClCompile Include="model\Healthbar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controller\ObstacleCollisionController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tinyxml2\tinyxml2.h">
@@ -276,6 +279,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="model\Healthbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="controller\ObstacleCollisionController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

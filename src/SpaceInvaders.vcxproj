@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="controller\CollisionControllerBase.cpp" />
+    <ClCompile Include="controller\ObstacleCollisionController.cpp" />
     <ClCompile Include="model\Healthbar.cpp" />
     <ClCompile Include="model\ObstacleEntity.cpp" />
     <ClCompile Include="timeline\ConcurrentEvent.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="controller\GameController.h" />
     <ClInclude Include="controller\IController.h" />
     <ClInclude Include="controller\IntervalActionController.h" />
+    <ClInclude Include="controller\ObstacleCollisionController.h" />
     <ClInclude Include="controller\OutOfBoundsController.h" />
     <ClInclude Include="controller\PathController.h" />
     <ClInclude Include="controller\PlayerController.h" />

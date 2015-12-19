@@ -26,6 +26,9 @@ namespace si
 			/// Tests if this obstacle entity is still alive.
 			bool isAlive() const;
 
+			/// Gets this obstacle entity's position.
+			Vector2d getPosition() const final override;
+
 		private:
 			Healthbar health;
 		};

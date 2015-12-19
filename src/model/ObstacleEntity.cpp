@@ -25,6 +25,11 @@ const Healthbar& ObstacleEntity::getHealth() const
     return this->health;
 }
 
+Vector2d ObstacleEntity::getPosition() const
+{
+	return this->prevPos;
+}
+
 bool ObstacleEntity::isAlive() const
 {
 	return this->health.isAlive();
