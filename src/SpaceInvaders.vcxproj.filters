@@ -141,6 +141,9 @@
     <ClCompile Include="timeline\PermanentEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="view\ParticleEmitterRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tinyxml2\tinyxml2.h">
@@ -263,8 +266,11 @@
     <ClInclude Include="timeline\ConditionalEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClCompile Include="timeline\PermanentEvent.h">
+    <ClInclude Include="timeline\PermanentEvent.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="view\ParticleEmitterRenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
