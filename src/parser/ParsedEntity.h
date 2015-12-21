@@ -8,6 +8,7 @@
 #include "controller/IController.h"
 #include "view/IRenderable.h"
 #include "timeline/ITimelineEvent.h"
+#include "timeline/ConcurrentEvent.h"
 #include "timeline/SpawnEvent.h"
 #include "Scene.h"
 
