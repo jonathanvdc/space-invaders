@@ -18,7 +18,8 @@ namespace si
 		public:
 			/// Creates a new path controller from the given
 			/// target ship, spring constant, and path.
-			PathController(const std::shared_ptr<si::model::ShipEntity>& target,
+			PathController(
+				const std::shared_ptr<si::model::ShipEntity>& target,
 				double springConstant, const std::function<Vector2d(duration_t)>& path);
 
 			/// Checks if this controller is still "alive".
@@ -29,9 +30,9 @@ namespace si
 			/// Updates the game model based on the given time delta.
 			void update(si::model::Game& game, duration_t timeDelta) final override;
 		private:
-			const std::shared_ptr<si::model::ShipEntity> target;
-			const double springConstant;
-			const std::function<Vector2d(duration_t)> path;
+			std::shared_ptr<si::model::ShipEntity> target;
+			double springConstant;
+			std::function<Vector2d(duration_t)> path;
 		};
 	}
 }

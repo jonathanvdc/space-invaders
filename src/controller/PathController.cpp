@@ -10,7 +10,8 @@
 using namespace si;
 using namespace si::controller;
 
-PathController::PathController(const std::shared_ptr<si::model::ShipEntity>& target,
+PathController::PathController(
+	const std::shared_ptr<si::model::ShipEntity>& target,
 	double springConstant, const std::function<Vector2d(duration_t)>& path)
 	: target(target), springConstant(springConstant), path(path)
 { }
@@ -24,7 +25,7 @@ bool PathController::isAlive() const
 }
 
 /// Updates the game model based on the given time delta.
-void PathController::update(si::model::Game&, duration_t timeDelta) 
+void PathController::update(si::model::Game&, duration_t timeDelta)
 {
 	// To make an entity trace a path, we will model
 	// a critically dampened spring. This kind of spring
