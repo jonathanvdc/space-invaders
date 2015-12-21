@@ -83,12 +83,13 @@ namespace si
 			const int columnCount;
 			const InvaderBehavior invaderBehavior;
 
-			// Stores the wave event's ships as a vector of vectors of
-			// pointers to ships. Essentially, every nested vector contains
-			// all ships in a specific column - identified by the vector's
-			// index in the topmost vector -, which can then be used to determine
-			// which invaders are free to open fire.
-			std::vector<std::vector<std::shared_ptr<si::model::ShipEntity>>> ships;
+			/// Stores the wave event's ships as a vector of vectors of
+			/// timeline event pointers. Essentially, every nested vector contains
+			/// the life of all ships in a specific column - identified by the vector's
+			/// index in the topmost vector -, which can then be used to determine
+			/// which invaders are free to open fire: once an event has been ended,
+			/// its value in this vector is set to null.
+			std::vector<std::vector<ITimelineEvent_ptr>> shipEvents;
 		};
 	}
 }

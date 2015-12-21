@@ -457,14 +457,14 @@ ParsedShipFactory SceneDescription::readShipEntity(
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
 
-	return [=]()
+	return readAssociatedEvents<si::model::ShipEntity>(node, assets, [=]()
 	{
 		auto model = std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
-	};
+		return addDrainHealth(addControllers(createDirectedEntity(model, view()), controllers));
+	});
 }
 
 /// Reads a obstacle entity as specified by the given node.
@@ -479,14 +479,14 @@ ParsedObstacleFactory SceneDescription::readObstacleEntity(
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
 
-	return [=]()
+	return readAssociatedEvents<si::model::ObstacleEntity>(node, assets, [=]()
 	{
 		auto model = std::make_shared<si::model::ObstacleEntity>(physProps, pos, maxHealth);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ObstacleCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
-	};
+		return addDrainHealth(addControllers(createDirectedEntity(model, view()), controllers));
+	});
 }
 
 /// Reads a player entity as specified by the given node.
@@ -526,7 +526,7 @@ void SceneDescription::addPlayerToScene(
 		},
 		[=](const si::model::Game& game, si::duration_t) -> bool
 		{
-			return game.contains(player.model);
+			return player.model->isAlive();
 		}));
 }
 
@@ -547,14 +547,14 @@ ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 		getDoubleAttribute(node, VelocityYAttributeName));
 	auto view = readAssociatedView(node, assets);
 
-	return [=]()
+	return readAssociatedEvents<si::model::DriftingEntity>(node, assets, [=]()
 	{
 		auto model = std::make_shared<si::model::DriftingEntity>(physProps, pos, veloc);
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
-	};
+		return addControllers(createDirectedEntity(model, view()), controllers);
+	});
 }
 
 /// Reads a model entity specified by the given node.
@@ -586,6 +586,9 @@ EventFactory SceneDescription::parseTimeline(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
+	if (node == nullptr)
+		return si::timeline::emptyTimeline;
+
 	std::vector<EventFactory> events;
 	for (auto child = node->FirstChildElement();
 		 child != nullptr;
@@ -612,6 +615,9 @@ EventFactory SceneDescription::parseConcurrentEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
+	if (node == nullptr)
+		return si::timeline::emptyTimeline;
+
 	std::vector<EventFactory> events;
 	for (auto child = node->FirstChildElement();
 		 child != nullptr;
@@ -638,6 +644,9 @@ EventFactory SceneDescription::parseWaveEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
+	if (node == nullptr)
+		return si::timeline::emptyTimeline;
+
 	auto shipNode = getSingleChild(node, ShipNodeName);
 	auto shipFactory = readShipEntity(shipNode, assets);
 	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
@@ -670,6 +679,9 @@ EventFactory SceneDescription::parseConditionalEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
+	if (node == nullptr)
+		return si::timeline::emptyTimeline;
+
 	auto condition = getReferenceAttribute(node, PredicateAttributeName, conditionMap);
 	auto ifEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ThenNodeName)), assets);
 	auto elseEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ElseNodeName)), assets);
@@ -685,6 +697,9 @@ EventFactory SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
 	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
 {
+	if (node == nullptr)
+		return si::timeline::emptyTimeline;
+
 	std::string nodeName = node->Name();
 	if (nodeName == TimelineNodeName)
 	{
@@ -739,6 +754,31 @@ EventFactory SceneDescription::parseTimelineEvent(
 	{
 		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
 	}
+}
+
+/// Reads a timed "show" event as specified by the given node.
+/// A null node is interpreted as the empty event.
+std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> SceneDescription::parseTimedShowEvent(
+	const tinyxml2::XMLElement* node,
+	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+{
+	if (node == nullptr)
+	{
+		return [=](const si::model::Entity_ptr&) -> si::timeline::ITimelineEvent_ptr
+		{
+			return si::timeline::emptyTimeline();
+		};
+	}
+
+	auto asset = getReferenceAttribute(node, AssetAttributeName, assets);
+	duration_t time(getDoubleAttribute(node, DurationAttributeName));
+
+	return [=](const si::model::Entity_ptr& parent) -> si::timeline::ITimelineEvent_ptr
+	{
+		return std::make_shared<si::timeline::DeadlineEvent>(
+			std::make_shared<si::timeline::ShowEvent>([=]() { return Scene::track(parent, asset()); }),
+			time);
+	};
 }
 
 /// Throws an error if the XML document

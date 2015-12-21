@@ -51,7 +51,7 @@ void Timeline::start(Scene& target)
 /// the amount of time that has passed since the
 /// last update, are given. A boolean flag is
 /// returned that tells if this timeline event
-/// has ended.
+/// is still running.
 bool Timeline::update(Scene& target, duration_t timeDelta)
 {
 	if (this->isRunning())
@@ -122,11 +122,14 @@ ITimelineEvent& Timeline::getCurrentEvent()
 }
 
 /// Creates an event that performs the given events
-/// concurrently.
+/// in sequence.
 std::shared_ptr<Timeline> si::timeline::sequence(
-	const ITimelineEvent_ptr& first,
-	const ITimelineEvent_ptr& second)
+	const std::vector<ITimelineEvent_ptr>& items)
 {
-	return std::make_shared<Timeline>(
-		std::vector<ITimelineEvent_ptr>({ first, second }));
+	return std::make_shared<Timeline>(items);
+}
+
+std::shared_ptr<Timeline> si::timeline::emptyTimeline()
+{
+	return std::make_shared<Timeline>(std::vector<ITimelineEvent_ptr>());
 }

@@ -95,9 +95,7 @@ bool ConcurrentEvent::isRunning() const
 /// Creates an event that performs the given events
 /// concurrently.
 std::shared_ptr<ConcurrentEvent> si::timeline::concurrent(
-	const ITimelineEvent_ptr& first,
-	const ITimelineEvent_ptr& second)
+	const std::vector<ITimelineEvent_ptr>& items)
 {
-	return std::make_shared<ConcurrentEvent>(
-		std::vector<ITimelineEvent_ptr>({ first, second }));
+	return std::make_shared<ConcurrentEvent>(items);
 }

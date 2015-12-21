@@ -64,7 +64,9 @@ namespace si
 		/// Creates an event that performs the given events
 		/// in sequence.
 		std::shared_ptr<Timeline> sequence(
-			const ITimelineEvent_ptr& first,
-			const ITimelineEvent_ptr& second);
+			const std::vector<ITimelineEvent_ptr>& items);
+
+		/// Creates an empty timeline.
+		std::shared_ptr<Timeline> emptyTimeline();
 	}
 }

@@ -14,6 +14,7 @@
 #include "ITimelineEvent.h"
 #include "Scene.h"
 #include "ConcurrentEvent.h"
+#include "Timeline.h"
 #include "SpawnEvent.h"
 #include "RandomGenerator.h"
 
@@ -28,29 +29,32 @@ InvaderWaveEvent::InvaderWaveEvent(
 	int rowCount, int columnCount, const InvaderBehavior& invaderBehavior)
 	: shipFactory(shipFactory), projectileFactory(projectileFactory),
 	  rowCount(rowCount), columnCount(columnCount),
-	  invaderBehavior(invaderBehavior), ships()
+	  invaderBehavior(invaderBehavior), shipEvents()
 { }
 
 /// Starts the timeline event.
 void InvaderWaveEvent::start(Scene& target)
 {
-	// End this event if it was already running.
-	this->end(target);
+	// Don't restart an invader wave event.
+	if (shipEvents.size() > 0)
+		return;
+
+	const double pi = 3.1415;
+
+	double velX = this->invaderBehavior.velocity.x;
+	double velY = this->invaderBehavior.velocity.y;
+
+	auto projFactory = this->projectileFactory;
 
 	// Create ships
 	for (int i = 0; i < this->columnCount; i++)
 	{
-		std::vector<std::shared_ptr<si::model::ShipEntity>> column;
+		std::vector<ITimelineEvent_ptr> column;
 		for (int j = 0; j < this->rowCount; j++)
 		{
 			// Create a new ship entity.
 			auto entity = this->shipFactory();
 			auto model = entity.model;
-
-			const double pi = 3.1415;
-
-			double velX = this->invaderBehavior.velocity.x;
-			double velY = this->invaderBehavior.velocity.y;
 
 			// Now compute the entity's initial position in the game.
 			// We want to position ships like this, where the columns
@@ -82,10 +86,6 @@ void InvaderWaveEvent::start(Scene& target)
 
 			model->setPosition({ posX, posY });
 
-			// Add the entity to the game, along with its
-			// view and controllers.
-			si::parser::addToScene(entity, target);
-
 			// Now sketch out a path for the ships to follow.
 			// We'll have them follow a gentle sine curve, by
 			// attaching them to a critically dampened spring
@@ -108,21 +108,19 @@ void InvaderWaveEvent::start(Scene& target)
 
 			// A path controller will make the invader ship trace
 			// the path function we just created.
-			target.addController(std::make_shared<si::controller::PathController>(
-				model, this->invaderBehavior.springConstant, path));
-
-			auto projFactory = this->projectileFactory;
+			auto pathController = std::make_shared<si::controller::PathController>(
+				model, this->invaderBehavior.springConstant, path);
 
 			// Let's get the invaders to fire some projectiles
 			// at us by creating an interval action controller.
-			target.addController(std::make_shared<si::controller::IntervalActionController>(
+			auto fireProjectileController = std::make_shared<si::controller::IntervalActionController>(
 				this->invaderBehavior.fireInterval +
 					si::RandomGenerator::instance.nextReal<double>(-1.0, 1.0) * this->invaderBehavior.fireIntervalDeviation,
 				[=](const si::model::Game& game, duration_t) -> bool
 				{
-					for (std::size_t k = 0; k < column.size(); k++)
+					for (std::size_t k = 0; k < static_cast<std::size_t>(j); k++)
 					{
-						if (game.contains(column.at(k)))
+						if (this->shipEvents.at(i).at(k) != nullptr)
 							// Don't open fire if there is another invader
 							// in front of this ship.
 							return false;
@@ -131,20 +129,51 @@ void InvaderWaveEvent::start(Scene& target)
 				}, [=, &target](si::model::Game&, duration_t) -> void
 				{
 					si::parser::fireAndAddProjectile(*model, projFactory, target);
-				}, [=](const si::model::Game& game, duration_t) -> bool
+				}, [=](const si::model::Game&, duration_t) -> bool
 				{
-					return game.contains(model);
-				}));
+					return model->isAlive();
+				});
 
-			column.push_back(model);
+			// Create an event that captures the invaders' lifetime.
+			auto lifetimeEvent = concurrent({
+				entity.creationEvent,
+				si::parser::createAddControllersEvent({
+					pathController,
+					fireProjectileController
+				})
+			});
+
+			// Add that event to the current column.
+			column.push_back(lifetimeEvent);
+
+			// Oh, and be sure to start that event.
+			lifetimeEvent->start(target);
 		}
-		this->ships.push_back(column);
+		this->shipEvents.push_back(column);
 	}
 }
 
 /// Has this timeline event update the given scene.
-bool InvaderWaveEvent::update(Scene& target, duration_t)
+bool InvaderWaveEvent::update(Scene& target, duration_t timeDelta)
 {
+	// Update all events. If an event has terminated,
+	// set its value to null.
+	for (auto& col : this->shipEvents)
+	{
+		for (auto& item : col)
+		{
+			// Update the entity's lifetime event.
+			if (item != nullptr && !item->update(target, timeDelta))
+			{
+				// Seems like this entity is done for.
+				// End its event, and set the event pointer
+				// to null.
+				item->end(target);
+				item = nullptr;
+			}
+		}
+	}
+
 	return this->isRunning(target.getGame());
 }
 
@@ -153,23 +182,22 @@ bool InvaderWaveEvent::update(Scene& target, duration_t)
 void InvaderWaveEvent::end(Scene& target)
 {
 	// Remove all ships from the scene.
-	for (const auto& col : this->ships)
+	for (auto& col : this->shipEvents)
 	{
-		for (const auto& item : col)
+		for (auto& item : col)
 		{
-			// Remove the entity itself (the model)
-			// from the scene.
-			// Note: we don't have to remove the
-			//       view or controllers here.
-			//       The scene will do that for us.
-			target.getGame().remove(item);
+			if (item != nullptr)
+			{
+				// Remove the entity itself (the model)
+				// from the scene.
+				// Note: we don't have to remove the
+				//       view or controllers here.
+				//       The scene will do that for us.
+				item->end(target);
+				item = nullptr;
+			}
 		}
 	}
-
-	// Clear the ships vector, to make sure
-	// we don't hang on to the chunks of
-	// memory occupied by the ships.
-	this->ships.clear();
 }
 
 /// Checks if this event is still running.
@@ -177,11 +205,11 @@ bool InvaderWaveEvent::isRunning(const si::model::Game& game) const
 {
 	// The event is still running as long as there is
 	// at least one invader left.
-	for (const auto& col : this->ships)
+	for (const auto& col : this->shipEvents)
 	{
 		for (const auto& item : col)
 		{
-			if (game.contains(item))
+			if (item != nullptr)
 				return true;
 		}
 	}

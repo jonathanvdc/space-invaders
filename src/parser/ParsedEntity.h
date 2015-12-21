@@ -10,6 +10,8 @@
 #include "timeline/ITimelineEvent.h"
 #include "timeline/ConcurrentEvent.h"
 #include "timeline/SpawnEvent.h"
+#include "timeline/InstantaneousEvent.h"
+#include "timeline/FinalizedEvent.h"
 #include "Scene.h"
 
 namespace si
@@ -122,15 +124,33 @@ namespace si
 		/// Adds the given vector of controllers to a parsed entity's
 		/// creation event.
 		template<typename T>
-		ParsedEntity<T> addControllersToEntity(
+		ParsedEntity<T> addControllers(
 			const ParsedEntity<T>& target,
 			const std::vector<si::controller::IController_ptr>& items)
 		{
 			return ParsedEntity<T>(
 				target.model, 
-				si::timeline::concurrent(
-					target.creationEvent, 
-					createAddControllersEvent(items)));
+				si::timeline::concurrent({
+					target.creationEvent,
+					createAddControllersEvent(items)
+				}));
+		}
+
+		/// Appends an event that drains the given parsed entity's
+		/// health to this parsed entity.
+		template<typename T>
+		ParsedEntity<T> addDrainHealth(const ParsedEntity<T>& target)
+		{
+			auto model = target.model;
+
+			return ParsedEntity<T>(
+				model,
+				si::timeline::finalize(
+					target.creationEvent,
+					[model](Scene&) -> void
+					{
+						model->getHealth().setHealth(0.0);
+					}));
 		}
 
 		/// Applies the given parsed entity's creation event

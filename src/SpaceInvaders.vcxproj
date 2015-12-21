@@ -161,6 +161,7 @@
     <ClCompile Include="model\Entity.cpp" />
     <ClCompile Include="controller\ActionController.cpp" />
     <ClCompile Include="timeline\ConditionalEvent.cpp" />
+    <ClCompile Include="timeline\FinalizedEvent.cpp" />
     <ClCompile Include="timeline\InstantaneousEvent.cpp" />
     <ClCompile Include="timeline\PermanentEvent.cpp" />
     <ClCompile Include="view\FramecounterRenderable.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="timeline\ConcurrentEvent.h" />
     <ClInclude Include="timeline\ConditionalEvent.h" />
     <ClInclude Include="timeline\DeadlineEvent.h" />
+    <ClInclude Include="timeline\FinalizedEvent.h" />
     <ClInclude Include="timeline\InstantaneousEvent.h" />
     <ClInclude Include="timeline\InvaderWaveEvent.h" />
     <ClInclude Include="timeline\ITimelineEvent.h" />

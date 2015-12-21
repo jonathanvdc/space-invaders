@@ -154,27 +154,38 @@ namespace si
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a timeline as specified by the given node.
+			/// A null node is interpreted as the empty event.
 			static EventFactory parseTimeline(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a concurrent event as specified by the given node.
+			/// A null node is interpreted as the empty event.
 			static EventFactory parseConcurrentEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads an invader wave event as specified by the given node.
+			/// A null node is interpreted as the empty event.
 			static EventFactory parseWaveEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a condition event as specified by the given node.
+			/// A null node is interpreted as the empty event.
 			static EventFactory parseConditionalEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
 			/// Reads a timeline event as specified by the given node.
+			/// A null node is interpreted as the empty event.
 			static EventFactory parseTimelineEvent(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+
+			/// Reads a timed "show" event as specified by the given node.
+			/// A null node is interpreted as the empty event.
+			static std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> parseTimedShowEvent(
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
@@ -184,6 +195,35 @@ namespace si
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
 				Scene& scene);
+
+			/// Reads this parsed entity factory's associated events.
+			template<typename T>
+			static ParsedEntityFactory<T> readAssociatedEvents(
+				const tinyxml2::XMLElement* node,
+				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
+				const ParsedEntityFactory<T>& source)
+			{
+				auto creatingEvent = parseTimelineEvent(getSingleChild(node, "Creating", true), assets);
+				auto createdEvent = parseTimelineEvent(getSingleChild(node, "Created", true), assets);
+				auto destroyedEvent = parseTimelineEvent(getSingleChild(node, "Destroyed", true), assets);
+				auto creatingEffect = parseTimedShowEvent(getSingleChild(node, "CreatingEffect", true), assets);
+				auto createdEffect = parseTimedShowEvent(getSingleChild(node, "CreatedEffect", true), assets);
+				auto destroyedEffect = parseTimedShowEvent(getSingleChild(node, "DestroyedEffect", true), assets);
+
+				return [=]() -> ParsedEntity<T>
+				{
+					auto entity = source();
+					return ParsedEntity<T>(
+						entity.model,
+						si::timeline::sequence({
+							si::timeline::concurrent({ creatingEvent(), creatingEffect(entity.model) }),
+							si::timeline::concurrent({
+								entity.creationEvent, createdEvent(), createdEffect(entity.model)
+							}),
+							si::timeline::concurrent({ destroyedEvent(), destroyedEffect(entity.model) })
+						}));
+				};
+			}
 
 		private:
 			/// Gets this scene description's texture definitions node.
