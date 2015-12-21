@@ -1,8 +1,7 @@
 #pragma once
 
-#include <memory>
+#include <functional>
 #include "Common.h"
-#include "model/Entity.h"
 #include "ITimelineEvent.h"
 #include "Scene.h"
 
@@ -10,15 +9,16 @@ namespace si
 {
 	namespace timeline
 	{
-		/// A class for timeline events that spawn an entity.
-		class SpawnEvent final : public ITimelineEvent
+		/// Defines an event that instantaneously performs an action.
+		class InstantaneousEvent final : public ITimelineEvent
 		{
 		public:
-			/// Creates a new entity-spawning event from the given
-			/// entity and view.
-			SpawnEvent(
-				const si::model::Entity_ptr& entityModel,
-				const si::view::IRenderable_ptr& entityView);
+			typedef std::function<void(Scene&)> SceneAction;
+
+			/// Creates an instananeous event from the given
+			/// action function.
+			InstantaneousEvent(
+				const SceneAction& action);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -41,8 +41,7 @@ namespace si
 			/// has been started.
 			void end(Scene& target) final override;
 		private:
-			si::model::Entity_ptr entityModel;
-			si::view::IRenderable_ptr entityView;
+			SceneAction action;
 		};
 	}
 }

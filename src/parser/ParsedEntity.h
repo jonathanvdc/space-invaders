@@ -7,6 +7,8 @@
 #include "model/ObstacleEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
+#include "timeline/ITimelineEvent.h"
+#include "timeline/SpawnEvent.h"
 #include "Scene.h"
 
 namespace si
@@ -20,49 +22,52 @@ namespace si
 		{
 			/// Creates a parsed entity from the given components.
 			ParsedEntity(
-				std::shared_ptr<T> model,
-				si::view::IRenderable_ptr view,
-				const std::vector<si::controller::IController_ptr>& controllers)
-				: model(model), view(view), controllers(controllers)
-			{ }
-
-			/// Creates a parsed entity from the given components,
-			/// with move semantics.
-			ParsedEntity(
-				std::shared_ptr<T> model,
-				si::view::IRenderable_ptr view,
-				std::vector<si::controller::IController_ptr>&& controllers)
-				: model(model), view(view), controllers(controllers)
+				const std::shared_ptr<T>& model,
+				const si::timeline::ITimelineEvent_ptr& creationEvent)
+				: model(model), creationEvent(creationEvent)
 			{ }
 
 			/// Creates a parsed entity from the given components.
-			template<typename V>
 			ParsedEntity(
-				const ParsedEntity<V>& other)
-				: ParsedEntity(other.model, other.view, other.controllers)
+				std::shared_ptr<T>&& model,
+				si::timeline::ITimelineEvent_ptr&& creationEvent)
+				: model(model), creationEvent(creationEvent)
 			{ }
 
-			/// Creates a parsed entity from the given components,
-			/// with move semantics.
+			/// Copies a parsed entity.
 			template<typename V>
-			ParsedEntity(
-				ParsedEntity<V>&& other)
-				: ParsedEntity(other.model, other.view, other.controllers)
+			ParsedEntity(const ParsedEntity<V>& other)
+				: ParsedEntity(other.model, other.creationEvent)
 			{ }
+
+			/// Moves a parsed entity.
+			template<typename V>
+			ParsedEntity(ParsedEntity<V>&& other)
+				: ParsedEntity(other.model, other.creationEvent)
+			{ }
+
+			/// Copy-assigns a parsed entity.
+			template<typename V>
+			ParsedEntity<T>& operator=(const ParsedEntity<V>& other)
+			{
+				this->model = other.model;
+				this->creationEvent = other.creationEvent;
+			}
+
+			/// Move-assigns a parsed entity.
+			template<typename V>
+			ParsedEntity<T>& operator=(ParsedEntity<V>&& other)
+			{
+				this->model = std::move(other.model);
+				this->creationEvent = std::move(other.creationEvent);
+			}
 
 			/// The parsed entity's model.
 			std::shared_ptr<T> model;
-			/// The parsed entity's view.
-			si::view::IRenderable_ptr view;
-			/// The parsed entity's controllers.
-			std::vector<si::controller::IController_ptr> controllers;
+			/// An event that adds the parsed entity
+			/// to the scene.
+			si::timeline::ITimelineEvent_ptr creationEvent;
 		};
-
-		template<typename T, typename V>
-		ParsedEntity<T> dynamic_entity_cast(const ParsedEntity<V>& entity)
-		{
-			return ParsedEntity<T>(std::dynamic_pointer_cast<T>(entity.model), entity.view, entity.controllers);
-		}
 
 		template<typename T>
 		using Factory = std::function<T()>;
@@ -76,16 +81,61 @@ namespace si
 		using ParsedObstacleFactory = ParsedEntityFactory<si::model::ObstacleEntity>;
 		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
-		/// Adds the given entity's model, view and
-		/// controllers to the given scene.
+		/// Creates a parsed entity from the given physics model
+		/// and view. The created timeline will spawn the model,
+		/// and associate it with a renderable that tracks the
+		/// model's position.
+		template<typename T>
+		ParsedEntity<T> createTrackedEntity(
+			const std::shared_ptr<T>& model,
+			const si::view::IRenderable_ptr& view)
+		{
+			return ParsedEntity<T>(
+				model, 
+				std::make_shared<si::timeline::SpawnEvent>(
+					model, 
+					Scene::track(model, view)));
+		}
+
+		/// Creates a parsed entity from the given physics model
+		/// and view. The created timeline will spawn the model,
+		/// and associate it with a renderable that tracks the
+		/// model's position and orientation.
+		template<typename T>
+		ParsedEntity<T> createDirectedEntity(
+			const std::shared_ptr<T>& model,
+			const si::view::IRenderable_ptr& view)
+		{
+			return ParsedEntity<T>(
+				model, 
+				std::make_shared<si::timeline::SpawnEvent>(
+					model, 
+					Scene::direct(model, view)));
+		}
+		
+		/// Adds the given vector of controllers to a parsed entity's
+		/// creation event.
+		template<typename T>
+		ParsedEntity<T> addControllersToEntity(
+			const ParsedEntity<T>& target,
+			const std::vector<si::controller::IController_ptr>& items)
+		{
+			return ParsedEntity<T>(
+				target.model, 
+				si::timeline::concurrent(
+					target.creationEvent, 
+					createAddControllersEvent(items)));
+		}
+
+		/// Creates an event that adds the given vector
+		/// of controllers to the scene.
+		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
+			const std::vector<si::controller::IController_ptr>& items);
+
+		/// Applies the given parsed entity's creation event
+		/// to a scene.
 		void addToScene(
 			const ParsedEntity<si::model::Entity>& entity,
-			Scene& target);
-
-		/// Adds the given directed entity's model, view and
-		/// controllers to the given scene.
-		void addToSceneDirected(
-			const ParsedEntity<si::model::PhysicsEntity>& entity,
 			Scene& target);
 
 		/// Creates a bullet that is fired from the given source. 

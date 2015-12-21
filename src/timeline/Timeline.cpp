@@ -120,3 +120,13 @@ ITimelineEvent& Timeline::getCurrentEvent()
 {
 	return *this->allEvents.at(this->currentEventIndex);
 }
+
+/// Creates an event that performs the given events
+/// concurrently.
+std::shared_ptr<Timeline> si::timeline::sequence(
+	const ITimelineEvent_ptr& first,
+	const ITimelineEvent_ptr& second)
+{
+	return std::make_shared<Timeline>(
+		std::vector<ITimelineEvent_ptr>({ first, second }));
+}

@@ -91,3 +91,13 @@ bool ConcurrentEvent::isRunning() const
 {
 	return !this->runningEventIndices.empty();
 }
+
+/// Creates an event that performs the given events
+/// concurrently.
+std::shared_ptr<ConcurrentEvent> si::timeline::concurrent(
+	const ITimelineEvent_ptr& first,
+	const ITimelineEvent_ptr& second)
+{
+	return std::make_shared<ConcurrentEvent>(
+		std::vector<ITimelineEvent_ptr>({ first, second }));
+}

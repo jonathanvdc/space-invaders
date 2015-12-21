@@ -60,5 +60,11 @@ namespace si
 			std::size_t currentEventIndex;
 			const std::vector<ITimelineEvent_ptr> allEvents;
 		};
+
+		/// Creates an event that performs the given events
+		/// in sequence.
+		std::shared_ptr<Timeline> sequence(
+			const ITimelineEvent_ptr& first,
+			const ITimelineEvent_ptr& second);
 	}
 }

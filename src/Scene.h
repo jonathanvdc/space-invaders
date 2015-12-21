@@ -47,21 +47,6 @@ namespace si
 		void addEntity(
 			const si::model::Entity_ptr& model,
 			const si::view::IRenderable_ptr& view);
-		
-		/// Adds an entity that is associated with as
-		/// view to this scene. The view will
-		/// be wired to track the entity's position.
-		void addTrackedEntity(
-			const si::model::Entity_ptr& model,
-			const si::view::IRenderable_ptr& view);
-
-		/// Adds an entity that is associated with as
-		/// view to this scene. The view will
-		/// be wired to track the entity's position 
-		/// and orientation.
-		void addDirectedEntity(
-			const std::shared_ptr<si::model::PhysicsEntity>& model,
-			const si::view::IRenderable_ptr& view);
 
 		/// Adds a renderable (view) element to 
 		/// this scene that is not associated 
@@ -120,6 +105,19 @@ namespace si
 
 		/// Gets this scene's controller.
 		const si::controller::GameController& getController() const;
+
+		/// Creates a renderable from the given view that
+		/// traces the given entity's position.
+		static si::view::IRenderable_ptr track(
+			const si::model::Entity_ptr& model,
+			const si::view::IRenderable_ptr& view);
+
+		/// Creates a renderable from the given view that
+		/// traces the given entity's position and 
+		/// orientation.
+		static si::view::IRenderable_ptr direct(
+			const std::shared_ptr<si::model::PhysicsEntity>& model,
+			const si::view::IRenderable_ptr& view);
 
 	private:
 		/// Updates all events that are currently running,

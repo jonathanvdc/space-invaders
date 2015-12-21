@@ -68,49 +68,6 @@ void Scene::addEntity(
 	this->associatedView[model] = view;
 }
 
-/// Adds an entity that is associated with as
-/// view to this scene. The view will
-/// be wired to track the entity's position.
-void Scene::addTrackedEntity(
-	const si::model::Entity_ptr& model,
-	const si::view::IRenderable_ptr& view)
-{
-	this->addEntity(model,
-		std::make_shared<si::view::PathOffsetRenderable>(
-			view,
-			[=]() { return model->getPosition(); }));
-}
-
-/// Adds an entity that is associated with as
-/// view to this scene. The view will
-/// be wired to track the entity's position
-/// and orientation.
-void Scene::addDirectedEntity(
-	const std::shared_ptr<si::model::PhysicsEntity>& model,
-	const si::view::IRenderable_ptr& view)
-{
-	this->addEntity(model,
-		std::make_shared<si::view::TransformedRenderable>(
-			view,
-			[=](DoubleRect bounds)
-			{
-				auto pos = model->getPosition();
-				auto radius = model->getPhysicsProperties().radius;
-				DoubleRect rect(
-					pos.x * bounds.width + bounds.top,
-					pos.y * bounds.height + bounds.left,
-					bounds.width * radius * 2.0,
-					bounds.height * radius * 2.0);
-
-				Vector2d center(rect.left + rect.width / 2.0, rect.top + rect.height / 2.0);
-				return std::make_pair(
-					si::view::Transformation::rotate(
-						model->getOrientationAngle() + si::view::Transformation::pi / 2.0,
-						center),
-					rect);
-			}));
-}
-
 /// Adds a renderable (view) element to
 /// this scene that is not associated
 /// with anything in the model. This
@@ -251,4 +208,43 @@ void Scene::updateEvents(duration_t timeDelta)
 		{
 			return deadEvents.find(item) != deadEvents.end();
 		}), this->sceneEvents.end());
+}
+
+/// Creates a renderable from the given view that
+/// traces the given entity's position.
+si::view::IRenderable_ptr Scene::track(
+	const si::model::Entity_ptr& model,
+	const si::view::IRenderable_ptr& view)
+{
+	return std::make_shared<si::view::PathOffsetRenderable>(
+		view,
+		[=]() { return model->getPosition(); });
+}
+
+/// Creates a renderable from the given view that
+/// traces the given entity's position and 
+/// orientation.
+si::view::IRenderable_ptr Scene::direct(
+	const std::shared_ptr<si::model::PhysicsEntity>& model,
+	const si::view::IRenderable_ptr& view)
+{
+	return std::make_shared<si::view::TransformedRenderable>(
+		view,
+		[=](DoubleRect bounds)
+		{
+			auto pos = model->getPosition();
+			auto radius = model->getPhysicsProperties().radius;
+			DoubleRect rect(
+				pos.x * bounds.width + bounds.top,
+				pos.y * bounds.height + bounds.left,
+				bounds.width * radius * 2.0,
+				bounds.height * radius * 2.0);
+
+			Vector2d center(rect.left + rect.width / 2.0, rect.top + rect.height / 2.0);
+			return std::make_pair(
+				si::view::Transformation::rotate(
+					model->getOrientationAngle() + si::view::Transformation::pi / 2.0,
+					center),
+				rect);
+		});
 }

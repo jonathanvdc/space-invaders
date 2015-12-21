@@ -54,5 +54,11 @@ namespace si
 			const std::vector<ITimelineEvent_ptr> subEvents;
 			std::set<std::size_t> runningEventIndices;
 		};
+
+		/// Creates an event that performs the given events
+		/// concurrently.
+		std::shared_ptr<ConcurrentEvent> concurrent(
+			const ITimelineEvent_ptr& first,
+			const ITimelineEvent_ptr& second);
 	}
 }

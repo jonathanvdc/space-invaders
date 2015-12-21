@@ -463,7 +463,7 @@ ParsedShipFactory SceneDescription::readShipEntity(
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::ShipEntity>(model, view(), controllers);
+		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
 	};
 }
 
@@ -485,7 +485,7 @@ ParsedObstacleFactory SceneDescription::readObstacleEntity(
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ObstacleCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::ObstacleEntity>(model, view(), controllers);
+		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
 	};
 }
 
@@ -504,7 +504,7 @@ void SceneDescription::addPlayerToScene(
 	player.model->accelerate(si::Vector2d(velX, velY));
 
 	// Add the player to the scene.
-	addToSceneDirected(player, scene);
+	addToScene(player, scene);
 
 	// Register the player, and throw in a player
 	// velocity controller while we're at it.
@@ -553,7 +553,7 @@ ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 		std::vector<si::controller::IController_ptr> controllers;
 		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
 		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return ParsedEntity<si::model::DriftingEntity>(model, view(), controllers);
+		return addControllersToEntity(createDirectedEntity(model, view()), controllers);
 	};
 }
 
@@ -695,7 +695,7 @@ EventFactory SceneDescription::parseTimelineEvent(
 		auto factory = readEntity(getSingleChild(node), assets);
 		return [=]()
 		{
-			return std::make_shared<si::timeline::SpawnEvent>(factory);
+			return factory().creationEvent;
 		};
 	}
 	else if (nodeName == DeadlineNodeName)

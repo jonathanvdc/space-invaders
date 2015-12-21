@@ -84,11 +84,7 @@ void InvaderWaveEvent::start(Scene& target)
 
 			// Add the entity to the game, along with its
 			// view and controllers.
-			target.addDirectedEntity(model, entity.view);
-			for (const auto& item : entity.controllers)
-			{
-				target.addController(item);
-			}
+			si::parser::addToScene(entity, target);
 
 			// Now sketch out a path for the ships to follow.
 			// We'll have them follow a gentle sine curve, by

@@ -6,6 +6,7 @@
 #include "model/DriftingEntity.h"
 #include "controller/IController.h"
 #include "view/IRenderable.h"
+#include "timeline/InstantaneousEvent.h"
 #include "Scene.h"
 
 using namespace si;
@@ -17,24 +18,22 @@ void si::parser::addToScene(
 	const ParsedEntity<si::model::Entity>& entity,
 	Scene& target)
 {
-	target.addTrackedEntity(entity.model, entity.view);
-	for (const auto& item : entity.controllers)
-	{
-		target.addController(item);
-	}
+	target.startEvent(entity.creationEvent);
 }
 
-/// Adds the given entity's model, view and
-/// controllers to the given scene.
-void si::parser::addToSceneDirected(
-	const ParsedEntity<si::model::PhysicsEntity>& entity,
-	Scene& target)
+/// Creates an event that adds the given vector
+/// of controllers to the scene.
+si::timeline::ITimelineEvent_ptr si::parser::createAddControllersEvent(
+	const std::vector<si::controller::IController_ptr>& items)
 {
-	target.addDirectedEntity(entity.model, entity.view);
-	for (const auto& item : entity.controllers)
-	{
-		target.addController(item);
-	}
+	return std::make_shared<si::timeline::InstantaneousEvent>(
+		[=](Scene& target) -> void
+		{
+			for (const auto& item : items)
+			{
+				target.addController(item);
+			}
+		});
 }
 
 /// Creates a bullet that is fired from the given source. 
@@ -83,5 +82,5 @@ void si::parser::fireAndAddProjectile(
 	Scene& target)
 {
 	auto entity = fireProjectile(source, projectileFactory);
-	addToSceneDirected(entity, target);
+	addToScene(entity, target);
 }
