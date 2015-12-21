@@ -112,6 +112,11 @@ namespace si
 					model, 
 					Scene::direct(model, view)));
 		}
+
+		/// Creates an event that adds the given vector
+		/// of controllers to the scene.
+		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
+			const std::vector<si::controller::IController_ptr>& items);
 		
 		/// Adds the given vector of controllers to a parsed entity's
 		/// creation event.
@@ -126,11 +131,6 @@ namespace si
 					target.creationEvent, 
 					createAddControllersEvent(items)));
 		}
-
-		/// Creates an event that adds the given vector
-		/// of controllers to the scene.
-		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
-			const std::vector<si::controller::IController_ptr>& items);
 
 		/// Applies the given parsed entity's creation event
 		/// to a scene.
