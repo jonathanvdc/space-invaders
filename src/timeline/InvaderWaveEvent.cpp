@@ -116,7 +116,7 @@ void InvaderWaveEvent::start(Scene& target)
 			auto fireProjectileController = std::make_shared<si::controller::IntervalActionController>(
 				this->invaderBehavior.fireInterval +
 					si::RandomGenerator::instance.nextReal<double>(-1.0, 1.0) * this->invaderBehavior.fireIntervalDeviation,
-				[=](const si::model::Game& game, duration_t) -> bool
+				[=](const si::model::Game&, duration_t) -> bool
 				{
 					for (std::size_t k = 0; k < static_cast<std::size_t>(j); k++)
 					{
@@ -174,7 +174,7 @@ bool InvaderWaveEvent::update(Scene& target, duration_t timeDelta)
 		}
 	}
 
-	return this->isRunning(target.getGame());
+	return this->isRunning();
 }
 
 /// Applies this timeline event's finalization
@@ -201,7 +201,7 @@ void InvaderWaveEvent::end(Scene& target)
 }
 
 /// Checks if this event is still running.
-bool InvaderWaveEvent::isRunning(const si::model::Game& game) const
+bool InvaderWaveEvent::isRunning() const
 {
 	// The event is still running as long as there is
 	// at least one invader left.

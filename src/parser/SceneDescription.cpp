@@ -524,7 +524,7 @@ void SceneDescription::addPlayerToScene(
 		{
 			fireAndAddProjectile(*player.model, projectileFactory, scene);
 		},
-		[=](const si::model::Game& game, si::duration_t) -> bool
+		[=](const si::model::Game&, si::duration_t) -> bool
 		{
 			return player.model->isAlive();
 		}));

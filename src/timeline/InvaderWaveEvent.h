@@ -28,13 +28,13 @@ namespace si
 			/// The spring constant that the invader ship's
 			/// controller uses to trace its path.
 			double springConstant;
-			/// The rate at which invader ships are allowed 
+			/// The rate at which invader ships are allowed
 			/// to launch projectiles.
 			duration_t fireInterval;
-			/// A maximal deviation from the standard fire 
+			/// A maximal deviation from the standard fire
 			/// interval for this type of invader.
-			/// If this is set to a nonzero value, then 
-			/// some invaders will fire projectiles at 
+			/// If this is set to a nonzero value, then
+			/// some invaders will fire projectiles at
 			/// a higher pace than others.
 			duration_t fireIntervalDeviation;
 		};
@@ -64,18 +64,18 @@ namespace si
 			/// is still running.
 			bool update(Scene& target, duration_t timeDelta) final override;
 
-			/// Applies this timeline event's finalization 
+			/// Applies this timeline event's finalization
 			/// logic to the given scene: objects associated
 			/// with this event are removed from the scene.
 			/// This method can either be called to perform
-			/// cleanup after an event has ended, or 
+			/// cleanup after an event has ended, or
 			/// to forcibly end the event. It should
 			/// be called exactly once for every event that
 			/// has been started.
 			void end(Scene& target) final override;
 
 			/// Checks if this event is still running.
-			bool isRunning(const si::model::Game& game) const;
+			bool isRunning() const;
 		private:
 			const si::parser::ParsedShipFactory shipFactory;
 			const si::parser::ParsedDriftingEntityFactory projectileFactory;
