@@ -133,6 +133,10 @@ namespace si
 				const tinyxml2::XMLElement* node,
 				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
 
+			/// Reads the controller that is described by the given node.
+			static ControllerBuilder readController(
+				const tinyxml2::XMLElement* node);
+
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
 				const tinyxml2::XMLElement* node,

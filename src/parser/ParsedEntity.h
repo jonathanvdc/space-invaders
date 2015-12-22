@@ -84,6 +84,9 @@ namespace si
 		using ParsedObstacleFactory = ParsedEntityFactory<si::model::ObstacleEntity>;
 		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
+		using ControllerBuilder =
+			std::function<si::controller::IController_ptr(const std::shared_ptr<si::model::PhysicsEntity>&)>;
+
 		/// Creates a parsed entity from the given physics model
 		/// and view. The created timeline will spawn the model,
 		/// and associate it with a renderable that tracks the
@@ -94,9 +97,9 @@ namespace si
 			const si::view::IRenderable_ptr& view)
 		{
 			return ParsedEntity<T>(
-				model, 
+				model,
 				std::make_shared<si::timeline::SpawnEvent>(
-					model, 
+					model,
 					Scene::track(model, view)));
 		}
 
@@ -110,9 +113,9 @@ namespace si
 			const si::view::IRenderable_ptr& view)
 		{
 			return ParsedEntity<T>(
-				model, 
+				model,
 				std::make_shared<si::timeline::SpawnEvent>(
-					model, 
+					model,
 					Scene::direct(model, view)));
 		}
 
@@ -120,7 +123,7 @@ namespace si
 		/// of controllers to the scene.
 		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
 			const std::vector<si::controller::IController_ptr>& items);
-		
+
 		/// Adds the given vector of controllers to a parsed entity's
 		/// creation event.
 		template<typename T>
@@ -129,7 +132,7 @@ namespace si
 			const std::vector<si::controller::IController_ptr>& items)
 		{
 			return ParsedEntity<T>(
-				target.model, 
+				target.model,
 				si::timeline::concurrent({
 					target.creationEvent,
 					createAddControllersEvent(items)
@@ -159,7 +162,7 @@ namespace si
 			const ParsedEntity<si::model::Entity>& entity,
 			Scene& target);
 
-		/// Creates a bullet that is fired from the given source. 
+		/// Creates a bullet that is fired from the given source.
 		/// Momentum is transferred from the source entity to
 		/// the projectile, but the bullet is not added to the
 		/// scene.
@@ -167,7 +170,7 @@ namespace si
 			si::model::DriftingEntity& source,
 			const ParsedDriftingEntityFactory& projectileFactory);
 
-		/// Creates a bullet that is fired from the given source. 
+		/// Creates a bullet that is fired from the given source.
 		/// Momentum is transferred from the source entity to
 		/// the projectile, after which the projectile is added
 		/// to the scene.

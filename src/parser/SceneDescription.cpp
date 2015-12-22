@@ -21,6 +21,7 @@
 #include "controller/ShipCollisionController.h"
 #include "controller/ProjectileCollisionController.h"
 #include "controller/ObstacleCollisionController.h"
+#include "controller/GravityController.h"
 #include "view/IRenderable.h"
 #include "view/SpriteRenderable.h"
 #include "view/RelativeBoxRenderable.h"
@@ -157,6 +158,7 @@ const char* const RibbonParticleNodeName = "RibbonParticle";
 const char* const ParticleEmitterNodeName = "ParticleEmitter";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
+const char* const GravityNodeName = "Gravity";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -190,6 +192,7 @@ const char* const RowsAttributeName = "rows";
 const char* const ColumnsAttributeName = "columns";
 const char* const PredicateAttributeName = "predicate";
 const char* const SpeedAttributeName = "speed";
+const char* const GravitationalConstantAttributeName = "G";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -438,6 +441,27 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	else if (nodeName == GroupNodeName)
 	{
 		return readGroupRenderable(node, resources);
+	}
+	else
+	{
+		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
+	}
+}
+
+/// Reads the controller that is described by the given node.
+ControllerBuilder SceneDescription::readController(
+	const tinyxml2::XMLElement* node)
+{
+	std::string nodeName = node->Name();
+	if (nodeName == GravityNodeName)
+	{
+		double gravitationalConstant = getDoubleAttribute(node, GravitationalConstantAttributeName);
+
+		return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> si::controller::IController_ptr
+		{
+			return std::make_shared<si::controller::GravityController>(
+				parent, gravitationalConstant);
+		};
 	}
 	else
 	{
