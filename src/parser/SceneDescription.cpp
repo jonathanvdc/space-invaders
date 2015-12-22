@@ -149,6 +149,7 @@ const char* const SpawnNodeName = "Spawn";
 const char* const DeadlineNodeName = "Deadline";
 const char* const PermanentNodeName = "Permanent";
 const char* const ConcurrentNodeName = "Concurrent";
+const char* const ControllersNodeName = "Controllers";
 const char* const ShowNodeName = "Show";
 const char* const WaveNodeName = "Wave";
 const char* const ConditionNodeName = "Condition";
@@ -469,6 +470,44 @@ ControllerBuilder SceneDescription::readController(
 	}
 }
 
+/// Reads the given node's vector of associated controllers.
+std::vector<ControllerBuilder> SceneDescription::readAssociatedControllers(
+	const tinyxml2::XMLElement* node)
+{
+	std::vector<ControllerBuilder> results;
+	auto controllersNode = getSingleChild(node, ControllersNodeName, true);
+	if (controllersNode == nullptr)
+		return results;
+
+	for (auto child = controllersNode->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		results.push_back(readController(child));
+	}
+
+	return results;
+}
+
+/// Creates a directed parsed entity from the given parameters.
+/// This logic is common to ships, obstacles and projectiles.
+template<typename TModel, typename TPathController, typename... TArgs>
+static ParsedEntity<TModel> instantiateDirectedEntity(
+	const Factory<si::view::IRenderable_ptr>& view,
+	const std::vector<ControllerBuilder>& associatedControllers,
+	TArgs... args)
+{
+	auto model = std::make_shared<TModel>(args...);
+	std::vector<si::controller::IController_ptr> controllers;
+	controllers.push_back(std::make_shared<TPathController>(model));
+	controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
+	for (const auto& item : associatedControllers)
+	{
+		controllers.push_back(item(model));
+	}
+	return addControllers(createDirectedEntity(model, view()), controllers);
+}
+
 /// Reads a ship entity as specified by the given node.
 ParsedShipFactory SceneDescription::readShipEntity(
 	const tinyxml2::XMLElement* node,
@@ -480,14 +519,15 @@ ParsedShipFactory SceneDescription::readShipEntity(
 		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
+	auto assocCtrlrs = readAssociatedControllers(node);
 
 	return readAssociatedEvents<si::model::ShipEntity>(node, assets, [=]()
 	{
-		auto model = std::make_shared<si::model::ShipEntity>(physProps, pos, maxHealth);
-		std::vector<si::controller::IController_ptr> controllers;
-		controllers.push_back(std::make_shared<si::controller::ShipCollisionController>(model));
-		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addDrainHealth(addControllers(createDirectedEntity(model, view()), controllers));
+		return addDrainHealth(
+			instantiateDirectedEntity<
+				si::model::ShipEntity,
+				si::controller::ShipCollisionController>(
+					view, assocCtrlrs, physProps, pos, maxHealth));
 	});
 }
 
@@ -502,14 +542,15 @@ ParsedObstacleFactory SceneDescription::readObstacleEntity(
 		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
+	auto assocCtrlrs = readAssociatedControllers(node);
 
 	return readAssociatedEvents<si::model::ObstacleEntity>(node, assets, [=]()
 	{
-		auto model = std::make_shared<si::model::ObstacleEntity>(physProps, pos, maxHealth);
-		std::vector<si::controller::IController_ptr> controllers;
-		controllers.push_back(std::make_shared<si::controller::ObstacleCollisionController>(model));
-		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addDrainHealth(addControllers(createDirectedEntity(model, view()), controllers));
+		return addDrainHealth(
+			instantiateDirectedEntity<
+				si::model::ObstacleEntity,
+				si::controller::ObstacleCollisionController>(
+					view, assocCtrlrs, physProps, pos, maxHealth));
 	});
 }
 
@@ -570,14 +611,14 @@ ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 		getDoubleAttribute(node, VelocityXAttributeName),
 		getDoubleAttribute(node, VelocityYAttributeName));
 	auto view = readAssociatedView(node, assets);
+	auto assocCtrlrs = readAssociatedControllers(node);
 
 	return readAssociatedEvents<si::model::DriftingEntity>(node, assets, [=]()
 	{
-		auto model = std::make_shared<si::model::DriftingEntity>(physProps, pos, veloc);
-		std::vector<si::controller::IController_ptr> controllers;
-		controllers.push_back(std::make_shared<si::controller::ProjectileCollisionController>(model));
-		controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
-		return addControllers(createDirectedEntity(model, view()), controllers);
+		return instantiateDirectedEntity<
+			si::model::DriftingEntity,
+			si::controller::ProjectileCollisionController>(
+				view, assocCtrlrs, physProps, pos, veloc);
 	});
 }
 

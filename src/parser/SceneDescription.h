@@ -137,6 +137,10 @@ namespace si
 			static ControllerBuilder readController(
 				const tinyxml2::XMLElement* node);
 
+			/// Reads the given node's vector of associated controllers.
+			static std::vector<ControllerBuilder> readAssociatedControllers(
+				const tinyxml2::XMLElement* node);
+
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
 				const tinyxml2::XMLElement* node,
