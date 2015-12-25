@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "tinyxml2/tinyxml2.h"
 #include "Common.h"
@@ -40,6 +41,8 @@
 #include "timeline/PermanentEvent.h"
 #include "timeline/LoopedEvent.h"
 #include "timeline/BackgroundEvent.h"
+#include "timeline/SoundEvent.h"
+#include "timeline/MusicEvent.h"
 #include "Scene.h"
 #include "ParsedEntity.h"
 
@@ -143,6 +146,8 @@ const char* const ShipNodeName = "Ship";
 const char* const ObstacleNodeName = "Obstacle";
 const char* const AssetsTableNodeName = "Assets";
 const char* const TextureTableNodeName = "Textures";
+const char* const SoundsTableNodeName = "Sounds";
+const char* const MusicTableNodeName = "Music";
 const char* const FontsTableNodeName = "Fonts";
 const char* const DecorTableNodeName = "Decor";
 const char* const BackgroundTableNodeName = "Background";
@@ -166,6 +171,8 @@ const char* const LoopNodeName = "Loop";
 const char* const BackgroundNodeName = "Background";
 const char* const MainNodeName = "Main";
 const char* const ExtraNodeName = "Extra";
+const char* const SoundNodeName = "Sound";
+const char* const MusicNodeName = "Music";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -200,6 +207,8 @@ const char* const ColumnsAttributeName = "columns";
 const char* const PredicateAttributeName = "predicate";
 const char* const SpeedAttributeName = "speed";
 const char* const GravitationalConstantAttributeName = "G";
+const char* const MusicAttributeName = "music";
+const char* const SoundAttributeName = "sound";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -253,11 +262,60 @@ std::map<std::string, sf::Font> SceneDescription::readFonts() const
 	return results;
 }
 
+/// Reads all sound assets defined in this
+/// scene description document.
+std::map<std::string, std::shared_ptr<sf::SoundBuffer>> SceneDescription::readSounds() const
+{
+	std::map<std::string, std::shared_ptr<sf::SoundBuffer>> results;
+	auto soundsNode = getSingleChild(this->doc.RootElement(), SoundsTableNodeName, true);
+	if (soundsNode == nullptr)
+		return results;
+	for (auto child = soundsNode->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		std::string name = getAttribute(child, IdAttributeName);
+		std::string path = getAttribute(child, PathAttributeName);
+		auto sound = std::make_shared<sf::SoundBuffer>();
+		if (!sound->loadFromFile(path))
+		{
+			throw SceneDescriptionException("Couldn't load audio file '" + path + "'.");
+		}
+		results[name] = sound;
+	}
+	return results;
+}
+
+/// Reads all music assets defined in this scene
+/// description document.
+std::map<std::string, std::shared_ptr<sf::Music>> SceneDescription::readMusic() const
+{
+	std::map<std::string, std::shared_ptr<sf::Music>> results;
+	auto soundsNode = getSingleChild(this->doc.RootElement(), MusicTableNodeName, true);
+	if (soundsNode == nullptr)
+		return results;
+	for (auto child = soundsNode->FirstChildElement();
+		 child != nullptr;
+		 child = child->NextSiblingElement())
+	{
+		std::string name = getAttribute(child, IdAttributeName);
+		std::string path = getAttribute(child, PathAttributeName);
+		auto sound = std::make_shared<sf::Music>();
+		if (!sound->openFromFile(path))
+		{
+			throw SceneDescriptionException("Couldn't load audio file '" + path + "'.");
+		}
+		results[name] = sound;
+	}
+	return results;
+}
+
 /// Reads all resources defined in this
 /// scene description document.
 SceneResources SceneDescription::readResources() const
 {
-	return{ this->readTextures(), this->readFonts() };
+	return{ this->readTextures(), this->readFonts(),
+			this->readSounds(), this->readMusic() };
 }
 
 /// Reads all renderable elements definitions in this
@@ -290,7 +348,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	// Start by reading all resources and assets (renderable view elements).
 	auto resources = this->readResources();
-	auto assets = this->readRenderables(resources);
+	SceneAssets assets = { this->readRenderables(resources), resources.sounds, resources.music };
 
 	auto scene = std::make_unique<Scene>(name);
 
@@ -342,9 +400,9 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 /// Reads an entity node's associated view.
 Factory<si::view::IRenderable_ptr> SceneDescription::readAssociatedView(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
-	return getReferenceAttribute(node, AssetAttributeName, assets);
+	return getReferenceAttribute(node, AssetAttributeName, assets.renderables);
 }
 
 /// Reads a renderable group element specified by the given node.
@@ -517,7 +575,7 @@ static ParsedEntity<TModel> instantiateDirectedEntity(
 /// Reads a ship entity as specified by the given node.
 ParsedShipFactory SceneDescription::readShipEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
@@ -540,7 +598,7 @@ ParsedShipFactory SceneDescription::readShipEntity(
 /// Reads a obstacle entity as specified by the given node.
 ParsedObstacleFactory SceneDescription::readObstacleEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
@@ -563,7 +621,7 @@ ParsedObstacleFactory SceneDescription::readObstacleEntity(
 /// Reads a player entity as specified by the given node.
 void SceneDescription::addPlayerToScene(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
+	const SceneAssets& assets,
 	Scene& scene)
 {
 	// Read the player ship node, and instantiate it.
@@ -607,7 +665,7 @@ void SceneDescription::addPlayerToScene(
 /// on-demand.
 ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	auto physProps = getPhysicsProperties(node);
 	Vector2d pos(
@@ -631,7 +689,7 @@ ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 /// Reads a model entity specified by the given node.
 ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == ShipNodeName)
@@ -655,7 +713,7 @@ ParsedEntityFactory<si::model::Entity> SceneDescription::readEntity(
 /// Reads a timeline as specified by the given node.
 EventFactory SceneDescription::parseTimeline(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
@@ -684,7 +742,7 @@ EventFactory SceneDescription::parseTimeline(
 /// Reads a concurrent event as specified by the given node.
 EventFactory SceneDescription::parseConcurrentEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
@@ -713,7 +771,7 @@ EventFactory SceneDescription::parseConcurrentEvent(
 /// Reads an invader wave event as specified by the given node.
 EventFactory SceneDescription::parseWaveEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
@@ -748,7 +806,7 @@ static std::map<std::string, si::timeline::ConditionalEvent::ScenePredicate> con
 /// Reads a condition event as specified by the given node.
 EventFactory SceneDescription::parseConditionalEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
@@ -766,7 +824,7 @@ EventFactory SceneDescription::parseConditionalEvent(
 /// Reads a timeline event as specified by the given node.
 EventFactory SceneDescription::parseTimelineEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
@@ -783,6 +841,18 @@ EventFactory SceneDescription::parseTimelineEvent(
 		{
 			return factory().creationEvent;
 		};
+	}
+	else if (nodeName == ShowNodeName)
+	{
+		auto factory = getReferenceAttribute(node, AssetAttributeName, assets.renderables);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::ShowEvent>(factory);
+		};
+	}
+	else if (nodeName == WaveNodeName)
+	{
+		return parseWaveEvent(node, assets);
 	}
 	else if (nodeName == DeadlineNodeName)
 	{
@@ -818,21 +888,25 @@ EventFactory SceneDescription::parseTimelineEvent(
 			return std::make_shared<si::timeline::BackgroundEvent>(mainEvent(), extraEvent());
 		};
 	}
-	else if (nodeName == ShowNodeName)
+	else if (nodeName == SoundNodeName)
 	{
-		auto factory = getReferenceAttribute(node, AssetAttributeName, assets);
+		auto sound = getReferenceAttribute(node, SoundAttributeName, assets.sounds);
 		return [=]()
 		{
-			return std::make_shared<si::timeline::ShowEvent>(factory);
+			return std::make_shared<si::timeline::SoundEvent>(sound);
+		};
+	}
+	else if (nodeName == MusicNodeName)
+	{
+		auto music = getReferenceAttribute(node, MusicAttributeName, assets.music);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::MusicEvent>(music);
 		};
 	}
 	else if (nodeName == ConcurrentNodeName)
 	{
 		return parseConcurrentEvent(node, assets);
-	}
-	else if (nodeName == WaveNodeName)
-	{
-		return parseWaveEvent(node, assets);
 	}
 	else if (nodeName == ConditionNodeName)
 	{
@@ -848,7 +922,7 @@ EventFactory SceneDescription::parseTimelineEvent(
 /// A null node is interpreted as the empty event.
 std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> SceneDescription::parseTimedShowEvent(
 	const tinyxml2::XMLElement* node,
-	const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets)
+	const SceneAssets& assets)
 {
 	if (node == nullptr)
 	{
@@ -858,7 +932,7 @@ std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> Sc
 		};
 	}
 
-	auto asset = getReferenceAttribute(node, AssetAttributeName, assets);
+	auto asset = getReferenceAttribute(node, AssetAttributeName, assets.renderables);
 	duration_t time(getDoubleAttribute(node, DurationAttributeName));
 
 	return [=](const si::model::Entity_ptr& parent) -> si::timeline::ITimelineEvent_ptr

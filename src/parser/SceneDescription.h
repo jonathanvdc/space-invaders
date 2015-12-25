@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "tinyxml2/tinyxml2.h"
 #include "Common.h"
@@ -84,6 +85,22 @@ namespace si
 			std::map<std::string, std::shared_ptr<sf::Texture>> textures;
 			/// The scene's font map.
 			std::map<std::string, sf::Font> fonts;
+			/// The scene's sound map.
+			std::map<std::string, std::shared_ptr<sf::SoundBuffer>> sounds;
+			/// The scene's music map.
+			std::map<std::string, std::shared_ptr<sf::Music>> music;
+		};
+
+		/// Defines a data structure that contains
+		/// processed resources for scenes.
+		struct SceneAssets
+		{
+			/// The scene's renderable map.
+			std::map<std::string, Factory<si::view::IRenderable_ptr>> renderables;
+			/// The scene's sound map.
+			std::map<std::string, std::shared_ptr<sf::SoundBuffer>> sounds;
+			/// The scene's music map.
+			std::map<std::string, std::shared_ptr<sf::Music>> music;
 		};
 
 		/// Defines a scene description class.
@@ -105,6 +122,14 @@ namespace si
 			/// Reads all font assets defined in this
 			/// scene description document.
 			std::map<std::string, sf::Font> readFonts() const;
+
+			/// Reads all sound assets defined in this
+			/// scene description document.
+			std::map<std::string, std::shared_ptr<sf::SoundBuffer>> readSounds() const;
+
+			/// Reads all music assets defined in this scene
+			/// description document.
+			std::map<std::string, std::shared_ptr<sf::Music>> readMusic() const;
 
 			/// Reads all resources defined in this
 			/// scene description document.
@@ -131,7 +156,7 @@ namespace si
 			/// Reads an entity node's associated view.
 			static Factory<si::view::IRenderable_ptr> readAssociatedView(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads the controller that is described by the given node.
 			static ControllerBuilder readController(
@@ -144,71 +169,71 @@ namespace si
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads an obstacle entity as specified by the given node.
 			static ParsedObstacleFactory readObstacleEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a projectile entity as specified by the given node.
 			static ParsedDriftingEntityFactory readProjectileEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads an unknown entity as specified by the given node.
 			static ParsedEntityFactory<si::model::Entity> readEntity(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a timeline as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static EventFactory parseTimeline(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a concurrent event as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static EventFactory parseConcurrentEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads an invader wave event as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static EventFactory parseWaveEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a condition event as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static EventFactory parseConditionalEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a timeline event as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static EventFactory parseTimelineEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Reads a timed "show" event as specified by the given node.
 			/// A null node is interpreted as the empty event.
 			static std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> parseTimedShowEvent(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets);
+				const SceneAssets& assets);
 
 			/// Adds a player entity, as specified by the given node,
 			/// to the scene.
 			static void addPlayerToScene(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
+				const SceneAssets& assets,
 				Scene& scene);
 
 			/// Reads this parsed entity factory's associated events.
 			template<typename T>
 			static ParsedEntityFactory<T> readAssociatedEvents(
 				const tinyxml2::XMLElement* node,
-				const std::map<std::string, Factory<si::view::IRenderable_ptr>>& assets,
+				const SceneAssets& assets,
 				const ParsedEntityFactory<T>& source)
 			{
 				auto creatingEvent = parseTimelineEvent(getSingleChild(node, "Creating", true), assets);
