@@ -38,6 +38,8 @@
 #include "timeline/InvaderWaveEvent.h"
 #include "timeline/ConditionalEvent.h"
 #include "timeline/PermanentEvent.h"
+#include "timeline/LoopedEvent.h"
+#include "timeline/BackgroundEvent.h"
 #include "Scene.h"
 #include "ParsedEntity.h"
 
@@ -160,6 +162,10 @@ const char* const ParticleEmitterNodeName = "ParticleEmitter";
 const char* const FramecounterNodeName = "Framecounter";
 const char* const TextNodeName = "Text";
 const char* const GravityNodeName = "Gravity";
+const char* const LoopNodeName = "Loop";
+const char* const BackgroundNodeName = "Background";
+const char* const MainNodeName = "Main";
+const char* const ExtraNodeName = "Extra";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -793,6 +799,23 @@ EventFactory SceneDescription::parseTimelineEvent(
 		return [=]()
 		{
 			return std::make_shared<si::timeline::PermanentEvent>(inner());
+		};
+	}
+	else if (nodeName == LoopNodeName)
+	{
+		auto inner = parseTimelineEvent(getSingleChild(node), assets);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::LoopedEvent>(inner());
+		};
+	}
+	else if (nodeName == BackgroundNodeName)
+	{
+		auto mainEvent = parseTimelineEvent(getSingleChild(node, MainNodeName), assets);
+		auto extraEvent = parseTimelineEvent(getSingleChild(node, ExtraNodeName), assets);
+		return [=]()
+		{
+			return std::make_shared<si::timeline::BackgroundEvent>(mainEvent(), extraEvent());
 		};
 	}
 	else if (nodeName == ShowNodeName)
