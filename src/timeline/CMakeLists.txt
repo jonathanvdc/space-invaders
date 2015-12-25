@@ -7,6 +7,7 @@ set(SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/FinalizedEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InstantaneousEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/InvaderWaveEvent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MusicEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PermanentEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ShowEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundEvent.cpp
