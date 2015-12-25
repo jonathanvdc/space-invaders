@@ -8,15 +8,17 @@ namespace si
 {
 	namespace timeline
 	{
-		/// Defines an event that starts a child event, but never ends it.
-        /// This allows for the creation of non-blocking timeline components.
-		class PermanentEvent final : public ITimelineEvent
+		/// Defines an event starts two child events: one "main" event and
+        /// one "background" event. Both events are ended when the "main"
+        /// events signals it's done.
+		class BackgroundEvent final : public ITimelineEvent
 		{
 		public:
-			/// Creates a permanent event from the given
-			/// inner event.
-			PermanentEvent(
-				const si::timeline::ITimelineEvent_ptr& innerEvent);
+			/// Creates a timeline event from the given main
+            /// and background events.
+			BackgroundEvent(
+				const si::timeline::ITimelineEvent_ptr& mainEvent,
+                const si::timeline::ITimelineEvent_ptr& backgroundEvent);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -39,7 +41,8 @@ namespace si
 			/// has been started.
 			void end(Scene& target) final override;
 		private:
-			si::timeline::ITimelineEvent_ptr innerEvent;
+			si::timeline::ITimelineEvent_ptr mainEvent;
+            si::timeline::ITimelineEvent_ptr backgroundEvent;
 		};
 	}
 }

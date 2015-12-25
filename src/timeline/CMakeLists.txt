@@ -1,6 +1,7 @@
 
 set(SOURCE
     ${SOURCE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ConcurrentEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ConditionalEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DeadlineEvent.cpp
