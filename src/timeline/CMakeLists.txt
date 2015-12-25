@@ -9,6 +9,7 @@ set(SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/InvaderWaveEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PermanentEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ShowEvent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SoundEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SpawnEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Timeline.cpp
     PARENT_SCOPE
