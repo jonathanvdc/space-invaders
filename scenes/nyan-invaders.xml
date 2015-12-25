@@ -6,6 +6,9 @@
         <Texture id="nyan-ship-tex" path="nyan_cat.png" />
         <Texture id="nyan-projectile-tex" path="nyan_projectile.png" />
     </Textures>
+    <Music>
+        <Music id="nyan-music" path="nyan_music.ogg" />
+    </Music>
     <Assets>
         <Box id="nyan-ship">
             <Group>
@@ -74,5 +77,6 @@
         <Deadline duration="2.0">
             <Show asset="nyan-invaders" />
         </Deadline>
+        <Music music="nyan-music" />
     </Timeline>
 </Scene>
