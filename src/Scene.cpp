@@ -27,7 +27,8 @@ Scene::Scene(const std::string& name)
 { }
 
 Scene::Scene(const std::string& name, sf::Color backgroundColor)
-	: name(name), game(), renderer(backgroundColor), controller(), sceneEvents(), associatedView()
+	: name(name), game(), renderer(backgroundColor), controller(),
+	  sceneEvents(), associatedView(), flags()
 {
 	// Create an event handler that removes the
 	// associated view when the model is removed.
@@ -141,6 +142,19 @@ void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
 	this->players.push_back(player);
 }
 
+/// Gets the boolean flag with the given name.
+bool Scene::getFlag(const std::string& name) const
+{
+	return this->flags.at(name);
+}
+
+/// Sets the boolean flag with the given name to the
+/// given value.
+void Scene::setFlag(const std::string& name, bool value)
+{
+	this->flags[name] = value;
+}
+
 /// Gets this scene's name.
 std::string Scene::getName() const
 {
@@ -222,7 +236,7 @@ si::view::IRenderable_ptr Scene::track(
 }
 
 /// Creates a renderable from the given view that
-/// traces the given entity's position and 
+/// traces the given entity's position and
 /// orientation.
 si::view::IRenderable_ptr Scene::direct(
 	const std::shared_ptr<si::model::PhysicsEntity>& model,

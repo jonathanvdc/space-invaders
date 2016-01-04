@@ -19,7 +19,7 @@
 namespace si
 {
 	/// Defines a "scene" class, which
-	/// contains the model, view, and 
+	/// contains the model, view, and
 	/// controller for an entire game.
 	class Scene final
 	{
@@ -29,7 +29,7 @@ namespace si
 		/// the given name.
 		Scene(const std::string& name);
 
-		/// Creates a new scene, with the 
+		/// Creates a new scene, with the
 		/// given background color, and the
 		/// given name.
 		Scene(const std::string& name, sf::Color backgroundColor);
@@ -48,10 +48,10 @@ namespace si
 			const si::model::Entity_ptr& model,
 			const si::view::IRenderable_ptr& view);
 
-		/// Adds a renderable (view) element to 
-		/// this scene that is not associated 
+		/// Adds a renderable (view) element to
+		/// this scene that is not associated
 		/// with anything in the model. This
-		/// can be useful to construct a 
+		/// can be useful to construct a
 		/// background, or an HUD.
 		void addRenderable(
 			const si::view::IRenderable_ptr& view);
@@ -68,9 +68,9 @@ namespace si
 		void addController(
 			const si::controller::IController_ptr& item);
 
-		/// Starts the given timeline event for this 
-		/// scene. The timeline event will be updated 
-		/// on every frame, until it has ended, at 
+		/// Starts the given timeline event for this
+		/// scene. The timeline event will be updated
+		/// on every frame, until it has ended, at
 		/// which point its `end` method will be called.
 		void startEvent(
 			const si::timeline::ITimelineEvent_ptr& item);
@@ -84,6 +84,13 @@ namespace si
 
 		/// Registers the given ship as a player ship.
 		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
+
+		/// Gets the boolean flag with the given name.
+		bool getFlag(const std::string& name) const;
+
+		/// Sets the boolean flag with the given name to the
+		/// given value.
+		void setFlag(const std::string& name, bool value);
 
 		/// Gets this scene's name.
 		std::string getName() const;
@@ -113,7 +120,7 @@ namespace si
 			const si::view::IRenderable_ptr& view);
 
 		/// Creates a renderable from the given view that
-		/// traces the given entity's position and 
+		/// traces the given entity's position and
 		/// orientation.
 		static si::view::IRenderable_ptr direct(
 			const std::shared_ptr<si::model::PhysicsEntity>& model,
@@ -131,5 +138,6 @@ namespace si
 		std::vector<si::timeline::ITimelineEvent_ptr> sceneEvents;
 		std::vector<std::shared_ptr<si::model::ShipEntity>> players;
 		std::map<si::model::Entity_ptr, si::view::IRenderable_ptr> associatedView;
+		std::map<std::string, bool> flags;
 	};
 }
