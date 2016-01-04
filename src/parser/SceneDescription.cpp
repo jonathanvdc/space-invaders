@@ -173,6 +173,7 @@ const char* const MainNodeName = "Main";
 const char* const ExtraNodeName = "Extra";
 const char* const SoundNodeName = "Sound";
 const char* const MusicNodeName = "Music";
+const char* const SetFlagNodeName = "SetFlag";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -209,6 +210,8 @@ const char* const SpeedAttributeName = "speed";
 const char* const GravitationalConstantAttributeName = "G";
 const char* const MusicAttributeName = "music";
 const char* const SoundAttributeName = "sound";
+const char* const FlagAttributeName = "flag";
+const char* const ValueAttributeName = "value";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -811,7 +814,11 @@ EventFactory SceneDescription::parseConditionalEvent(
 	if (node == nullptr)
 		return si::timeline::emptyTimeline;
 
-	auto condition = getReferenceAttribute(node, PredicateAttributeName, conditionMap);
+	std::string attr = getAttribute(node, PredicateAttributeName);
+	auto condition = conditionMap.find(attr) == conditionMap.end()
+		? [=](const Scene& scene) { return scene.getFlag(attr); }
+		: conditionMap.at(attr);
+
 	auto ifEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ThenNodeName)), assets);
 	auto elseEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ElseNodeName)), assets);
 
@@ -902,6 +909,17 @@ EventFactory SceneDescription::parseTimelineEvent(
 		return [=]()
 		{
 			return std::make_shared<si::timeline::MusicEvent>(music);
+		};
+	}
+	else if (nodeName == SetFlagNodeName)
+	{
+		auto flagName = getAttribute(node, FlagAttributeName);
+		auto flagValue = getBooleanAttribute(node, ValueAttributeName);
+
+		return [=]()
+		{
+			return std::make_shared<si::timeline::InstantaneousEvent>(
+				[=](Scene& target) { target.setFlag(flagName, flagValue); });
 		};
 	}
 	else if (nodeName == ConcurrentNodeName)
@@ -1050,6 +1068,26 @@ sf::Color SceneDescription::getColorAttribute(const tinyxml2::XMLElement* node)
 	auto a = sf::Uint8(getDoubleAttribute(node, AlphaAttributeName, 1.0) * 255);
 
 	return sf::Color(r, g, b, a);
+}
+
+/// Gets the value of the boolean attribute with the given
+/// name in the given XML node.
+/// If no such attribute can be found, an exception is thrown.
+/// If the attribute's value was not recognized as a boolean literal,
+/// an exception is thrown.
+bool SceneDescription::getBooleanAttribute(const tinyxml2::XMLElement* node, const char* name)
+{
+	auto val = getAttribute(node, name);
+	if (val == "true")
+		return true;
+	else if (val == "false")
+		return false;
+	else
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node did have a '" + name +
+			"' attribute, but its value ('" + val + "')" +
+			" was neither 'true' nor 'false'. Expected a boolean nonetheless.");
 }
 
 /// Reads the given node's physics properties.

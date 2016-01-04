@@ -60,6 +60,9 @@
         <Box id="loss" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="You died :/" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
+        <Box id="bossmessage" width="0.4" height="0.4" posY="0.4" posX="0.3">
+            <Text text="Boss fight" font="arial" r="0.2" g="0.8" b="0.2" />
+        </Box>
         <ParticleEmitter id="ray-burst" interval="0.02" lifetime="0.5" speed="0.1">
             <Box width="0.005" height="0.005" >
                 <RibbonParticle r="0.0" g="1.0" b="0.0" />
@@ -92,52 +95,68 @@
         </Deadline>
         <Condition predicate="player.alive">
             <Then>
-                <Timeline>
-                    <Wave rows="3" columns="2">
-                        <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" >
-                            <DestroyedEffect asset="explosion" duration="2.5" />
-                        </Ship>
-                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
-                    </Wave>
-                    <Concurrent>
-                        <Spawn>
-                            <Obstacle mass="200" radius="0.025" health="20" posX="0.2" posY="0.2" asset="ray-burst-model">
-                                <Controllers>
-                                    <Gravity G="0.00001" />
-                                </Controllers>
-                            </Obstacle>
-                        </Spawn>
-                        <Spawn>
-                            <Obstacle mass="200" radius="0.025" health="20" posX="0.775" posY="0.2" asset="ray-burst-model">
-                                <Controllers>
-                                    <Gravity G="0.00001" />
-                                </Controllers>
-                            </Obstacle>
-                        </Spawn>
-                        <Timeline>
-                            <Wave rows="1" columns="3">
-                                <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
-                                    <CreatingEffect asset="ray-burst" duration="1.5" />
-                                    <DestroyedEffect asset="ray-burst" duration="2.5" />
-                                </Ship>
-                                <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
-                            </Wave>
-                            <Wave rows="1" columns="1">
-                                <Ship mass="200" radius="0.05" health="200" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
-                                    <CreatingEffect asset="ray-burst" duration="1.5" />
-                                    <DestroyedEffect asset="ray-burst" duration="2.5" />
+                <Concurrent>
+                    <Timeline>
+                        <Wave rows="3" columns="2">
+                            <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" >
+                                <DestroyedEffect asset="explosion" duration="2.5" />
+                            </Ship>
+                            <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                        </Wave>
+                        <Concurrent>
+                            <Spawn>
+                                <Obstacle mass="200" radius="0.025" health="20" posX="0.2" posY="0.2" asset="ray-burst-model">
                                     <Controllers>
                                         <Gravity G="0.00001" />
                                     </Controllers>
-                                </Ship>
-                                <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
-                            </Wave>
-                        </Timeline>
-                    </Concurrent>
-                    <Permanent>
-                        <Show asset="victory" />
-                    </Permanent>
-                </Timeline>
+                                </Obstacle>
+                            </Spawn>
+                            <Spawn>
+                                <Obstacle mass="200" radius="0.025" health="20" posX="0.775" posY="0.2" asset="ray-burst-model">
+                                    <Controllers>
+                                        <Gravity G="0.00001" />
+                                    </Controllers>
+                                </Obstacle>
+                            </Spawn>
+                            <Timeline>
+                                <Wave rows="1" columns="3">
+                                    <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
+                                        <CreatingEffect asset="ray-burst" duration="1.5" />
+                                        <DestroyedEffect asset="ray-burst" duration="2.5" />
+                                    </Ship>
+                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                                </Wave>
+                                <SetFlag flag="bossfight" value="true" />
+                                <Wave rows="1" columns="1">
+                                    <Ship mass="200" radius="0.05" health="200" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
+                                        <CreatingEffect asset="ray-burst" duration="1.5" />
+                                        <DestroyedEffect asset="ray-burst" duration="2.5" />
+                                        <Controllers>
+                                            <Gravity G="0.00001" />
+                                        </Controllers>
+                                    </Ship>
+                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                                </Wave>
+                                <SetFlag flag="bossfight" value="false" />
+                            </Timeline>
+                        </Concurrent>
+                        <Permanent>
+                            <Show asset="victory" />
+                        </Permanent>
+                    </Timeline>
+                    <Condition predicate="bossfight">
+                        <Then>
+                            <Deadline duration="2.0">
+                                <Show asset="bossmessage" />
+                            </Deadline>
+                        </Then>
+                        <Else>
+                            <Loop>
+                                <Timeline/>
+                            </Loop>
+                        </Else>
+                    </Condition>
+                </Concurrent>
             </Then>
             <Else>
                 <Show asset="loss" />

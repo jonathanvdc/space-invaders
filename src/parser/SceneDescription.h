@@ -301,6 +301,13 @@ namespace si
 			/// its 'r', 'g', 'b' and 'a' attributes.
 			static sf::Color getColorAttribute(const tinyxml2::XMLElement* node);
 
+			/// Gets the value of the boolean attribute with the given
+			/// name in the given XML node.
+			/// If no such attribute can be found, an exception is thrown.
+			/// If the attribute's value was not recognized as a boolean literal,
+			/// an exception is thrown.
+			static bool getBooleanAttribute(const tinyxml2::XMLElement* node, const char* name);
+
 			/// Reads the given node's physics properties.
 			static si::model::PhysicsProperties getPhysicsProperties(
 				const tinyxml2::XMLElement* node);

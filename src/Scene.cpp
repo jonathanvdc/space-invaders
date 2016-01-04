@@ -145,7 +145,14 @@ void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
 /// Gets the boolean flag with the given name.
 bool Scene::getFlag(const std::string& name) const
 {
-	return this->flags.at(name);
+	if (this->flags.find(name) == this->flags.end())
+	{
+		return false;
+	}
+	else
+	{
+		return this->flags.at(name);
+	}
 }
 
 /// Sets the boolean flag with the given name to the
