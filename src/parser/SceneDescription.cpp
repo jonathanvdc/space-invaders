@@ -212,6 +212,7 @@ const char* const MusicAttributeName = "music";
 const char* const SoundAttributeName = "sound";
 const char* const FlagAttributeName = "flag";
 const char* const ValueAttributeName = "value";
+const char* const MaxIterationCountAttributeName = "maxIterations";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -881,9 +882,10 @@ EventFactory SceneDescription::parseTimelineEvent(
 	else if (nodeName == LoopNodeName)
 	{
 		auto inner = parseTimelineEvent(getSingleChild(node), assets);
+		int maxIterationCount = getIntAttribute(node, MaxIterationCountAttributeName, 0);
 		return [=]()
 		{
-			return std::make_shared<si::timeline::LoopedEvent>(inner());
+			return std::make_shared<si::timeline::LoopedEvent>(inner(), maxIterationCount);
 		};
 	}
 	else if (nodeName == BackgroundNodeName)
@@ -1004,6 +1006,27 @@ int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const ch
 		throw SceneDescriptionException(
 			"'" + std::string(node->Name()) +
 			"' node did not have a '" + name + "' attribute.");
+	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node did have a '" + name +
+			"' attribute, but its value was not formatted as an integer number.");
+	default:
+		return result;
+	}
+}
+
+/// Gets the value of the integer attribute with the
+/// given name in the given XML node.
+/// If no such attribute can be found, the given default
+/// value is returned as a result.
+int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const char* name, int defaultValue)
+{
+	int result;
+	switch (node->QueryIntAttribute(name, &result))
+	{
+	case tinyxml2::XML_NO_ATTRIBUTE:
+		return defaultValue;
 	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
 		throw SceneDescriptionException(
 			"'" + std::string(node->Name()) +

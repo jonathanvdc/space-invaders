@@ -285,6 +285,12 @@ namespace si
 			/// exception is thrown.
 			static int getIntAttribute(const tinyxml2::XMLElement* node, const char* name);
 
+			/// Gets the value of the integer attribute with the
+			/// given name in the given XML node.
+			/// If no such attribute can be found, the given default
+			/// value is returned as a result.
+			static int getIntAttribute(const tinyxml2::XMLElement* node, const char* name, int defaultValue);
+
 			/// Gets the value of the floating-point attribute with the
 			/// given name in the given XML node.
 			/// If no such attribute can be found, an

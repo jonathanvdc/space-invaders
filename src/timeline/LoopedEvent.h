@@ -13,9 +13,14 @@ namespace si
 		class LoopedEvent final : public ITimelineEvent
 		{
 		public:
-			/// Creates a timeline event that loops the given inner event. 
+			/// Creates a timeline event that loops the given inner event.
+			/// An maximal number of iterations is also given. If this is
+			/// zero or less, then the inner event is executed an infinite
+			/// number of times. Otherwise, this argument specifies
+			/// the maximal number of iterations.
 			LoopedEvent(
-				const si::timeline::ITimelineEvent_ptr& innerEvent);
+				const si::timeline::ITimelineEvent_ptr& innerEvent,
+				int maxIterationCount);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;
@@ -37,8 +42,16 @@ namespace si
 			/// be called exactly once for every event that
 			/// has been started.
 			void end(Scene& target) final override;
+
+			/// Checks if this event will loop forever,
+			bool isInfiniteLoop() const;
+
+			/// Gets the maximal number of loop iterations.
+			int getMaxIterationCount() const;
 		private:
 			si::timeline::ITimelineEvent_ptr innerEvent;
+			int maxIterationCount;
+			int iterationCount;
 		};
 	}
 }
