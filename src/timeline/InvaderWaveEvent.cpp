@@ -39,7 +39,7 @@ void InvaderWaveEvent::start(Scene& target)
 	if (shipEvents.size() > 0)
 		return;
 
-	const double pi = 3.1415;
+	const double pi = si::view::Transformation::pi;
 
 	double velX = this->invaderBehavior.velocity.x;
 	double velY = this->invaderBehavior.velocity.y;
