@@ -236,12 +236,24 @@ namespace si
 				const SceneAssets& assets,
 				const ParsedEntityFactory<T>& source)
 			{
-				auto creatingEvent = parseTimelineEvent(getSingleChild(node, "Creating", true), assets);
-				auto createdEvent = parseTimelineEvent(getSingleChild(node, "Created", true), assets);
-				auto destroyedEvent = parseTimelineEvent(getSingleChild(node, "Destroyed", true), assets);
-				auto creatingEffect = parseTimedShowEvent(getSingleChild(node, "CreatingEffect", true), assets);
-				auto createdEffect = parseTimedShowEvent(getSingleChild(node, "CreatedEffect", true), assets);
-				auto destroyedEffect = parseTimedShowEvent(getSingleChild(node, "DestroyedEffect", true), assets);
+				auto creatingEvent = parseTimelineEvent(
+					getSingleChild(
+						getSingleChild(node, "Creating", true), nullptr, true),
+						assets);
+				auto createdEvent = parseTimelineEvent(
+					getSingleChild(
+						getSingleChild(node, "Created", true), nullptr, true),
+						assets);
+				auto destroyedEvent = parseTimelineEvent(
+					getSingleChild(
+						getSingleChild(node, "Destroyed", true), nullptr, true),
+						assets);
+				auto creatingEffect = parseTimedShowEvent(
+					getSingleChild(node, "CreatingEffect", true), assets);
+				auto createdEffect = parseTimedShowEvent(
+					getSingleChild(node, "CreatedEffect", true), assets);
+				auto destroyedEffect = parseTimedShowEvent(
+					getSingleChild(node, "DestroyedEffect", true), assets);
 
 				return [=]() -> ParsedEntity<T>
 				{
@@ -320,7 +332,9 @@ namespace si
 
 			/// Gets the only child of the given XML node, optionally
 			/// with the given name.
-			/// If this cannot be done, an exception is thrown.
+			/// If this cannot be done, an exception is thrown, unless the
+			/// isOptional argument is set to true, in which case a null pointer
+			/// is returned.
 			static const tinyxml2::XMLElement* getSingleChild(const tinyxml2::XMLElement* parent,
 				const char* name = nullptr, bool isOptional = false);
 

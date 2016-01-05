@@ -81,6 +81,9 @@
     </Assets>
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <DestroyedEffect asset="explosion" duration="5.0" />
+        <Destroyed>
+            <SetFlag flag="player-alive" value="false" />
+        </Destroyed>
         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
     <Background>
@@ -93,7 +96,8 @@
         <Deadline duration="2.0">
             <Show asset="namespace-invaders" />
         </Deadline>
-        <Condition predicate="player.alive">
+        <SetFlag flag="player-alive" value="true" />
+        <Condition predicate="player-alive">
             <Then>
                 <Concurrent>
                     <Timeline>
@@ -128,25 +132,27 @@
                                     </Ship>
                                     <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                                 </Wave>
-                                <SetFlag flag="bossfight" value="true" />
+                                <SetFlag flag="boss-fight" value="true" />
                                 <Wave rows="1" columns="1">
                                     <Ship mass="200" radius="0.05" health="200" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
                                         <CreatingEffect asset="ray-burst" duration="1.5" />
                                         <DestroyedEffect asset="ray-burst" duration="2.5" />
                                         <Controllers>
                                             <Gravity G="0.00001" />
+                                            <!--<OnLeave posY="0.4" posX="0.3" width="0.4" height="0.4">
+                                            </OnLeave>-->
                                         </Controllers>
                                     </Ship>
                                     <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                                 </Wave>
-                                <SetFlag flag="bossfight" value="false" />
+                                <SetFlag flag="boss-fight" value="false" />
                             </Timeline>
                         </Concurrent>
                         <Permanent>
                             <Show asset="victory" />
                         </Permanent>
                     </Timeline>
-                    <Condition predicate="bossfight">
+                    <Condition predicate="boss-fight">
                         <Then>
                             <Deadline duration="2.0">
                                 <Show asset="bossmessage" />

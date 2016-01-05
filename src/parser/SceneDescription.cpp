@@ -801,12 +801,6 @@ EventFactory SceneDescription::parseWaveEvent(
 	};
 }
 
-/// A map that converts condition names to scene predicates.
-static std::map<std::string, si::timeline::ConditionalEvent::ScenePredicate> conditionMap
-{
-	std::make_pair(std::string("player.alive"), [](const Scene& scene) { return scene.anyPlayersAlive(); })
-};
-
 /// Reads a condition event as specified by the given node.
 EventFactory SceneDescription::parseConditionalEvent(
 	const tinyxml2::XMLElement* node,
@@ -816,9 +810,7 @@ EventFactory SceneDescription::parseConditionalEvent(
 		return si::timeline::emptyTimeline;
 
 	std::string attr = getAttribute(node, PredicateAttributeName);
-	auto condition = conditionMap.find(attr) == conditionMap.end()
-		? [=](const Scene& scene) { return scene.getFlag(attr); }
-		: conditionMap.at(attr);
+	auto condition = [=](const Scene& scene) { return scene.getFlag(attr); };
 
 	auto ifEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ThenNodeName)), assets);
 	auto elseEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ElseNodeName)), assets);
@@ -1124,10 +1116,27 @@ si::model::PhysicsProperties SceneDescription::getPhysicsProperties(
 }
 
 
-/// Gets the only child of the given XML node.
-/// If this cannot be done, an exception is thrown.
+/// Gets the only child of the given XML node, optionally
+/// with the given name.
+/// If this cannot be done, an exception is thrown, unless the
+/// isOptional argument is set to true, in which case a null pointer
+/// is returned.
 const tinyxml2::XMLElement* SceneDescription::getSingleChild(const tinyxml2::XMLElement* node, const char* name, bool isOptional)
 {
+	if (node == nullptr)
+	{
+		if (isOptional)
+		{
+			return nullptr;
+		}
+		else
+		{
+			throw SceneDescriptionException(
+				"No parent node was provided to look for '" + std::string(name) +
+				"' nodes in.");
+		}
+	}
+
 	auto child = node->FirstChildElement(name);
 
 	if (child == nullptr)
