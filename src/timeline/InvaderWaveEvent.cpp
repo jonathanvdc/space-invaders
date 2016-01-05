@@ -37,7 +37,10 @@ void InvaderWaveEvent::start(Scene& target)
 {
 	// Don't restart an invader wave event.
 	if (shipEvents.size() > 0)
-		return;
+	{
+		this->end(target);
+		this->shipEvents.clear();
+	}
 
 	const double pi = si::view::Transformation::pi;
 
@@ -188,11 +191,7 @@ void InvaderWaveEvent::end(Scene& target)
 		{
 			if (item != nullptr)
 			{
-				// Remove the entity itself (the model)
-				// from the scene.
-				// Note: we don't have to remove the
-				//       view or controllers here.
-				//       The scene will do that for us.
+				// End the event.
 				item->end(target);
 				item = nullptr;
 			}

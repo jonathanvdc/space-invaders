@@ -97,12 +97,14 @@
             <Then>
                 <Concurrent>
                     <Timeline>
-                        <Wave rows="3" columns="2">
-                            <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" >
-                                <DestroyedEffect asset="explosion" duration="2.5" />
-                            </Ship>
-                            <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
-                        </Wave>
+                        <Loop maxIterations="2">
+                            <Wave rows="3" columns="2">
+                                <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" >
+                                    <DestroyedEffect asset="explosion" duration="2.5" />
+                                </Ship>
+                                <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
+                            </Wave>
+                        </Loop>
                         <Concurrent>
                             <Spawn>
                                 <Obstacle mass="200" radius="0.025" health="20" posX="0.2" posY="0.2" asset="ray-burst-model">
