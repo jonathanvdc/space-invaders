@@ -84,8 +84,11 @@ namespace si
 		using ParsedObstacleFactory = ParsedEntityFactory<si::model::ObstacleEntity>;
 		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
+		using UnboundController =
+			std::function<si::controller::IController_ptr(Scene&)>;
+
 		using ControllerBuilder =
-			std::function<si::controller::IController_ptr(const std::shared_ptr<si::model::PhysicsEntity>&)>;
+			std::function<UnboundController(const std::shared_ptr<si::model::PhysicsEntity>&)>;
 
 		/// Creates a parsed entity from the given physics model
 		/// and view. The created timeline will spawn the model,
@@ -122,6 +125,11 @@ namespace si
 		/// Creates an event that adds the given vector
 		/// of controllers to the scene.
 		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
+			const std::vector<UnboundController>& items);
+
+		/// Creates an event that adds the given vector
+		/// of controllers to the scene.
+		si::timeline::ITimelineEvent_ptr createAddControllersEvent(
 			const std::vector<si::controller::IController_ptr>& items);
 
 		/// Adds the given vector of controllers to a parsed entity's
@@ -129,7 +137,7 @@ namespace si
 		template<typename T>
 		ParsedEntity<T> addControllers(
 			const ParsedEntity<T>& target,
-			const std::vector<si::controller::IController_ptr>& items)
+			const std::vector<UnboundController>& items)
 		{
 			return ParsedEntity<T>(
 				target.model,

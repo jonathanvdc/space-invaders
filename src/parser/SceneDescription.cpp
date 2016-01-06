@@ -174,6 +174,8 @@ const char* const ExtraNodeName = "Extra";
 const char* const SoundNodeName = "Sound";
 const char* const MusicNodeName = "Music";
 const char* const SetFlagNodeName = "SetFlag";
+const char* const OnLeaveNodeName = "OnLeave";
+const char* const OnEnterNodeName = "OnEnter";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -526,10 +528,13 @@ ControllerBuilder SceneDescription::readController(
 	{
 		double gravitationalConstant = getDoubleAttribute(node, GravitationalConstantAttributeName);
 
-		return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> si::controller::IController_ptr
+		return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> UnboundController
 		{
-			return std::make_shared<si::controller::GravityController>(
-				parent, gravitationalConstant);
+			return [=](Scene&) -> si::controller::IController_ptr
+			{
+				return std::make_shared<si::controller::GravityController>(
+					parent, gravitationalConstant);
+			};
 		};
 	}
 	else
@@ -566,9 +571,9 @@ static ParsedEntity<TModel> instantiateDirectedEntity(
 	TArgs... args)
 {
 	auto model = std::make_shared<TModel>(args...);
-	std::vector<si::controller::IController_ptr> controllers;
-	controllers.push_back(std::make_shared<TPathController>(model));
-	controllers.push_back(std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds));
+	std::vector<UnboundController> controllers;
+	controllers.push_back([=](Scene&) { return std::make_shared<TPathController>(model); });
+	controllers.push_back([=](Scene&) { return std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds); });
 	for (const auto& item : associatedControllers)
 	{
 		controllers.push_back(item(model));

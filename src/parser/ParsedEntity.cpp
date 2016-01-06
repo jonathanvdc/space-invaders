@@ -24,6 +24,21 @@ void si::parser::addToScene(
 /// Creates an event that adds the given vector
 /// of controllers to the scene.
 si::timeline::ITimelineEvent_ptr si::parser::createAddControllersEvent(
+	const std::vector<UnboundController>& items)
+{
+	return std::make_shared<si::timeline::InstantaneousEvent>(
+		[=](Scene& target) -> void
+		{
+			for (const auto& item : items)
+			{
+				target.addController(item(target));
+			}
+		});
+}
+
+/// Creates an event that adds the given vector
+/// of controllers to the scene.
+si::timeline::ITimelineEvent_ptr si::parser::createAddControllersEvent(
 	const std::vector<si::controller::IController_ptr>& items)
 {
 	return std::make_shared<si::timeline::InstantaneousEvent>(
@@ -36,7 +51,7 @@ si::timeline::ITimelineEvent_ptr si::parser::createAddControllersEvent(
 		});
 }
 
-/// Creates a bullet that is fired from the given source. 
+/// Creates a bullet that is fired from the given source.
 /// Momentum is transferred from the source entity to
 /// the projectile, but the bullet is not added to the
 /// scene.
@@ -66,13 +81,13 @@ ParsedEntity<si::model::DriftingEntity> si::parser::fireProjectile(
 	// and divide it by the ship's.
 	source.accelerate(-si::Vector2d(veloc * projPhysProps.mass / sourcePhysProps.mass));
 
-	// We're done here. Adding the 
+	// We're done here. Adding the
 	// projectile to the scene is some
 	// other function's problem.
 	return projectile;
 }
 
-/// Creates a bullet that is fired from the given source. 
+/// Creates a bullet that is fired from the given source.
 /// Momentum is transferred from the source entity to
 /// the projectile, after which the projectile is added
 /// to the scene.
