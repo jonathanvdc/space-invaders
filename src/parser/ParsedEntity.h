@@ -187,7 +187,7 @@ namespace si
 			const ParsedDriftingEntityFactory& projectileFactory,
 			Scene& target);
 
-		/// Creates a function object that returns a copy of the given value. 
+		/// Creates a function object that returns a copy of the given value.
 		template<typename T, typename... TArgs>
 		std::function<T(TArgs...)> constantFunction(T result)
 		{

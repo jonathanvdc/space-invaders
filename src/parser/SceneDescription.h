@@ -160,11 +160,13 @@ namespace si
 
 			/// Reads the controller that is described by the given node.
 			static ControllerBuilder readController(
-				const tinyxml2::XMLElement* node);
+				const tinyxml2::XMLElement* node,
+				const SceneAssets& assets);
 
 			/// Reads the given node's vector of associated controllers.
 			static std::vector<ControllerBuilder> readAssociatedControllers(
-				const tinyxml2::XMLElement* node);
+				const tinyxml2::XMLElement* node,
+				const SceneAssets& assets);
 
 			/// Reads a generic ship entity as specified by the given node.
 			static ParsedShipFactory readShipEntity(
@@ -277,6 +279,14 @@ namespace si
 			/// Gets this scene description's renderable definitions node.
 			const tinyxml2::XMLElement* getRenderablesNode() const;
 
+			/// Reads an on-enter controller. Its contains-model condition can be
+			/// negated, which enables this function to create on-leave controllers
+			/// as well.
+			template<bool negate>
+			static ControllerBuilder readOnEnterController(
+				const tinyxml2::XMLElement* node,
+				const SceneAssets& assets);
+
 			/// Throws an error if the XML document
 			/// associated with this scene is in an error
 			/// state.
@@ -346,19 +356,7 @@ namespace si
 			static T getReferenceAttribute(
 				const tinyxml2::XMLElement* node,
 				const char* attributeName,
-				const std::map<std::string, T>& map)
-			{
-				std::string attr = getAttribute(node, attributeName);
-				if (map.find(attr) == map.end())
-				{
-					throw SceneDescriptionException(
-						"This '" + std::string(node->Name()) + "' node's '" + std::string(attributeName) +
-						"' attribute has a value of '" + attr +
-						"', but no appropriate element could be found for '" + attr + "'.");
-				}
-
-				return map.at(attr);
-			}
+				const std::map<std::string, T>& map);
 
 			tinyxml2::XMLDocument doc;
 			std::string path;

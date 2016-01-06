@@ -16,6 +16,7 @@
 #include "model/ShipEntity.h"
 #include "model/DriftingEntity.h"
 #include "controller/IController.h"
+#include "controller/ActionController.h"
 #include "controller/IntervalActionController.h"
 #include "controller/PlayerController.h"
 #include "controller/OutOfBoundsController.h"
@@ -519,9 +520,47 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	}
 }
 
+/// Reads an on-enter controller. Its contains-model condition can be
+/// negated, which enables this function to create on-leave controllers
+/// as well.
+template<bool negate>
+ControllerBuilder SceneDescription::readOnEnterController(
+	const tinyxml2::XMLElement* node,
+	const SceneAssets& assets)
+{
+	double x = getDoubleAttribute(node, PositionXAttributeName, 0.0);
+	double y = getDoubleAttribute(node, PositionYAttributeName, 0.0);
+	double width = getDoubleAttribute(node, WidthAttributeName, 1.0);
+	double height = getDoubleAttribute(node, HeightAttributeName, 1.0);
+
+	auto eventFactory = parseTimelineEvent(getSingleChild(node), assets);
+
+	si::DoubleRect rect(x, y, width, height);
+
+	return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> UnboundController
+	{
+		return [=](Scene& scene) -> si::controller::IController_ptr
+		{
+			return std::make_shared<si::controller::ActionController>(
+			[=, &scene](si::model::Game& game, duration_t) -> bool
+			{
+				auto parentPos = parent->getPosition();
+				bool cond = rect.contains(parentPos);
+				if (negate ? !cond : cond)
+				{
+					scene.startEvent(eventFactory());
+					return false;
+				}
+				return game.contains(parent);
+			});
+		};
+	};
+}
+
 /// Reads the controller that is described by the given node.
 ControllerBuilder SceneDescription::readController(
-	const tinyxml2::XMLElement* node)
+	const tinyxml2::XMLElement* node,
+	const SceneAssets& assets)
 {
 	std::string nodeName = node->Name();
 	if (nodeName == GravityNodeName)
@@ -537,6 +576,14 @@ ControllerBuilder SceneDescription::readController(
 			};
 		};
 	}
+	else if (nodeName == OnEnterNodeName)
+	{
+		return readOnEnterController<false>(node, assets);
+	}
+	else if (nodeName == OnLeaveNodeName)
+	{
+		return readOnEnterController<true>(node, assets);
+	}
 	else
 	{
 		throw SceneDescriptionException("Unexpected node type: '" + nodeName + "'.");
@@ -545,7 +592,8 @@ ControllerBuilder SceneDescription::readController(
 
 /// Reads the given node's vector of associated controllers.
 std::vector<ControllerBuilder> SceneDescription::readAssociatedControllers(
-	const tinyxml2::XMLElement* node)
+	const tinyxml2::XMLElement* node,
+	const SceneAssets& assets)
 {
 	std::vector<ControllerBuilder> results;
 	auto controllersNode = getSingleChild(node, ControllersNodeName, true);
@@ -556,7 +604,7 @@ std::vector<ControllerBuilder> SceneDescription::readAssociatedControllers(
 		 child != nullptr;
 		 child = child->NextSiblingElement())
 	{
-		results.push_back(readController(child));
+		results.push_back(readController(child, assets));
 	}
 
 	return results;
@@ -596,7 +644,7 @@ ParsedShipFactory SceneDescription::readShipEntity(
 		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
-	auto assocCtrlrs = readAssociatedControllers(node);
+	auto assocCtrlrs = readAssociatedControllers(node, assets);
 
 	return readAssociatedEvents<si::model::ShipEntity>(node, assets, [=]()
 	{
@@ -619,7 +667,7 @@ ParsedObstacleFactory SceneDescription::readObstacleEntity(
 		getDoubleAttribute(node, PositionYAttributeName, 0.5));
 	double maxHealth = getDoubleAttribute(node, HealthAttributeName);
 	auto view = readAssociatedView(node, assets);
-	auto assocCtrlrs = readAssociatedControllers(node);
+	auto assocCtrlrs = readAssociatedControllers(node, assets);
 
 	return readAssociatedEvents<si::model::ObstacleEntity>(node, assets, [=]()
 	{
@@ -688,7 +736,7 @@ ParsedDriftingEntityFactory SceneDescription::readProjectileEntity(
 		getDoubleAttribute(node, VelocityXAttributeName),
 		getDoubleAttribute(node, VelocityYAttributeName));
 	auto view = readAssociatedView(node, assets);
-	auto assocCtrlrs = readAssociatedControllers(node);
+	auto assocCtrlrs = readAssociatedControllers(node, assets);
 
 	return readAssociatedEvents<si::model::DriftingEntity>(node, assets, [=]()
 	{
@@ -1112,6 +1160,28 @@ bool SceneDescription::getBooleanAttribute(const tinyxml2::XMLElement* node, con
 			"' node did have a '" + name +
 			"' attribute, but its value ('" + val + "')" +
 			" was neither 'true' nor 'false'. Expected a boolean nonetheless.");
+}
+
+/// Gets a value from the given key-value map
+/// identified by the attribute with the given name
+/// in the given node.
+/// If something goes wrong, an exception is thrown.
+template<typename T>
+T SceneDescription::getReferenceAttribute(
+	const tinyxml2::XMLElement* node,
+	const char* attributeName,
+	const std::map<std::string, T>& map)
+{
+	std::string attr = getAttribute(node, attributeName);
+	if (map.find(attr) == map.end())
+	{
+		throw SceneDescriptionException(
+			"This '" + std::string(node->Name()) + "' node's '" + std::string(attributeName) +
+			"' attribute has a value of '" + attr +
+			"', but no appropriate element could be found for '" + attr + "'.");
+	}
+
+	return map.at(attr);
 }
 
 /// Reads the given node's physics properties.
