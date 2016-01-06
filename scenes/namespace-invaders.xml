@@ -55,9 +55,12 @@
             <Text text="namespace::invaders" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
         <Box id="victory" width="0.4" height="0.4" posY="0.4" posX="0.3">
-            <Text text="You win!" font="arial" r="1.0" g="1.0" b="1.0" />
+            <Text text="You destroyed the lambda tribe! Err... good job." font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
-        <Box id="loss" width="0.4" height="0.4" posY="0.4" posX="0.3">
+        <Box id="lost" width="0.4" height="0.4" posY="0.4" posX="0.3">
+            <Text text="The machine tribe is done for :(" font="arial" r="1.0" g="1.0" b="1.0" />
+        </Box>
+        <Box id="died" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="You died :/" font="arial" r="1.0" g="1.0" b="1.0" />
         </Box>
         <Box id="bossmessage" width="0.4" height="0.4" posY="0.4" posX="0.3">
@@ -82,7 +85,7 @@
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <DestroyedEffect asset="explosion" duration="5.0" />
         <Destroyed>
-            <SetFlag flag="player-alive" value="false" />
+            <SetFlag flag="game-active" value="false" />
         </Destroyed>
         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
     </Player>
@@ -96,15 +99,24 @@
         <Deadline duration="2.0">
             <Show asset="namespace-invaders" />
         </Deadline>
-        <SetFlag flag="player-alive" value="true" />
-        <Condition predicate="player-alive">
+        <SetFlag flag="game-active" value="true" />
+        <SetFlag flag="invader-escaped" value="false" />
+        <Condition predicate="game-active">
             <Then>
                 <Concurrent>
                     <Timeline>
                         <Loop maxIterations="2">
                             <Wave rows="3" columns="2">
-                                <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader" >
+                                <Ship mass="200" radius="0.025" health="5" velX="1.0" velY="0.07" fireIntervalDeviation="0.2" asset="cpp-invader" >
                                     <DestroyedEffect asset="explosion" duration="2.5" />
+                                    <Controllers>
+                                        <OnLeave>
+                                            <Concurrent>
+                                                <SetFlag flag="game-active" value="false" />
+                                                <SetFlag flag="invader-escaped" value="true" />
+                                            </Concurrent>
+                                        </OnLeave>
+                                    </Controllers>
                                 </Ship>
                                 <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                             </Wave>
@@ -126,9 +138,17 @@
                             </Spawn>
                             <Timeline>
                                 <Wave rows="1" columns="3">
-                                    <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.1" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
+                                    <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.07" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
                                         <CreatingEffect asset="ray-burst" duration="1.5" />
                                         <DestroyedEffect asset="ray-burst" duration="2.5" />
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="invader-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                     </Ship>
                                     <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
                                 </Wave>
@@ -139,8 +159,12 @@
                                         <DestroyedEffect asset="ray-burst" duration="2.5" />
                                         <Controllers>
                                             <Gravity G="0.00001" />
-                                            <!--<OnLeave posY="0.4" posX="0.3" width="0.4" height="0.4">
-                                            </OnLeave>-->
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="invader-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
                                         </Controllers>
                                     </Ship>
                                     <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
@@ -167,7 +191,14 @@
                 </Concurrent>
             </Then>
             <Else>
-                <Show asset="loss" />
+                <Condition predicate="invader-escaped">
+                    <Then>
+                        <Show asset="lost" />
+                    </Then>
+                    <Else>
+                        <Show asset="died" />
+                    </Else>
+                </Condition>
             </Else>
         </Condition>
     </Timeline>
