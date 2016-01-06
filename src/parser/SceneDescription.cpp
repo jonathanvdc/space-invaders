@@ -572,8 +572,12 @@ static ParsedEntity<TModel> instantiateDirectedEntity(
 {
 	auto model = std::make_shared<TModel>(args...);
 	std::vector<UnboundController> controllers;
-	controllers.push_back([=](Scene&) { return std::make_shared<TPathController>(model); });
-	controllers.push_back([=](Scene&) { return std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds); });
+	controllers.push_back(
+		constantFunction<si::controller::IController_ptr, Scene&>(
+			std::make_shared<TPathController>(model)));
+	controllers.push_back(
+		constantFunction<si::controller::IController_ptr, Scene&>(
+			std::make_shared<si::controller::OutOfBoundsController>(model, GameBounds)));
 	for (const auto& item : associatedControllers)
 	{
 		controllers.push_back(item(model));
