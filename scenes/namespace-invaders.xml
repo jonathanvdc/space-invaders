@@ -145,7 +145,6 @@
                                             <OnLeave>
                                                 <Concurrent>
                                                     <SetFlag flag="game-active" value="false" />
-                                                    <SetFlag flag="invader-escaped" value="true" />
                                                 </Concurrent>
                                             </OnLeave>
                                         </Controllers>
