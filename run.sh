@@ -9,9 +9,8 @@ if test "1" -eq "$#"; then
     cmake ..
     make -j2
     cd ../../scenes
-    ../src/build/space-invaders $@
+    ../src/build/space-invaders $@ && echo "Thanks for playing!"
     cd ..
-    echo "Thanks for playing!"
 else
     echo "Expected exactly one input argument. Sorry :/"
     echo
