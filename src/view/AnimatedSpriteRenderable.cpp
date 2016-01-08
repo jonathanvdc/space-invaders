@@ -37,8 +37,7 @@ sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta)
     double fracPart = std::modf(cycleTime, &intPart);
 
     // Calculate the index of the current frame.
-    int frameIndex = static_cast<int>(
-        std::round(fracPart * static_cast<double>(this->frames)));
+    int frameIndex = static_cast<int>(fracPart * static_cast<double>(this->frames));
 
     // Now we can ascertain the texture rectangle.
     int texX = static_cast<int>(textureSize.x);
@@ -47,5 +46,5 @@ sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta)
     int frameX = texX / this->frames;
     int offsetX = frameX * frameIndex;
 
-	return{ offsetX, 0, offsetX + frameX, texY };
+	return{ offsetX, 0, frameX, texY };
 }
