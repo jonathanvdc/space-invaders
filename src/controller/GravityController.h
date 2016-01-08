@@ -11,17 +11,22 @@ namespace si
 {
 	namespace controller
 	{
-		/// Defines a type of controller accelerates drifting entities toward
+		/// Defines a type of controller that accelerates drifting entities toward
         /// the controlled entity's current position.
 		class GravityController final : public IController
 		{
 		public:
 			/// Creates a gravity controller from the given gravity well
             /// entity, as well as a gravitation constant that determines
-            /// how much drifting entities are attracted to the target entity.
+            /// how strongly drifting entities are attracted to the target entity.
+			/// A negative gravitational constant can be used to create a
+			/// "force field" of sorts.
+			/// A falloff constant determines the distance
+            /// at which entities are affected. A falloff constant of two
+            /// will result in inverse-square behavior.
 			GravityController(
                 const std::shared_ptr<si::model::PhysicsEntity>& target,
-				double gravitationalConstant);
+				double gravitationalConstant, double falloffConstant);
 
 			/// Checks if this controller is still "alive".
 			/// A gravity controller is said to be dead once the game no longer
@@ -33,6 +38,7 @@ namespace si
 		private:
 			std::shared_ptr<si::model::PhysicsEntity> target;
 			double gravitationalConstant;
+			double falloffConstant;
 		};
 	}
 }

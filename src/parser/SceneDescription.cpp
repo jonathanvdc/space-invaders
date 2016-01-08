@@ -215,6 +215,7 @@ const char* const ColumnsAttributeName = "columns";
 const char* const PredicateAttributeName = "predicate";
 const char* const SpeedAttributeName = "speed";
 const char* const GravitationalConstantAttributeName = "G";
+const char* const FalloffConstantAttributeName = "falloff";
 const char* const MusicAttributeName = "music";
 const char* const SoundAttributeName = "sound";
 const char* const FlagAttributeName = "flag";
@@ -584,13 +585,14 @@ ControllerBuilder SceneDescription::readController(
 	if (nodeName == GravityNodeName)
 	{
 		double gravitationalConstant = getDoubleAttribute(node, GravitationalConstantAttributeName);
+		double falloffConstant = getDoubleAttribute(node, FalloffConstantAttributeName, 2.0);
 
 		return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> UnboundController
 		{
 			return [=](Scene&) -> si::controller::IController_ptr
 			{
 				return std::make_shared<si::controller::GravityController>(
-					parent, gravitationalConstant);
+					parent, gravitationalConstant, falloffConstant);
 			};
 		};
 	}

@@ -93,7 +93,26 @@
         <Asset asset="framecounter" />
     </Background>
     <Decor>
-
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.2" posY="0.9">
+            <Controllers>
+                <Gravity G="-0.0000001" falloff="3" />
+            </Controllers>
+        </Obstacle>
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.4" posY="0.9">
+            <Controllers>
+                <Gravity G="-0.0000001" falloff="3" />
+            </Controllers>
+        </Obstacle>
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.6" posY="0.9">
+            <Controllers>
+                <Gravity G="-0.0000001" falloff="3" />
+            </Controllers>
+        </Obstacle>
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.8" posY="0.9">
+            <Controllers>
+                <Gravity G="-0.0000001" falloff="3" />
+            </Controllers>
+        </Obstacle>
     </Decor>
     <Timeline>
         <Deadline duration="2.0">

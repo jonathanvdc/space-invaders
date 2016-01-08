@@ -15,8 +15,9 @@ using namespace si::controller;
 /// how much drifting entities are attracted to the target entity.
 GravityController::GravityController(
     const std::shared_ptr<si::model::PhysicsEntity>& target,
-    double gravitationalConstant)
-	: target(target), gravitationalConstant(gravitationalConstant)
+    double gravitationalConstant, double falloffConstant)
+	: target(target), gravitationalConstant(gravitationalConstant),
+      falloffConstant(falloffConstant)
 { }
 
 /// Checks if this controller is still "alive".
@@ -58,17 +59,20 @@ void GravityController::update(si::model::Game& game, duration_t timeDelta)
             // division by zero, which is somewhat undesirable.
 
             // Since the scene consists of medium-sized objects, we'll apply
-            // Newton's law of universal gravitation, which states that
+            // a slightly modified version of Newton's law of universal
+            // gravitation, which states that
             //
-            //   F = G * m1 * m2 / d^2
+            //   F = G * m1 * m2 / d^n
             //
             // Let's assume that m1 is the mass of the (constant) entity belonging
             // to this controller, and m2 is the mass of any drifting entity.
+            // n is this gravity controller's falloff constant, which will
+            // typically be two.
             // Since we'll accelerate the latter, the second law of motion states:
             //
             //     F = m2 * a
             // <=> a = F / m2
-            // <=> a = G * m1 / d^2
+            // <=> a = G * m1 / d^n
             //
             // Essentially, the mass of the other entity does not matter.
             // We can compute its acceleration purely based on the mass of the
@@ -78,12 +82,12 @@ void GravityController::update(si::model::Game& game, duration_t timeDelta)
             // The acceleration vector is directed toward the gravity well.
             // Thus, we can state that:
             //
-            // (vector) a = normalize(offset) * (G * m1 / d^2)
-            // <=>      a = offset / length(offset) * (G * m1 / length(offset)^2)
-            // <=>      a = offset * (G * m1 / length(offset)^3)
+            // (vector) a = normalize(offset) * (G * m1 / d^n)
+            // <=>      a = offset / length(offset) * (G * m1 / length(offset)^n)
+            // <=>      a = offset * (G * m1 / length(offset)^(n + 1))
 
             double dist = vecLength(offset);
-            Vector2d accel = offset * (factor / (dist * dist * dist));
+            Vector2d accel = offset * (factor / std::pow(dist, this->falloffConstant + 1));
 
             // Now accelerate the drifting entity.
             other->accelerate(accel * timeDelta.count());
