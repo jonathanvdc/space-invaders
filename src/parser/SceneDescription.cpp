@@ -179,6 +179,7 @@ const char* const MusicNodeName = "Music";
 const char* const SetFlagNodeName = "SetFlag";
 const char* const OnLeaveNodeName = "OnLeave";
 const char* const OnEnterNodeName = "OnEnter";
+const char* const WaitNodeName = "Wait";
 
 // Constants that define XML attribute names.
 const char* const IdAttributeName = "id";
@@ -937,6 +938,14 @@ EventFactory SceneDescription::parseTimelineEvent(
 	else if (nodeName == WaveNodeName)
 	{
 		return parseWaveEvent(node, assets);
+	}
+	else if (nodeName == WaitNodeName)
+	{
+		return [=]()
+		{
+			auto inner = std::make_shared<si::timeline::Timeline>();
+			return std::make_shared<si::timeline::LoopedEvent>(inner);
+		};
 	}
 	else if (nodeName == DeadlineNodeName)
 	{
