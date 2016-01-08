@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 		std::cout << "Expected exactly one argument, which refers to a scene description. "
 				  << "Got " << (argc < 2 ? "none" : std::to_string(argc - 1)) << "."
 				  << std::endl;
-		return 0;
+		return 1;
 	}
 
 	try
@@ -62,17 +62,18 @@ int main(int argc, char* argv[])
 		auto scene = si::parser::parseScene(argv[1]);
 
 		playGame(*scene);
+		return 0;
 	}
 	catch (si::parser::XMLParseException& ex)
 	{
 		std::cout << "The given file is not valid XML. Here's what went wrong: " << std::endl
 			<< ex.what() << std::endl;
+		return 1;
 	}
 	catch (si::parser::SceneDescriptionException& ex)
 	{
 		std::cout << "The given scene description contains an error. To be exact: " << std::endl
 			<< ex.what() << std::endl;
+		return 1;
 	}
-
-	return 0;
 }
