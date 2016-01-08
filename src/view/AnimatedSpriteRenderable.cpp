@@ -24,6 +24,7 @@ sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta)
 {
 	auto textureSize = this->getTexture()->getSize();
 
+    // Increment the total elapsed time.
     this->totalTime += timeDelta;
 
     // Computes a floating-point number that represents the number of cycles that
@@ -35,6 +36,10 @@ sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta)
     // this cycle has been completed.
     double intPart;
     double fracPart = std::modf(cycleTime, &intPart);
+
+    // Subtract completed cycles from the total elapsed time to
+    // keep us from wandering off into the land of imprecision.
+    this->totalTime -= intPart * this->cycleDuration;
 
     // Calculate the index of the current frame.
     int frameIndex = static_cast<int>(fracPart * static_cast<double>(this->frames));
