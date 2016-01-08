@@ -4,7 +4,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-// Defines a number of aliases for types 
+// Defines a number of aliases for types
 // which are used throughout the project.
 // A number of useful helpers functions
 // are defined as well.
@@ -29,7 +29,7 @@ namespace si
 	{
 		return std::sqrt(vecLengthSqr(vec));
 	}
-	
+
 	/// Normalizes the given vector.
 	template<typename T>
 	auto normalizeVec(sf::Vector2<T> vec)
@@ -37,7 +37,7 @@ namespace si
 		return vec / vecLength(vec);
 	}
 
-	/// Tests if the given shared pointer is of the 
+	/// Tests if the given shared pointer is of the
 	/// given type.
 	template<typename T, typename V>
 	bool isinstance(const std::shared_ptr<V>& ptr)

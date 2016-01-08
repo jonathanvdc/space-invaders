@@ -14,8 +14,6 @@
 #include "Scene.h"
 #include "parser/SceneDescription.h"
 
-using namespace std::chrono_literals;
-
 /// Plays a space invaders game, as defined by the
 /// given scene. A render window is used to
 /// render the game.
@@ -53,7 +51,7 @@ int main(int argc, char* argv[])
 {
 	if (argc != 2)
 	{
-		std::cout << "Expected exactly one argument, which refers to a scene description. " 
+		std::cout << "Expected exactly one argument, which refers to a scene description. "
 				  << "Got " << (argc < 2 ? "none" : std::to_string(argc - 1)) << "."
 				  << std::endl;
 		return 0;
@@ -78,4 +76,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-
