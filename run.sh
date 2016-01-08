@@ -2,13 +2,15 @@
 # given name. Any `*.xml` file in the `scenes/` directory can be used
 # for this puropose.
 
+cd src
+mkdir build -p
+cd build
+cmake ..
+make -j2
+cd ../..
+
 if test "1" -eq "$#"; then
-    cd src
-    mkdir build -p
-    cd build
-    cmake ..
-    make -j2
-    cd ../../scenes
+    cd scenes
     ../src/build/space-invaders $@ && echo "Thanks for playing!"
     cd ..
 else
