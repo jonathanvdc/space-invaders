@@ -27,11 +27,12 @@ namespace si
 
         protected:
             /// Gets the rectangular area of the texture to render.
-            sf::IntRect getTextureRectangle(duration_t timeDelta) const final override;
+            sf::IntRect getTextureRectangle(duration_t timeDelta) final override;
 
 		private:
             int frames;
             duration_t cycleDuration;
+			duration_t totalTime;
 		};
 	}
 }

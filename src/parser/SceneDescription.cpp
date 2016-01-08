@@ -460,10 +460,12 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 		auto tex = getReferenceAttribute(node, TextureAttributeName, resources.textures);
 		int frameCount = getIntAttribute(node, FrameCountAttributeName);
 		duration_t cycleDuration(getDoubleAttribute(node, CycleDurationAttributeName, 0.2));
-		auto result = std::make_shared<si::view::AnimatedSpriteRenderable>(
-			tex, frameCount, cycleDuration);
 
-		return [result]() { return result; };
+		return [=]()
+		{
+			return std::make_shared<si::view::AnimatedSpriteRenderable>(
+				tex, frameCount, cycleDuration);
+		};
 	}
 	else if (nodeName == RibbonParticleNodeName)
 	{

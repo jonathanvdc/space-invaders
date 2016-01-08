@@ -28,7 +28,7 @@ namespace si
 			std::shared_ptr<sf::Texture> getTexture() const;
 		protected:
 			/// Gets the rectangular area of the texture to render.
-			virtual sf::IntRect getTextureRectangle(duration_t timeDelta) const = 0;
+			virtual sf::IntRect getTextureRectangle(duration_t timeDelta) = 0;
 		private:
 			std::shared_ptr<sf::Texture> texture;
 		};
@@ -42,7 +42,7 @@ namespace si
 
 		protected:
 			/// Gets the rectangular area of the texture to render.
-			sf::IntRect getTextureRectangle(duration_t timeDelta) const final override;
+			sf::IntRect getTextureRectangle(duration_t timeDelta) final override;
 		};
 	}
 }

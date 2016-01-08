@@ -21,9 +21,9 @@ void SpriteRenderableBase::render(
 {
 	sf::Sprite sprite(*this->texture);
 	sprite.setPosition(static_cast<float>(bounds.left), static_cast<float>(bounds.top));
-	auto textureSize = this->texture->getSize();
-	sprite.setTextureRect(this->getTextureRectangle(context.getTimeDelta()));
-	sprite.setScale(static_cast<float>(bounds.width) / textureSize.x, static_cast<float>(bounds.height) / textureSize.y);
+	auto textureRect = this->getTextureRectangle(context.getTimeDelta());
+	sprite.setTextureRect(textureRect);
+	sprite.setScale(static_cast<float>(bounds.width) / textureRect.width, static_cast<float>(bounds.height) / textureRect.height);
 	context.getTarget().draw(sprite, transform.toRenderState());
 }
 
@@ -39,7 +39,7 @@ SpriteRenderable::SpriteRenderable(
 { }
 
 /// Gets the rectangular area of the texture to render.
-sf::IntRect SpriteRenderable::getTextureRectangle(duration_t) const
+sf::IntRect SpriteRenderable::getTextureRectangle(duration_t)
 {
 	auto textureSize = this->getTexture()->getSize();
 	return{ 0, 0, static_cast<int>(textureSize.x), static_cast<int>(textureSize.y) };

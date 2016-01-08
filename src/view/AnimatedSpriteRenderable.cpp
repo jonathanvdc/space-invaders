@@ -16,17 +16,19 @@ AnimatedSpriteRenderable::AnimatedSpriteRenderable(
     const std::shared_ptr<sf::Texture>& texture, int frames,
     duration_t cycleDuration)
 	: SpriteRenderableBase(texture), frames(frames),
-      cycleDuration(cycleDuration)
+      cycleDuration(cycleDuration), totalTime(0.0)
 { }
 
 /// Gets the rectangular area of the texture to render.
-sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta) const
+sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta)
 {
 	auto textureSize = this->getTexture()->getSize();
 
+    this->totalTime += timeDelta;
+
     // Computes a floating-point number that represents the number of cycles that
     // have been completed.
-    double cycleTime = timeDelta / this->cycleDuration;
+    double cycleTime = this->totalTime / this->cycleDuration;
 
     // Extract the fractional part from the relative number of completed cycles.
     // This is a number between zero and one that tells us what percentage of
