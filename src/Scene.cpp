@@ -111,37 +111,6 @@ void Scene::startEvent(
 	item->start(*this);
 }
 
-/// Gets a vector containing all players that
-/// are still alive in this scene.
-std::vector<std::shared_ptr<si::model::ShipEntity>> Scene::getPlayers() const
-{
-	std::vector<std::shared_ptr<si::model::ShipEntity>> results;
-	for (const auto& item : this->players)
-	{
-		if (item->isAlive())
-		{
-			results.push_back(item);
-		}
-	}
-	return results;
-}
-
-/// Checks if any player ships are still alive.
-bool Scene::anyPlayersAlive() const
-{
-	return std::any_of(this->players.begin(), this->players.end(),
-		[&](const std::shared_ptr<si::model::ShipEntity>& item)
-		{
-			return item->isAlive() && this->game.contains(item);
-		});
-}
-
-/// Registers the given ship as a player ship.
-void Scene::registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player)
-{
-	this->players.push_back(player);
-}
-
 /// Gets the boolean flag with the given name.
 bool Scene::getFlag(const std::string& name) const
 {

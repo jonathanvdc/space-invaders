@@ -75,16 +75,6 @@ namespace si
 		void startEvent(
 			const si::timeline::ITimelineEvent_ptr& item);
 
-		/// Gets a vector containing all players that
-		/// are still alive in this scene.
-		std::vector<std::shared_ptr<si::model::ShipEntity>> getPlayers() const;
-
-		/// Checks if any player ships are still alive.
-		bool anyPlayersAlive() const;
-
-		/// Registers the given ship as a player ship.
-		void registerPlayer(const std::shared_ptr<si::model::ShipEntity>& player);
-
 		/// Gets the boolean flag with the given name.
 		bool getFlag(const std::string& name) const;
 
@@ -136,7 +126,6 @@ namespace si
 		si::view::GameRenderer renderer;
 		si::controller::GameController controller;
 		std::vector<si::timeline::ITimelineEvent_ptr> sceneEvents;
-		std::vector<std::shared_ptr<si::model::ShipEntity>> players;
 		std::map<si::model::Entity_ptr, si::view::IRenderable_ptr> associatedView;
 		std::map<std::string, bool> flags;
 	};

@@ -700,7 +700,6 @@ void SceneDescription::addPlayerToScene(
 	// velocity controller while we're at it.
 	double playerAccel = getDoubleAttribute(node, AccelerationAttributeName);
 	scene.addController(std::make_shared<si::controller::PlayerController>(player.model, playerAccel));
-	scene.registerPlayer(player.model);
 
 	// Create a player projectile controller for this ship.
 	double fireInterval = getDoubleAttribute(node, FireIntervalAttributeName);
