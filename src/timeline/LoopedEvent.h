@@ -14,13 +14,13 @@ namespace si
 		{
 		public:
 			/// Creates a timeline event that loops the given inner event.
-			/// An maximal number of iterations is also given. If this is
-			/// zero or less, then the inner event is executed an infinite
+			/// An optional maximal number of iterations is also given. If this
+			/// is zero or less, then the inner event is executed an infinite
 			/// number of times. Otherwise, this argument specifies
 			/// the maximal number of iterations.
 			LoopedEvent(
 				const si::timeline::ITimelineEvent_ptr& innerEvent,
-				int maxIterationCount);
+				int maxIterationCount = 0);
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;

@@ -26,7 +26,7 @@ namespace si
             /// will result in inverse-square behavior.
 			GravityController(
                 const std::shared_ptr<si::model::PhysicsEntity>& target,
-				double gravitationalConstant, double falloffConstant);
+				double gravitationalConstant, double falloffConstant = 2.0);
 
 			/// Checks if this controller is still "alive".
 			/// A gravity controller is said to be dead once the game no longer
