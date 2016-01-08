@@ -43,10 +43,7 @@ sf::IntRect AnimatedSpriteRenderable::getTextureRectangle(duration_t timeDelta) 
     int texY = static_cast<int>(textureSize.y);
 
     int frameX = texX / this->frames;
-    int frameY = texY / this->frames;
-
     int offsetX = frameX * frameIndex;
-    int offsetY = frameY * frameIndex;
 
-	return{ offsetX, offsetY, offsetX + frameX, offsetY + frameY };
+	return{ offsetX, 0, offsetX + frameX, texY };
 }

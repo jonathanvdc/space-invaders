@@ -25,6 +25,7 @@
 #include "controller/ObstacleCollisionController.h"
 #include "controller/GravityController.h"
 #include "view/IRenderable.h"
+#include "view/AnimatedSpriteRenderable.h"
 #include "view/SpriteRenderable.h"
 #include "view/RelativeBoxRenderable.h"
 #include "view/GroupRenderable.h"
@@ -138,6 +139,7 @@ std::string SceneDescription::getPath() const
 }
 
 // Constants that define XML node names.
+const char* const AnimatedSpriteNodeName = "AnimatedSprite";
 const char* const PlayerNodeName = "Player";
 const char* const SpriteNodeName = "Sprite";
 const char* const BoxNodeName = "Box";
@@ -216,6 +218,8 @@ const char* const SoundAttributeName = "sound";
 const char* const FlagAttributeName = "flag";
 const char* const ValueAttributeName = "value";
 const char* const MaxIterationCountAttributeName = "maxIterations";
+const char* const FrameCountAttributeName = "frameCount";
+const char* const CycleDurationAttributeName = "cycleDuration";
 
 // Default game bounds. Anything that exceeds these bounds
 // will be removed from the game.
@@ -448,6 +452,16 @@ Factory<si::view::IRenderable_ptr> SceneDescription::readRenderable(
 	{
 		auto tex = getReferenceAttribute(node, TextureAttributeName, resources.textures);
 		auto result = std::make_shared<si::view::SpriteRenderable>(tex);
+
+		return [result]() { return result; };
+	}
+	else if (nodeName == AnimatedSpriteNodeName)
+	{
+		auto tex = getReferenceAttribute(node, TextureAttributeName, resources.textures);
+		int frameCount = getIntAttribute(node, FrameCountAttributeName);
+		duration_t cycleDuration(getDoubleAttribute(node, CycleDurationAttributeName, 0.2));
+		auto result = std::make_shared<si::view::AnimatedSpriteRenderable>(
+			tex, frameCount, cycleDuration);
 
 		return [result]() { return result; };
 	}
