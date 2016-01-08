@@ -10,21 +10,39 @@
 
 namespace si
 {
-	namespace view 
+	namespace view
 	{
-		/// Defines a renderable sprite object.
-		class SpriteRenderable final : public IRenderable
+		/// A base class for renderable sprite objects.
+		class SpriteRenderableBase : public IRenderable
 		{
 		public:
 			/// Creates a renderable sprite from the given texture.
-			SpriteRenderable(const std::shared_ptr<sf::Texture>& texture);
+			SpriteRenderableBase(const std::shared_ptr<sf::Texture>& texture);
 
 			/// Renders this sprite.
 			void render(
 				RenderContext& target, DoubleRect bounds,
 				const Transformation& transform) final override;
+
+			/// Gets the texture this sprite renderable uses.
+			std::shared_ptr<sf::Texture> getTexture() const;
+		protected:
+			/// Gets the rectangular area of the texture to render.
+			virtual sf::IntRect getTextureRectangle(duration_t timeDelta) const = 0;
 		private:
 			std::shared_ptr<sf::Texture> texture;
+		};
+
+		/// Defines a renderable sprite object, that draws the entire texture.
+		class SpriteRenderable final : public SpriteRenderableBase
+		{
+		public:
+			/// Creates a renderable sprite from the given texture.
+			SpriteRenderable(const std::shared_ptr<sf::Texture>& texture);
+
+		protected:
+			/// Gets the rectangular area of the texture to render.
+			sf::IntRect getTextureRectangle(duration_t timeDelta) const final override;
 		};
 	}
 }

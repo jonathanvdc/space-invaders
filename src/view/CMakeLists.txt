@@ -1,6 +1,7 @@
 
 set(SOURCE
     ${SOURCE}
+    ${CMAKE_CURRENT_SOURCE_DIR}/AnimatedSpriteRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FramecounterRenderable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GameRenderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GroupRenderable.cpp
