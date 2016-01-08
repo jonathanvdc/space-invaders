@@ -12,9 +12,7 @@ namespace si
 		/// Defines a type of controller that performs some action
 		/// every frame, provided that a set amount of time
 		/// has elapsed since the last time that the action
-		/// was performed. Said action is performed by calling
-		/// a function, which tells if this action controller
-		/// is still alive.
+		/// was performed.
 		class IntervalActionController final : public IController
 		{
 		public:
