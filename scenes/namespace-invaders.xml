@@ -189,14 +189,15 @@
                     </Timeline>
                     <Condition predicate="boss-fight">
                         <Then>
-                            <Deadline duration="2.0">
-                                <Show asset="bossmessage" />
-                            </Deadline>
+                            <Timeline>
+                                <Deadline duration="2.0">
+                                    <Show asset="bossmessage" />
+                                </Deadline>
+                                <Wait />
+                            </Timeline>
                         </Then>
                         <Else>
-                            <Loop>
-                                <Timeline/>
-                            </Loop>
+                            <Wait />
                         </Else>
                     </Condition>
                 </Concurrent>
