@@ -44,8 +44,12 @@ void InvaderWaveEvent::start(Scene& target)
 
 	const double pi = si::view::Transformation::pi;
 
-	double velX = this->invaderBehavior.velocity.x;
-	double velY = this->invaderBehavior.velocity.y;
+	double velPerp = this->invaderBehavior.velocity.x;
+	double velDir = this->invaderBehavior.velocity.y;
+
+	// Compute normalized target and perpendicular direction vectors.
+	auto targetDir = normalizeVec(this->invaderBehavior.targetDirection);
+	Vector2d perpDir(-targetDir.y, targetDir.x);
 
 	auto projFactory = this->projectileFactory;
 
@@ -72,22 +76,30 @@ void InvaderWaveEvent::start(Scene& target)
 			//     ------|-----------------------|
 			//     row 1 |       |       |       |
 			//
+			// In addition, we'll also re-orient this grid to match the
+			// target direction.
+
+
 			double radius = model->getPhysicsProperties().radius;
 			// Make sure the invader ships are positioned at safe distances, so
 			// they don't crash into each other. Note: due to the nature of their
-			// movements, inserting some empty space in the Y-direction is far
-			// more important than inserting empty space in the X-direction.
-			double spacingX = radius / 2.0 + 0.5 * pi * radius * velX;
-			double spacingY = radius / 2.0 + 3.0 * pi * radius * velY;
-			double totalX = radius * this->columnCount + spacingX * (this->columnCount - 1);
-			double totalY = radius * this->rowCount + spacingY * (this->rowCount - 1);
-			double offsetX = radius * i + spacingX * i;
-			double offsetY = radius * j + spacingY * j;
+			// movements, inserting some empty space in the target direction is far
+			// more important than inserting empty space in the perpendicular direction.
+			double spacingPerp = radius / 2.0 + 0.5 * pi * radius * velPerp;
+			double spacingDir = radius / 2.0 + 3.0 * pi * radius * velDir;
+			double totalPerp = radius * this->columnCount + spacingPerp * (this->columnCount - 1);
+			double totalDir = radius * this->rowCount + spacingDir * (this->rowCount - 1);
+			double offsetPerp = radius * i + spacingPerp * i;
+			double offsetDir = radius * j + spacingDir * j;
 
-			double posX = 0.5 - totalX / 2.0 + offsetX;
-			double posY = totalY - offsetY;
+			double posPerp = -totalPerp / 2.0 + offsetPerp;
+			double posDir = totalDir - offsetDir;
 
-			model->setPosition({ posX, posY });
+			// Now compute the actual x and y positions.
+			Vector2d pos(posDir * targetDir + posPerp * perpDir);
+			pos += this->invaderBehavior.spawnPosition;
+
+			model->setPosition(pos);
 
 			// Now sketch out a path for the ships to follow.
 			// We'll have them follow a gentle sine curve, by
@@ -104,9 +116,10 @@ void InvaderWaveEvent::start(Scene& target)
 
 			auto path = [=](duration_t time) -> Vector2d
 			{
-				return Vector2d(
-					posX + radius * std::sin(velX * pi * time.count()),
-					posY + velY * time.count());
+				auto perp = radius * std::sin(velPerp * pi * time.count()) * perpDir;
+				auto dir = velDir * time.count() * targetDir;
+
+				return pos + perp + dir;
 			};
 
 			// A path controller will make the invader ship trace

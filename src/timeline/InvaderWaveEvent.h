@@ -23,20 +23,31 @@ namespace si
 		{
 			/// The velocity of the invader ship's path
 			/// (which need not always coincide with the
-			/// invader ship's actual velocity)
+			/// invader ship's actual velocity). Note that this
+			/// velocity is relative to the target
+			/// direction.
 			Vector2d velocity;
+
 			/// The spring constant that the invader ship's
 			/// controller uses to trace its path.
 			double springConstant;
+
 			/// The rate at which invader ships are allowed
 			/// to launch projectiles.
 			duration_t fireInterval;
+
 			/// A maximal deviation from the standard fire
 			/// interval for this type of invader.
 			/// If this is set to a nonzero value, then
 			/// some invaders will fire projectiles at
 			/// a higher pace than others.
 			duration_t fireIntervalDeviation;
+
+			/// A vector that specifies where this batch of invaders will spawn.
+			Vector2d spawnPosition;
+
+			/// A vector that specifies the direction invaders will move in.
+			Vector2d targetDirection;
 		};
 
 		/// Defines a type of event that spawns a wave of invaders.
@@ -52,6 +63,8 @@ namespace si
 				const si::parser::ParsedShipFactory& shipFactory,
 				const si::parser::ParsedDriftingEntityFactory& projectileFactory,
 				int rowCount, int columnCount, const InvaderBehavior& invaderBehavior);
+
+			InvaderWaveEvent(const InvaderWaveEvent&) = delete;
 
 			/// Starts the timeline event.
 			void start(Scene& target) final override;

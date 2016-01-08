@@ -137,7 +137,7 @@
                                 </Obstacle>
                             </Spawn>
                             <Timeline>
-                                <Wave rows="1" columns="3">
+                                <Wave rows="1" columns="3" posX="0.0" posY="0.5" dirX="1.0" dirY="0.0">
                                     <Ship mass="200" radius="0.020" health="5" velX="0.5" velY="0.07" fireIntervalDeviation="0.2" asset="cpp-invader-2" >
                                         <CreatingEffect asset="ray-burst" duration="1.5" />
                                         <DestroyedEffect asset="ray-burst" duration="2.5" />

@@ -185,6 +185,8 @@ const char* const IdAttributeName = "id";
 const char* const PathAttributeName = "path";
 const char* const PositionXAttributeName = "posX";
 const char* const PositionYAttributeName = "posY";
+const char* const DirectionXAttributeName = "dirX";
+const char* const DirectionYAttributeName = "dirY";
 const char* const WidthAttributeName = "width";
 const char* const HeightAttributeName = "height";
 const char* const VelocityXAttributeName = "velX";
@@ -862,8 +864,16 @@ EventFactory SceneDescription::parseWaveEvent(
 	double springConst = getDoubleAttribute(shipNode, SpringConstantAttributeName, 5.0);
 	si::duration_t fireInterval(getDoubleAttribute(shipNode, FireIntervalAttributeName, 1.0));
 	si::duration_t maxDeviation(getDoubleAttribute(shipNode, FireIntervalDeviationAttributeName, 0.0));
+	double posX = getDoubleAttribute(node, PositionXAttributeName, 0.5);
+	double posY = getDoubleAttribute(node, PositionYAttributeName, 0.0);
+	double dirX = getDoubleAttribute(node, DirectionXAttributeName, 0.0);
+	double dirY = getDoubleAttribute(node, DirectionYAttributeName, 1.0);
 
-	si::timeline::InvaderBehavior behavior = { Vector2d(velX, velY), springConst, fireInterval, maxDeviation };
+	si::timeline::InvaderBehavior behavior =
+	{
+		Vector2d(velX, velY), springConst, fireInterval, maxDeviation,
+		Vector2d(posX, posY), Vector2d(dirX, dirY)
+	};
 
 	return [=]()
 	{
