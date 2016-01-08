@@ -82,7 +82,7 @@
             </Box>
         </ParticleEmitter>
     </Assets>
-    <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2">
+    <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2" posY="0.9">
         <DestroyedEffect asset="explosion" duration="5.0" />
         <Destroyed>
             <SetFlag flag="game-active" value="false" />
@@ -93,22 +93,22 @@
         <Asset asset="framecounter" />
     </Background>
     <Decor>
-        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.2" posY="0.9">
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.2" posY="0.75">
             <Controllers>
                 <Gravity G="-0.0000001" falloff="3" />
             </Controllers>
         </Obstacle>
-        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.4" posY="0.9">
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.4" posY="0.75">
             <Controllers>
                 <Gravity G="-0.0000001" falloff="3" />
             </Controllers>
         </Obstacle>
-        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.6" posY="0.9">
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.6" posY="0.75">
             <Controllers>
                 <Gravity G="-0.0000001" falloff="3" />
             </Controllers>
         </Obstacle>
-        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.8" posY="0.9">
+        <Obstacle mass="200" radius="0.025" health="10" asset="cpp-ship" posX="0.8" posY="0.75">
             <Controllers>
                 <Gravity G="-0.0000001" falloff="3" />
             </Controllers>
