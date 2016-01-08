@@ -12,7 +12,7 @@
     <Assets>
         <Box id="nyan-ship">
             <Group>
-                <Sprite texture="nyan-ship-tex" />
+                <AnimatedSprite texture="nyan-ship-tex" frameCount="2" />
                 <Box posX="0.2" posY="0.4" width="0.004">
                     <RibbonParticle r="1.0" g="0.0" b="0.0" />
                 </Box>
