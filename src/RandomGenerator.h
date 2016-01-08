@@ -13,7 +13,7 @@ namespace si
 		/// so it can just be passed around by reference.
 		RandomGenerator(const RandomGenerator&) = delete;
 
-		/// Conjures up a random floating-point number of the given type,
+		/// Conjures up a random floating-point number that is of the given type
 		/// and within the given range.
 		template<typename T>
 		T nextReal(T min, T max)
@@ -22,7 +22,7 @@ namespace si
 			return dist(twister);
 		}
 
-		/// Conjures up a random integer number of the given type,
+		/// Conjures up a random integer number that is of the given type
 		/// and within the given range.
 		template<typename T>
 		T nextInt(T min, T max)
