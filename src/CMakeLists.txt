@@ -22,7 +22,7 @@ add_subdirectory(parser)
 add_subdirectory(tinyxml2)
 
 # add the executable
-set(EXECUTABLE_NAME "SpaceInvaders")
+set(EXECUTABLE_NAME "space-invaders")
 add_executable(${EXECUTABLE_NAME} ${SOURCE})
 
 # Detect and add SFML
