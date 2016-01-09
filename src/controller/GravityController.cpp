@@ -87,7 +87,7 @@ void GravityController::update(si::model::Game& game, duration_t timeDelta)
             // <=>      a = offset * (G * m1 / length(offset)^(n + 1))
 
             double dist = vecLength(offset);
-            Vector2d accel = offset * (factor / std::pow(dist, this->falloffConstant + 1));
+            Vector2d accel = offset * (factor / std::pow(dist, this->falloffConstant + 1.0));
 
             // Now accelerate the drifting entity.
             other->accelerate(accel * timeDelta.count());
