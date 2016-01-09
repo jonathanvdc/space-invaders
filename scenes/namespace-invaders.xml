@@ -67,19 +67,17 @@
             <Text text="Boss fight" font="arial" r="0.2" g="0.8" b="0.2" />
         </Box>
         <ParticleEmitter id="ray-burst" interval="0.02" lifetime="0.5" speed="0.1">
-            <Box width="0.005" height="0.005" >
+            <Box width="0.01" height="0.01" >
                 <RibbonParticle r="0.0" g="1.0" b="0.0" />
             </Box>
         </ParticleEmitter>
         <ParticleEmitter id="ray-burst-model" interval="0.1" lifetime="0.5" speed="2.0">
-            <Box width="0.1" height="0.1" >
+            <Box width="0.01" height="0.01" >
                 <RibbonParticle r="0.5" g="0.0" b="0.5" />
             </Box>
         </ParticleEmitter>
-        <ParticleEmitter id="explosion" interval="0.1" lifetime="0.5" speed="0.05">
-            <Box width="0.05" height="0.05" >
-                <Sprite texture="cpp-ship-tex" />
-            </Box>
+        <ParticleEmitter id="explosion" interval="0.1" lifetime="0.5" speed="0.5">
+            <Sprite texture="cpp-ship-tex" />
         </ParticleEmitter>
     </Assets>
     <Player mass="200" radius="0.025" health="20" asset="cpp-ship" accel="0.2" velY="-0.05" fireInterval="0.2" posY="0.9">
@@ -87,7 +85,11 @@
         <Destroyed>
             <SetFlag flag="game-active" value="false" />
         </Destroyed>
-        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" />
+        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="cpp-projectile" >
+            <Controllers>
+                <Gravity G="0.000005" falloff="3" />
+            </Controllers>
+        </Projectile>
     </Player>
     <Background>
         <Asset asset="framecounter" />
@@ -144,14 +146,14 @@
                             <Spawn>
                                 <Obstacle mass="200" radius="0.025" health="20" posX="0.2" posY="0.2" asset="ray-burst-model">
                                     <Controllers>
-                                        <Gravity G="0.00001" />
+                                        <Gravity G="0.0000001" />
                                     </Controllers>
                                 </Obstacle>
                             </Spawn>
                             <Spawn>
                                 <Obstacle mass="200" radius="0.025" health="20" posX="0.775" posY="0.2" asset="ray-burst-model">
                                     <Controllers>
-                                        <Gravity G="0.00001" />
+                                        <Gravity G="0.0000001" />
                                     </Controllers>
                                 </Obstacle>
                             </Spawn>
