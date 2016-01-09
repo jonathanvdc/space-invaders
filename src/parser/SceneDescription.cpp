@@ -1039,7 +1039,7 @@ EventFactory SceneDescription::parseTimelineEvent(
 
 /// Reads a timed "show" event as specified by the given node.
 /// A null node is interpreted as the empty event.
-std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> SceneDescription::parseTimedShowEvent(
+EntityEventBuilder SceneDescription::parseTimedShowEvent(
 	const tinyxml2::XMLElement* node,
 	const SceneAssets& assets)
 {
@@ -1054,10 +1054,10 @@ std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> Sc
 	auto asset = getReferenceAttribute(node, AssetAttributeName, assets.renderables);
 	duration_t time(getDoubleAttribute(node, DurationAttributeName));
 
-	return [=](const si::model::Entity_ptr& parent) -> si::timeline::ITimelineEvent_ptr
+	return [=](const std::shared_ptr<si::model::PhysicsEntity>& parent) -> si::timeline::ITimelineEvent_ptr
 	{
 		return std::make_shared<si::timeline::DeadlineEvent>(
-			std::make_shared<si::timeline::ShowEvent>([=]() { return Scene::track(parent, asset()); }),
+			std::make_shared<si::timeline::ShowEvent>([=]() { return Scene::direct(parent, asset()); }),
 			time);
 	};
 }

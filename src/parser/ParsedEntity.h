@@ -84,27 +84,18 @@ namespace si
 		using ParsedObstacleFactory = ParsedEntityFactory<si::model::ObstacleEntity>;
 		using ParsedDriftingEntityFactory = ParsedEntityFactory<si::model::DriftingEntity>;
 
+		/// A type for controllers that have yet to be "bound" to a particular
+		/// scene.
 		using UnboundController =
 			std::function<si::controller::IController_ptr(Scene&)>;
 
 		using ControllerBuilder =
 			std::function<UnboundController(const std::shared_ptr<si::model::PhysicsEntity>&)>;
 
-		/// Creates a parsed entity from the given physics model
-		/// and view. The created timeline will spawn the model,
-		/// and associate it with a renderable that tracks the
-		/// model's position.
-		template<typename T>
-		ParsedEntity<T> createTrackedEntity(
-			const std::shared_ptr<T>& model,
-			const si::view::IRenderable_ptr& view)
-		{
-			return ParsedEntity<T>(
-				model,
-				std::make_shared<si::timeline::SpawnEvent>(
-					model,
-					Scene::track(model, view)));
-		}
+		/// A function that creates timeline events that relate to
+		/// entities with physics properties in some way.
+		using EntityEventBuilder =
+			std::function<si::timeline::ITimelineEvent_ptr(const std::shared_ptr<si::model::PhysicsEntity>&)>;
 
 		/// Creates a parsed entity from the given physics model
 		/// and view. The created timeline will spawn the model,

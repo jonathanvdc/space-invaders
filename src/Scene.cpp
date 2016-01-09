@@ -205,17 +205,6 @@ void Scene::updateEvents(duration_t timeDelta)
 }
 
 /// Creates a renderable from the given view that
-/// traces the given entity's position.
-si::view::IRenderable_ptr Scene::track(
-	const si::model::Entity_ptr& model,
-	const si::view::IRenderable_ptr& view)
-{
-	return std::make_shared<si::view::PathOffsetRenderable>(
-		view,
-		[=]() { return model->getPosition(); });
-}
-
-/// Creates a renderable from the given view that
 /// traces the given entity's position and
 /// orientation.
 si::view::IRenderable_ptr Scene::direct(

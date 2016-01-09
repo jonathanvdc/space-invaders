@@ -220,7 +220,8 @@ namespace si
 
 			/// Reads a timed "show" event as specified by the given node.
 			/// A null node is interpreted as the empty event.
-			static std::function<si::timeline::ITimelineEvent_ptr(const si::model::Entity_ptr&)> parseTimedShowEvent(
+			/// The event's renderable
+			static EntityEventBuilder parseTimedShowEvent(
 				const tinyxml2::XMLElement* node,
 				const SceneAssets& assets);
 

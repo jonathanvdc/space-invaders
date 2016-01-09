@@ -105,12 +105,6 @@ namespace si
 		const si::controller::GameController& getController() const;
 
 		/// Creates a renderable from the given view that
-		/// traces the given entity's position.
-		static si::view::IRenderable_ptr track(
-			const si::model::Entity_ptr& model,
-			const si::view::IRenderable_ptr& view);
-
-		/// Creates a renderable from the given view that
 		/// traces the given entity's position and
 		/// orientation.
 		static si::view::IRenderable_ptr direct(
