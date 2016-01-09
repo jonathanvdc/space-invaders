@@ -128,7 +128,7 @@
                             </Concurrent>
                             <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufo" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -136,7 +136,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufob" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -145,7 +145,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufog" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -154,7 +154,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufoo" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
