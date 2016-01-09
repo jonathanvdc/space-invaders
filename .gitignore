@@ -17,6 +17,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# pdfTeX files
+report/*.aux
+report/*.log
+report/*.synctex.gz
+report/*.pdf
+
 # =========================
 # Operating System Files
 # =========================
