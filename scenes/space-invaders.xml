@@ -88,6 +88,9 @@
         <Box id="comment-wave-three" width="0.8" height="0.4" posY="0.4" posX="0.1">
             <Text text="Third wave. Invaders may start to wobble." font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
+        <Box id="comment-wave-four" width="0.8" height="0.4" posY="0.4" posX="0.1">
+            <Text text="Fourth wave. Armed invaders incoming!" font="font" r="0.2" g="0.8" b="0.2" />
+        </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile">
@@ -263,36 +266,43 @@
                                 </Wave>
                             </Concurrent>
                             <Concurrent>
+                                <Sound sound="wave-success" />
+                                <Deadline duration="3">
+                                    <Show asset="comment-wave-four"/>
+                                </Deadline>
+                            </Concurrent>
+                            <Concurrent>
                                 <Wave rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufob" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
                                         </Destroyed>
                                     </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />
                                 </Wave>
                                 <Wave posY="0.1" rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufop" >
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufop" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
                                         </Destroyed>
                                     </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />
                                 </Wave>
                                 <Wave posY="0.2" rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufod" >
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufod" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
                                         </Destroyed>
                                     </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />
                                 </Wave>
                             </Concurrent>
                         </Timeline>
                     </Concurrent>
+                    <Sound sound="level-success" />
                     <Show asset="comment-you-survived" />
                 </Timeline>
             </Then>
