@@ -365,8 +365,8 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 
 	auto name = getAttribute(rootElem, NameAttributeName);
 	sf::Vector2u screenSize(
-		getUIntAttribute(rootElem, WidthAttributeName, 800),
-		getUIntAttribute(rootElem, HeightAttributeName, 800));
+		getRangeIntAttribute(rootElem, WidthAttributeName, 800, 1, 4000),
+		getRangeIntAttribute(rootElem, HeightAttributeName, 800, 1, 4000));
 
 	// Start by reading all resources and assets (renderable view elements).
 	auto resources = this->readResources();
@@ -1136,29 +1136,33 @@ int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const ch
 	}
 }
 
-/// Gets the value of the unsigned integer attribute with the
+/// Gets the value of the integer attribute with the
 /// given name in the given XML node.
 /// If no such attribute can be found, the given default
 /// value is returned as a result.
-unsigned int SceneDescription::getUIntAttribute(const tinyxml2::XMLElement* node, const char* name, unsigned int defaultValue)
+/// The result is also range-checked.
+int SceneDescription::getRangeIntAttribute(const tinyxml2::XMLElement* node, const char* name, int defaultValue, int min, int max)
 {
-	return asUInt(node, name, getIntAttribute(node, name, static_cast<int>(defaultValue)));
+	int result = getIntAttribute(node, name, defaultValue);
+	checkInRange(node, name, result, min, max);
+	return result;
 }
 
-/// Tries to interpret the given integer attribute value as an
-/// unsigned integer. If it is negative, then an exception
-/// is thrown. A parent node and an attribute name are also
-/// given to provide a more accurate exception message.
-unsigned int SceneDescription::asUInt(const tinyxml2::XMLElement* node, const char* name, int value)
+/// Checks if the given integer is within a certain range.
+void SceneDescription::checkInRange(const tinyxml2::XMLElement* node, const char* name, int value, int min, int max)
 {
-	if (value < 0)
-	{
+	if (value > max)
 		throw SceneDescriptionException(
-			"Negative integer values are not permitted for '" +
-			std::string(name) + "' attributes of '" +
-			node->Name() + "' nodes '.");
-	}
-	return static_cast<unsigned int>(value);
+			"'" + std::string(node->Name()) +
+			"' node had an '" + name +
+			"' attribute value of '" + std::to_string(value) + "', which " +
+			"is greater than the maximal value of '" + std::to_string(max) + "'.");
+	else if (value < min)
+		throw SceneDescriptionException(
+			"'" + std::string(node->Name()) +
+			"' node had an '" + name +
+			"' attribute value of '" + std::to_string(value) + "', which " +
+			"is less than the minimal value of '" + std::to_string(min) + "'.");
 }
 
 /// Gets the value of the floating-point attribute with the
