@@ -80,7 +80,7 @@
             <Text text="You survived. Good job!" font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
         <Box id="comment-well-done" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="First wave coming. Reverse to the bottom of the screen!" font="font" r="0.2" g="0.8" b="0.2" />
+            <Text text="First wave coming. Return to the bottom of the screen!" font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
         <Box id="comment-wave-two" width="0.8" height="0.4" posY="0.4" posX="0.1">
             <Text text="Second wave. Watch out: these guys will be twice as fast." font="font" r="0.2" g="0.8" b="0.2" />
@@ -279,7 +279,6 @@
                                             <Sound sound="you-died" />
                                         </Destroyed>
                                     </Ship>
-                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
                                 </Wave>
                                 <Wave posY="0.1" rows="1" columns="10">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufop" >
@@ -288,7 +287,6 @@
                                             <Sound sound="you-died" />
                                         </Destroyed>
                                     </Ship>
-                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
                                 </Wave>
                                 <Wave posY="0.2" rows="1" columns="10">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufod" >
@@ -303,7 +301,9 @@
                         </Timeline>
                     </Concurrent>
                     <Sound sound="level-success" />
-                    <Show asset="comment-you-survived" />
+                    <Permanent>
+                        <Show asset="comment-you-survived" />
+                    </Permanent>
                 </Timeline>
             </Then>
             <Else>
