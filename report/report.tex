@@ -1,0 +1,218 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[dutch,english]{babel}
+\usepackage[obeyspaces]{url}
+
+\author{Jonathan Van der Cruysse}
+\title{Rapport: Project Gevorderd Programmeren}
+
+\begin{document}
+	
+\newcommand{\classname}[1]
+{
+	\selectlanguage{english}
+	\textsf{#1}
+	\selectlanguage{dutch}
+}
+	
+\maketitle
+
+\section{Algemeen}
+Tijdens het maken van dit project 
+-- \emph{space invaders} -- had ik de volgende
+doelstellingen voor ogen: \emph{hackability}, 
+Newtoniaanse fysica, en natuurlijk ook de \emph{space setting}
+van het originele spel. 
+
+Met het begrip \emph{hackable} bedoel ik dat elke gebruiker kan arbitrair
+complexe sc\`enes opbouwen -- en die daarna spelen --, zonder een 
+letter aan de programmacode te veranderen. Dit beperkt zich niet enkel
+tot het cosmetische of een initi\"ele opstelling van invaders: het is 
+mogelijk een volledige \emph{timeline} op te stellen, die precies
+bepaalt wat er gebeurt, in chronologische volgorde. 
+Zelfs gebeurtenissen zoals een spel `winnen' of `verliezen' worden 
+vertolkt door zo'n \emph{timeline}. Op die manier heeft
+het programma zelf eerder iets weg van een soort \emph{engine}, die 
+scenario's tot uitvoering brengt.
+
+Voor bewegingen beroept het spel zich op Newton's eerste wet: 
+\emph{entities} die eenmaal in beweging gebracht zijn, zullen niet
+uit zichzelf tot stilstand komen. Alle \emph{entities} zijn hier gevoelig
+aan. Zo kunnen ook projectielen afgebogen worden door een object dat 
+zwaartekracht (of anti-zwaartekracht) uitstraalt.
+
+De setting van het spel in de ruimte hangt grotendeels samen met het 
+voorgenoemde principe. Door het ontbreken van fenomenen zoals wrijving
+in de ruimte, gaan deze twee dan ook goed samen.
+
+
+\section{Programma-structuur}
+\subsection{Algemene onderverdeling}
+De \emph{source files} van het programma zijn onderverdeeld in volgende 
+categorie\"en:
+\begin{itemize}
+\item \textbf{Model:} Dit onderdeel van \emph{space invaders} bevat de staat van het 
+spel zelf. Ik heb opzettelijk de verantwoordelijkheden van het \emph{model} minimaal 
+gehouden: \emph{entities} beheren hun eigen positie en levensduur, maar interageren 
+niet direct met andere \emph{entities}. 
+(directory: \path{src/model/})
+
+\item \textbf{View:} Representeert de visuele staat van het spel. \emph{Renderables} 
+staan gewoonlijk los van het \emph{model}: ze vormen eerder een
+`gereedschapskist' van herbruikbare, \emph{single-purpose} klassen die samengeplaatst 
+kunnen worden in een boomstructuur om complexere figuren te vormen. \classname{PathOffsetRenderable} en \classname{TransformedRenderable} worden gebruikt om 
+de positie en ori\"entatie van \emph{entities} te synchroniseren met hun 
+overeenkomstige \emph{renderables}. 
+
+Dit is niet gebaseerd op een `ingebakken' 
+ondersteuning van \emph{model} elementen, maar wel op een arbitraire 
+functie, die opgeroepen wordt om de positie en transformatie van de \emph{renderable 
+tree} te bepalen. De \emph{view} is op die manier niet afhankelijk van de overige
+onderdelen van \emph{space invaders}, wat het geschikt maakt voor gebruik in 
+een ander spel. 
+(directory: \path{src/view/})
+
+\item \textbf{Controller:} \emph{Controllers} zijn enerzijds verantwoordelijk voor 
+de interacties tussen verschillende \emph{entities}, en anderzijds voor het 
+`dirigeren' van individuele \emph{entities}. Zo wordt zwaartekracht geregeld door
+een \classname{GravityController}, terwijl het schip van een \emph{invader} geleid wordt 
+door een \classname{PathController}. 
+(directory: \path{src/controller/})
+
+\item \textbf{Timeline:} Naast de klassieke \emph{model-view-controller} 
+combinatie steunt dit spel ook op de vierde pilaar van de \emph{timeline}, die 
+bestaat uit \emph{events} die tijdens het spel (chronologisch) aan bod komen, en
+volledige controle over de sc\`ene hebben. Het toevoegen van \emph{invaders} of 
+obstakels, en daarnaast ook het tonen van UI-elementen zoals tekst, zijn
+typische use-cases voor \emph{events}.
+(directory: \path{src/timeline/})
+
+\item \textbf{Parser:} Deze component wordt gebruikt om het spel te initializeren
+met data uit een XML \emph{scene description} bestand.
+(directory: \path{src/parser/})
+
+\item \textbf{Top-level helpers:} Helper klassen die nuttig zijn voor de 
+voorgenoemde onderdelen, zoals \classname{Event}, \classname{RandomGenerator} en \classname{Stopwatch}. 
+Anderzijds zitten hier ook klassen tussen die de voorgenoemde componenten
+gebruiken, en samen plaatsen, zoals \classname{Scene} - een type object
+dat alle data gerelateerd aan een `spelbord' bijhoudt.
+(directory: \path{src/})
+
+\end{itemize}
+
+\subsection{Design patterns}
+
+De implementatie van het spel bedient zich van deze \emph{design patterns}, zoals vereist in de specificatie:
+
+\begin{itemize}
+	
+\item \textbf{Model-View-Controller:} Zoals reeds vermeld in de 
+projectstructuur,
+bedient deze \emph{space invaders} zich van het \emph{model-view-controller}
+patroon. Daarnaast is ook nog de \emph{timeline} toegevoegd, die het op een
+nog macroscopischer niveau werkt.
+
+\item \textbf{Singleton:} Overeenkomstig met de specificatie, zijn 
+de \classname{RandomGenerator} en \classname{Stopwatch} singletons: er bestaat maar \'e\'en instantie van deze klassen.
+
+\item \textbf{Observer:} Dit \emph{design pattern} wordt ge\"implementeerd
+door het \classname{Event} \emph{class template}: dit stelt een 
+ge\"idealiseerd \emph{observable} object voor, met als 
+observers -- of \emph{event handlers} -- 
+\classname{std::function} instanties. 
+Zo'n \classname{Event} kan dan als field in een klasse opgenomen worden. 
+
+\classname{Scene} maakt hier dankbaar gebruik van: de voorgenoemde 
+klasse bevat zowel een \classname{Game} en \classname{GameRenderer}. 
+De laatste bevat alle \emph{renderables}, de eerste alle \emph{entities}.
+Wanneer een \emph{entity} verwijderd wordt, vangt de \classname{Scene}
+een bericht op uit het \classname{Game} object, en wordt de overeenkomstige
+\emph{renderable} meteen ook verwijderd. Voor controllers is dit niet nodig:
+zij bepalen immers zelf wanneer ze verwijderd dienen te worden.
+
+
+\end{itemize}
+
+\subsection{Flexibel ontwerp}
+Het toewijzen van gedrag aan \emph{controllers} in plaats van 
+\emph{entities} heeft als gevolg dat de klassen-hi\"erarchie van 
+die laatsten eerder beperkt blijft. Zowel \emph{player} als \emph{invader}
+schepen worden door een \classname{ShipEntity} voorgesteld. 
+Het verschil tussen de twee zit hem immers in de \emph{controllers} die aan 
+de schepen toegewezen worden. Dit vindt ook zijn weerklank in 
+\emph{scene descriptions}: het is mogelijk om bepaalde \emph{controllers}, 
+zoals een \classname{GravityController} aan eenderwelke entity toe te 
+voegen. Typische toepassingen hiervan zijn een 
+`zwart gat', `magnetische kogels' en een `schild' dat 
+\emph{entities} afstoot.
+
+
+\section{Uitbreidingen}
+
+Deze implementatie omvat ook enkele uitbreidingen, bovenop het basispakket:
+
+\begin{itemize}
+
+\item \textbf{Audio:} Zowel geluidseffecten als achtergrondmuziek kunnen 
+in de vorm van \emph{timeline events} afgespeeld en gestopt worden.
+
+\item \textbf{Verschillende soorten invaders:} Het XML 
+\emph{scene description} formaat van deze \emph{space invaders} laat
+de gebruiker toe zowel de fysieke eigenschappen van de 
+\emph{entity} van \emph{invaders} -- of het schip van de speler --, 
+als de \emph{renderable} die daarmee geassocieerd is
+aan te passen.
+
+\item \textbf{Geanimeerde sprites:} naast statische sprites, is het
+ook mogelijk hun geanimeerde soortgenoten als \emph{renderable} te 
+gebruiken.
+
+\item \textbf{Timeline:} Meer dan een simpele uitbreiding, de hierboven
+reeds toegelichte \emph{timeline} is een van de pijlers waarop het programma
+steunt.
+
+\item \textbf{Verschillende timelines:} Een uitbreiding op een 
+andere uitbreiding: naast de \emph{main timeline} van een 
+\emph{scene description}, heeft elke \emph{entity} zijn eigen 
+\emph{timeline}. Deze begint met het cre\"eren van een \emph{entity}, 
+en eindigt wanneer die \emph{entity} vernietigd wordt. Het is mogelijk
+en veelvoorkomend om daaraan extra \emph{timeline events} toe te voegen.
+Dit maakt het praktisch om bijvoorbeeld een geluidseffect af te spelen
+wanneer een \emph{invader} wordt vernietigd. Eventueel kan ook een 
+\emph{controller} een event starten, bijvoorbeeld als een \emph{entity}
+de sc\`ene verlaat, of een bepaalde sectie van de sc\`ene binnengaat.
+
+\item \textbf{Timeline-gerelateerde extensies:}
+\begin{itemize}
+	
+\item \textbf{Condities en flags:} Bepaalde \emph{timeline events} kunnen
+conditioneel gemaakt worden: \'e\'en van twee \emph{timelines} worden 
+uitgevoerd op basis van een \emph{boolean flag}. 
+Mogelijk interessant is dat deze conditie op elke frame 
+opnieuw ge\"evalueerd wordt. Deze aanpak blijkt in praktijk 
+verassend goed te werken: een `typische' \emph{timeline}, waarin
+invaders gespawned worden, wordt uitgevoerd tot het schip van de speler
+vernietigd wordt. Bij het \emph{destroyed event} van die laatste 
+wordt een \emph{flag} op ``false'' gezet. Bij het berekenen van
+de volgende \emph{frame} `bedenkt' de conditie zich, wordt de huidige 
+\emph{timeline} be\"eindigd, en wordt een andere \emph{timeline} opgestart,
+die door middel van wat tekst uitlegt dat de speler verloren heeft.
+
+\item \textbf{Loops:} Gelijkaardig aan het voorgaande, bestaan er ook
+\emph{loop timeline events}, die hun \emph{child event} een eindig of
+oneindig aantal keer herhalen.
+
+\item \textbf{Deadlines:} \emph{timelines} kunnen ook stopgezet worden na
+een bepaalde tijdsduur. Dit houdt opzettelijk geen rekening met het
+al dan niet klaar-zijn van de stopgezette \emph{timeline}.
+
+\end{itemize}
+
+
+\end{itemize}
+	
+\end{document}
