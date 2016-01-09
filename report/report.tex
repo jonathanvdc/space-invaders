@@ -153,6 +153,12 @@ voegen. Typische toepassingen hiervan zijn een
 \emph{`gravity well'}, `magnetische kogels' en een `schild' dat 
 \emph{entities} afstoot.
 
+\subsection{Libraries}
+Dit project steunt op de \texttt{SFML} \emph{library} -- en gaat ervan uit
+dat deze als \emph{package} aanwezig is --, en includeert 
+\texttt{tinyxml2}. Dat laatste wordt door \url{CMakeLists.txt} als 
+gecompileerd, en gelinkt met de \emph{executable}.
+
 \section{Uitbreidingen}
 
 Deze implementatie omvat ook enkele uitbreidingen, bovenop het basispakket:
@@ -217,5 +223,13 @@ al dan niet klaar-zijn van de stopgezette \emph{timeline}.
 \end{itemize}
 
 \end{itemize}
-	
+
+\section{Praktisch}
+
+Het \url{run.sh} \emph{shell script} compileert het 
+\texttt{space-invaders} programma, en
+voert dit meteen uit op het argument dat meegegeven wordt aan dit
+script.
+
+
 \end{document}
