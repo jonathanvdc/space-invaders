@@ -37,8 +37,10 @@ void PlayerController::update(si::model::Game&, duration_t timeDelta)
 
 		auto vel = this->player->getVelocity();
 
-		if (vecDot(vel + (accel - forward) * timeDelta.count(), vel) >= 0.0)
-			accel -= forward;
+		auto newAccel = accel - forward;
+
+		if (vecDot(vel + newAccel * this->accelConst * timeDelta.count() / vecLength(newAccel), vel) >= 0.0)
+			accel = newAccel;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
 		sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
