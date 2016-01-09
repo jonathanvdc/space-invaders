@@ -25,19 +25,23 @@ void PlayerController::update(si::model::Game&, duration_t timeDelta)
 	auto right = normalizeVec(si::Vector2d(-forward.y, forward.x));
 
 	Vector2d accel;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		accel += forward;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		accel -= forward;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		accel -= right;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		accel += right;
 	}
