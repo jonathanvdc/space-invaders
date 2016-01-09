@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage[dutch,english]{babel}
 \usepackage[obeyspaces]{url}
+\usepackage[multiple]{footmisc}
 
 \author{Jonathan Van der Cruysse}
 \title{Rapport: Project Gevorderd Programmeren}
@@ -140,7 +141,9 @@ zij bepalen immers zelf wanneer ze verwijderd dienen te worden.
 \subsection{Flexibel ontwerp}
 Het toewijzen van gedrag aan \emph{controllers} in plaats van 
 \emph{entities} heeft als gevolg dat de klassen-hi\"erarchie van 
-die laatsten eerder beperkt blijft. Zowel \emph{player} als \emph{invader}
+die laatsten
+\footnote{Inheritance-hi\"erarchie van \classname{Entity}: \url{Entity_inheritance.png} (in bijlage)}\footnote{Inheritance-hi\"erarchie van \classname{IController}: \url{Controller_inheritance.png} (in bijlage)}
+ eerder beperkt blijft. Zowel \emph{player} als \emph{invader}
 schepen worden door een \classname{ShipEntity} voorgesteld. 
 Het verschil tussen de twee zit hem immers in de \emph{controllers} die aan 
 de schepen toegewezen worden. Dit vindt ook zijn weerklank in 
@@ -199,7 +202,7 @@ verassend goed te werken: een `typische' \emph{timeline}, waarin
 invaders gespawned worden, wordt uitgevoerd tot het schip van de speler
 vernietigd wordt. Bij het \emph{destroyed event} van die laatste 
 wordt een \emph{flag} op ``false'' gezet. Vervolgens `bedenkt' de conditie 
-zich bij het opstellen
+zich bij het opstellen van
 de volgende \emph{frame}, wordt de huidige 
 \emph{timeline} be\"eindigd, en wordt een andere \emph{timeline} opgestart,
 die door middel van wat tekst uitlegt dat de speler verloren heeft.
