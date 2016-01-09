@@ -188,6 +188,8 @@ const char* const PositionXAttributeName = "posX";
 const char* const PositionYAttributeName = "posY";
 const char* const DirectionXAttributeName = "dirX";
 const char* const DirectionYAttributeName = "dirY";
+const char* const SpacingXAttributeName = "spacingX";
+const char* const SpacingYAttributeName = "spacingY";
 const char* const WidthAttributeName = "width";
 const char* const HeightAttributeName = "height";
 const char* const VelocityXAttributeName = "velX";
@@ -871,11 +873,13 @@ EventFactory SceneDescription::parseWaveEvent(
 	double posY = getDoubleAttribute(node, PositionYAttributeName, 0.0);
 	double dirX = getDoubleAttribute(node, DirectionXAttributeName, 0.0);
 	double dirY = getDoubleAttribute(node, DirectionYAttributeName, 1.0);
+	double spacingX = getDoubleAttribute(node, SpacingXAttributeName, 0.05);
+	double spacingY = getDoubleAttribute(node, SpacingYAttributeName, 0.05);
 
 	si::timeline::InvaderBehavior behavior =
 	{
 		Vector2d(velX, velY), springConst, fireInterval, maxDeviation,
-		Vector2d(posX, posY), Vector2d(dirX, dirY)
+		Vector2d(posX, posY), Vector2d(dirX, dirY), Vector2d(spacingX, spacingY)
 	};
 
 	return [=]()

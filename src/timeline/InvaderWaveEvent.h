@@ -48,6 +48,12 @@ namespace si
 
 			/// A vector that specifies the direction invaders will move in.
 			Vector2d targetDirection;
+
+			/// A vector that specifies how far invaders are apart.
+			/// This vector is transformed such that its Y-component
+			/// matches the target direction, and its X-component matches
+			/// the direction perpendicular to that.
+			Vector2d spacing;
 		};
 
 		/// Defines a type of event that spawns a wave of invaders.

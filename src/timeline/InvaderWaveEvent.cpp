@@ -50,6 +50,7 @@ void InvaderWaveEvent::start(Scene& target)
 	// Compute normalized target and perpendicular direction vectors.
 	auto targetDir = normalizeVec(this->invaderBehavior.targetDirection);
 	Vector2d perpDir(-targetDir.y, targetDir.x);
+	auto spacing = this->invaderBehavior.spacing;
 
 	auto projFactory = this->projectileFactory;
 
@@ -81,12 +82,11 @@ void InvaderWaveEvent::start(Scene& target)
 
 
 			double radius = model->getPhysicsProperties().radius;
+
 			// Make sure the invader ships are positioned at safe distances, so
-			// they don't crash into each other. Note: due to the nature of their
-			// movements, inserting some empty space in the target direction is far
-			// more important than inserting empty space in the perpendicular direction.
-			double spacingPerp = radius / 2.0 + 0.5 * pi * radius * velPerp;
-			double spacingDir = radius / 2.0 + 3.0 * pi * radius * velDir;
+			// they don't crash into each other.
+			double spacingPerp = spacing.x;
+			double spacingDir = spacing.y;
 			double totalPerp = radius * this->columnCount + spacingPerp * (this->columnCount - 1);
 			double totalDir = radius * this->rowCount + spacingDir * (this->rowCount - 1);
 			double offsetPerp = radius * i + spacingPerp * i;
