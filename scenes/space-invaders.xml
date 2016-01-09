@@ -12,6 +12,7 @@
         <Texture id="ufob-tex" path="level1/assets/ufo-blue.png" />
         <Texture id="ufo-tex" path="level1/assets/ufo-red.png" />
         <Texture id="kaboum-tex" path="level1/effects/kaboum.png" />
+        <Texture id="background-tex" path="level1/backgrounds/background-space.jpg" />
     </Textures>
     <!--<Music>
         <Music id="music-level1" path="music-level1.wav" />
@@ -68,14 +69,15 @@
         <Box id="explosion">
             <AnimatedSprite texture="kaboum-tex" frameCount="4" cycleDuration="1.0" />
         </Box>
+        <Sprite id="background-image" texture="background-tex" />
         <Box id="comment-easy-start" width="0.4" height="0.4" posY="0.4" posX="0.3">
             <Text text="Starting always looks easy. Get him!" font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
         <Box id="comment-you-died" width="0.4" height="0.4" posY="0.4" posX="0.3">
-            <Text text="You died" font="font" r="0.2" g="0.8" b="0.2" />
+            <Text text="Oops. You died" font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
         <Box id="comment-well-done" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="Not bad. Now reverse to the bottom of the screen. Fast!" font="font" r="0.2" g="0.8" b="0.2" />
+            <Text text="First wave coming. Reverse to the bottom of the screen!" font="font" r="0.2" g="0.8" b="0.2" />
         </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
@@ -88,6 +90,7 @@
         </Destroyed>
     </Player>
     <Background>
+        <Asset asset="background-image" />
     </Background>
     <Decor>
     </Decor>
@@ -103,257 +106,131 @@
                         <!--<Loop>
                             <Music music="music-level1"/>
                         </Loop>-->
-                        <Deadline duration="2.0">
-                            <Wait />
-                        </Deadline>
-                        <Concurrent>
-                            <Wave posX="0.5" rows="1" columns="1">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
-                                    <DestroyedEffect asset="explosion" duration="2.0" />
-                                    <Destroyed>
-                                        <Sound sound="enemy1-died" />
-                                    </Destroyed>
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                            </Wave>
-                        </Concurrent>
-                        <Concurrent>
-                            <Sound sound="wave-success" />
-                            <Deadline duration="3">
-                                <Show asset="comment-well-done"/>
+                        <Timeline>
+                            <Deadline duration="2.0">
+                                <Wait />
                             </Deadline>
-                        </Concurrent>
-                        <Concurrent>
+                            <Concurrent>
+                                <Wave posX="0.5" rows="1" columns="1">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                        <Destroyed>
+                                            <Sound sound="enemy1-died" />
+                                        </Destroyed>
+                                    </Ship>
+                                </Wave>
+                            </Concurrent>
+                            <Concurrent>
+                                <Sound sound="wave-success" />
+                                <Deadline duration="3">
+                                    <Show asset="comment-well-done"/>
+                                </Deadline>
+                            </Concurrent>
+                            <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="1">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.2" rows="2" columns="5">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                </Concurrent>
+                            <Concurrent>
                                 <Wave posX="0.5" rows="1" columns="1">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
                                         <DestroyedEffect asset="explosion" duration="2.0" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
                                         </Destroyed>
-                                        <Controllers>
-                                            <OnLeave>
-                                                <Concurrent>
-                                                    <SetFlag flag="game-active" value="false" />
-                                                    <SetFlag flag="invader-escaped" value="true" />
-                                                </Concurrent>
-                                            </OnLeave>
-                                        </Controllers>
                                     </Ship>
                                 </Wave>
                                 <Wave posY="0.1" posX="0.25" rows="1" columns="4">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
                                         <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Controllers>
-                                            <OnLeave>
-                                                <Concurrent>
-                                                    <SetFlag flag="game-active" value="false" />
-                                                    <SetFlag flag="invader-escaped" value="true" />
-                                                </Concurrent>
-                                            </OnLeave>
-                                        </Controllers>
                                     </Ship>
                                     <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
                                 </Wave>
                                 <Wave posY="0.1" posX="0.75" rows="1" columns="4">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Controllers>
-                                            <OnLeave>
-                                                <Concurrent>
-                                                    <SetFlag flag="game-active" value="false" />
-                                                    <SetFlag flag="invader-escaped" value="true" />
-                                                </Concurrent>
-                                            </OnLeave>
-                                        </Controllers>
                                     </Ship>
                                     <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
                                 </Wave>
                                 <Wave posY="0.2" rows="2" columns="5">
                                     <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Controllers>
-                                            <OnLeave>
-                                                <Concurrent>
-                                                    <SetFlag flag="game-active" value="false" />
-                                                    <SetFlag flag="invader-escaped" value="true" />
-                                                </Concurrent>
-                                            </OnLeave>
-                                        </Controllers>
                                     </Ship>
                                     <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
                                 </Wave>
                             </Concurrent>
-                        <Concurrent>
-                            <Wave posX="0.5" rows="1" columns="1">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
-                                    <DestroyedEffect asset="explosion" duration="2.0" />
-                                    <Destroyed>
-                                        <Sound sound="you-died" />
-                                    </Destroyed>
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                            </Wave>
-                            <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
-                                    <DestroyedEffect asset="explosion" duration="2.0" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.2" rows="2" columns="5">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                        </Concurrent>
-                        <Concurrent>
-                            <Wave posX="0.5" rows="1" columns="4">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
-                                    <DestroyedEffect asset="explosion" duration="2.0" />
-                                    <Destroyed>
-                                        <Sound sound="you-died" />
-                                    </Destroyed>
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                            </Wave>
-                            <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
-                                    <DestroyedEffect asset="explosion" duration="2.0" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.2" rows="2" columns="5">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                        </Concurrent>
-                        <Concurrent>
-                            <Wave rows="1" columns="10">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.1" rows="1" columns="10">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufop" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                            <Wave posY="0.2" rows="1" columns="10">
-                                <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufod" >
-                                    <DestroyedEffect asset="explosion" duration="2.5" />
-                                    <Controllers>
-                                        <OnLeave>
-                                            <Concurrent>
-                                                <SetFlag flag="game-active" value="false" />
-                                                <SetFlag flag="invader-escaped" value="true" />
-                                            </Concurrent>
-                                        </OnLeave>
-                                    </Controllers>
-                                </Ship>
-                                <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
-                            </Wave>
-                        </Concurrent>
+                            <Concurrent>
+                                <Wave posX="0.5" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                        <Destroyed>
+                                            <Sound sound="you-died" />
+                                        </Destroyed>
+                                    </Ship>
+                                </Wave>
+                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.2" rows="2" columns="5">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                            </Concurrent>
+                            <Concurrent>
+                                <Wave rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.1" rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufop" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.2" rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufod" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                            </Concurrent>
+                        </Timeline>
                     </Concurrent>
                 </Timeline>
             </Then>
