@@ -65,9 +65,11 @@ namespace si
 			/// projectile factory, row count and column count.
 			/// A velocity and spring constant are also provided. They
 			/// determine which path invaders follow.
+			/// If the projectile factory is null, no projectiles will
+			/// be fired.
 			InvaderWaveEvent(
 				const si::parser::ParsedShipFactory& shipFactory,
-				const si::parser::ParsedDriftingEntityFactory& projectileFactory,
+				const std::shared_ptr<si::parser::ParsedDriftingEntityFactory>& projectileFactory,
 				int rowCount, int columnCount, const InvaderBehavior& invaderBehavior);
 
 			InvaderWaveEvent(const InvaderWaveEvent&) = delete;
@@ -97,7 +99,7 @@ namespace si
 			bool isRunning() const;
 		private:
 			const si::parser::ParsedShipFactory shipFactory;
-			const si::parser::ParsedDriftingEntityFactory projectileFactory;
+			const std::shared_ptr<si::parser::ParsedDriftingEntityFactory> projectileFactory;
 			const int rowCount;
 			const int columnCount;
 			const InvaderBehavior invaderBehavior;

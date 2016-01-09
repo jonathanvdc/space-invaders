@@ -866,7 +866,12 @@ EventFactory SceneDescription::parseWaveEvent(
 
 	auto shipNode = getSingleChild(node, ShipNodeName);
 	auto shipFactory = readShipEntity(shipNode, assets);
-	auto projectileFactory = readProjectileEntity(getSingleChild(node, ProjectileNodeName), assets);
+	auto projectileNode = getSingleChild(node, ProjectileNodeName, true);
+	auto projectileFactory = projectileNode == nullptr
+	 	? nullptr
+		: std::make_shared<ParsedDriftingEntityFactory>(
+			readProjectileEntity(projectileNode, assets));
+
 	int rows = getIntAttribute(node, RowsAttributeName);
 	int cols = getIntAttribute(node, ColumnsAttributeName);
 	double velX = getDoubleAttribute(shipNode, VelocityXAttributeName, 0.05);
