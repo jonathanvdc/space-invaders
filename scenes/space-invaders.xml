@@ -81,7 +81,11 @@
         </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
-        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />
+        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile">
+            <Controllers>
+                <Gravity G="0.00001" falloff="2" />
+            </Controllers>
+        </Projectile>
         <Destroyed>
             <Concurrent>
                 <Sound sound="you-died" />
