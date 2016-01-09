@@ -147,7 +147,7 @@ de schepen toegewezen worden. Dit vindt ook zijn weerklank in
 \emph{scene descriptions}: het is mogelijk om bepaalde \emph{controllers}, 
 zoals een \classname{GravityController} aan eenderwelke entity toe te 
 voegen. Typische toepassingen hiervan zijn een 
-`zwart gat', `magnetische kogels' en een `schild' dat 
+\emph{`gravity well'}, `magnetische kogels' en een `schild' dat 
 \emph{entities} afstoot.
 
 
@@ -198,8 +198,9 @@ opnieuw ge\"evalueerd wordt. Deze aanpak blijkt in praktijk
 verassend goed te werken: een `typische' \emph{timeline}, waarin
 invaders gespawned worden, wordt uitgevoerd tot het schip van de speler
 vernietigd wordt. Bij het \emph{destroyed event} van die laatste 
-wordt een \emph{flag} op ``false'' gezet. Bij het berekenen van
-de volgende \emph{frame} `bedenkt' de conditie zich, wordt de huidige 
+wordt een \emph{flag} op ``false'' gezet. Vervolgens `bedenkt' de conditie 
+zich bij het opstellen
+de volgende \emph{frame}, wordt de huidige 
 \emph{timeline} be\"eindigd, en wordt een andere \emph{timeline} opgestart,
 die door middel van wat tekst uitlegt dat de speler verloren heeft.
 
