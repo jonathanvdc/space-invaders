@@ -1,0 +1,242 @@
+<Scene name="Nyan invaders">
+    <Fonts>
+        <Font id="font" path="consola.ttf" />
+    </Fonts>
+    <Textures>
+        <Texture id="starship-tex" path="level1/assets/starship.png" />
+        <Texture id="nyan-projectile-tex" path="level1/assets/projectile.png" />
+        <Texture id="ufoo-tex" path="level1/assets/ufo-orange.png" />
+        <Texture id="ufop-tex" path="level1/assets/ufo-purple.png" />
+        <Texture id="ufod-tex" path="level1/assets/ufo-dark.png" />
+        <Texture id="ufog-tex" path="level1/assets/ufo-green.png" />
+        <Texture id="ufob-tex" path="level1/assets/ufo-blue.png" />
+        <Texture id="ufo-tex" path="level1/assets/ufo-red.png" />
+        <Texture id="kaboum-tex" path="level1/effects/kaboum.png" />
+        <Texture id="background-tex" path="level1/backgrounds/background-space.jpg" />
+    </Textures>
+    <!--<Music>
+        <Music id="music-level1" path="music-level1.wav" />
+    </Music>-->
+    <Sounds>
+        <Sound id="you-died" path="level1/sounds/you-just-died.wav" />
+        <Sound id="enemy1-died" path="level1/sounds/piuwww.wav" />
+        <Sound id="photon" path="level1/sounds/photon.wav" />
+        <Sound id="laser" path="level1/sounds/laser.wav" />
+        <Sound id="wave-success" path="level1/sounds/cheers.wav" />
+        <Sound id="level-success" path="level1/sounds/victory.wav" />
+    </Sounds>
+    <Assets>
+        <Box id="ufo">
+            <AnimatedSprite texture="ufo-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="ufob">
+            <AnimatedSprite texture="ufob-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="ufog">
+            <AnimatedSprite texture="ufog-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="ufod">
+            <AnimatedSprite texture="ufod-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="ufoo">
+            <AnimatedSprite texture="ufoo-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="ufop">
+            <AnimatedSprite texture="ufop-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Box id="starship">
+            <Group>
+                <Sprite texture="starship-tex" />
+                <Box posX="0.5" posY="0.4" width="0.004">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+                <Box posX="0.1" posY="0.4" width="0.004">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+                <Box posX="0.9" posY="0.4" width="0.004">
+                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                </Box>
+            </Group>
+        </Box>
+        <Box id="nyan-projectile">
+            <Group>
+                <Sprite texture="nyan-projectile-tex" />
+                <Box posX="0.05" width="0.07">
+                    <RibbonParticle r="0.9" g="0.3" b="0.5" />
+                </Box>
+            </Group>
+        </Box>
+        <Box id="explosion">
+            <AnimatedSprite texture="kaboum-tex" frameCount="4" cycleDuration="1.0" />
+        </Box>
+        <Sprite id="background-image" texture="background-tex" />
+        <Box id="comment-easy-start" width="0.4" height="0.4" posY="0.4" posX="0.3">
+            <Text text="Starting always looks easy. Get him!" font="font" r="0.2" g="0.8" b="0.2" />
+        </Box>
+        <Box id="comment-you-died" width="0.4" height="0.4" posY="0.4" posX="0.3">
+            <Text text="Oops. You died" font="font" r="0.2" g="0.8" b="0.2" />
+        </Box>
+        <Box id="comment-well-done" width="0.8" height="0.4" posY="0.4" posX="0.1">
+            <Text text="First wave coming. Reverse to the bottom of the screen!" font="font" r="0.2" g="0.8" b="0.2" />
+        </Box>
+    </Assets>
+    <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
+        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />
+        <Destroyed>
+            <Concurrent>
+                <Sound sound="you-died" />
+                <SetFlag flag="game-active" value="false" />
+            </Concurrent>
+        </Destroyed>
+    </Player>
+    <Background>
+        <Asset asset="background-image" />
+    </Background>
+    <Decor>
+    </Decor>
+    <Timeline>
+        <SetFlag flag="game-active" value="true" />
+        <Condition predicate="game-active" >
+            <Then>
+                <Timeline>
+                    <Deadline duration="2.0">
+                        <Show asset="comment-easy-start"/>
+                    </Deadline>
+                    <Concurrent>
+                        <!--<Loop>
+                            <Music music="music-level1"/>
+                        </Loop>-->
+                        <Timeline>
+                            <Deadline duration="2.0">
+                                <Wait />
+                            </Deadline>
+                            <Concurrent>
+                                <Wave posX="0.5" rows="1" columns="1">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                        <Destroyed>
+                                            <Sound sound="enemy1-died" />
+                                        </Destroyed>
+                                    </Ship>
+                                </Wave>
+                            </Concurrent>
+                            <Concurrent>
+                                <Sound sound="wave-success" />
+                                <Deadline duration="3">
+                                    <Show asset="comment-well-done"/>
+                                </Deadline>
+                            </Concurrent>
+                            <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="1">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.2" rows="2" columns="5">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                    </Wave>
+                                </Concurrent>
+                            <Concurrent>
+                                <Wave posX="0.5" rows="1" columns="1">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                        <Destroyed>
+                                            <Sound sound="you-died" />
+                                        </Destroyed>
+                                    </Ship>
+                                </Wave>
+                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.2" rows="2" columns="5">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                            </Concurrent>
+                            <Concurrent>
+                                <Wave posX="0.5" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                        <Destroyed>
+                                            <Sound sound="you-died" />
+                                        </Destroyed>
+                                    </Ship>
+                                </Wave>
+                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <DestroyedEffect asset="explosion" duration="2.0" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.2" rows="2" columns="5">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                            </Concurrent>
+                            <Concurrent>
+                                <Wave rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.1" rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufop" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                                <Wave posY="0.2" rows="1" columns="10">
+                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufod" >
+                                        <DestroyedEffect asset="explosion" duration="2.5" />
+                                    </Ship>
+                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="nyan-projectile" />-->
+                                </Wave>
+                            </Concurrent>
+                        </Timeline>
+                    </Concurrent>
+                </Timeline>
+            </Then>
+            <Else>
+                <Show asset="comment-you-died" />
+            </Else>
+        </Condition>
+    </Timeline>
+</Scene>
