@@ -33,7 +33,12 @@ void PlayerController::update(si::model::Game&, duration_t timeDelta)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) ||
 		sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		accel -= forward;
+		// Only go backward if that doesn't change the player ship's direction.
+
+		auto vel = this->player->getVelocity();
+
+		if (vecDot(vel - forward * timeDelta.count(), vel) >= 0.0)
+			accel -= forward;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) ||
 		sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -48,7 +53,7 @@ void PlayerController::update(si::model::Game&, duration_t timeDelta)
 	double accelLength = vecLength(accel);
 	if (accelLength > 0.0)
 	{
-		accel *= accelConst / accelLength;
+		accel *= this->accelConst / accelLength;
 		player->accelerate(accel * timeDelta.count());
 	}
 }

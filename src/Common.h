@@ -17,12 +17,19 @@ namespace si
 	typedef sf::Vector2<double> Vector2d;
 	typedef sf::Rect<double> DoubleRect;
 
+	/// Computes the dot product of two vectors.
+	template<typename T>
+	auto vecDot(sf::Vector2<T> first, sf::Vector2<T> second)
+	{
+		return first.x * second.x + first.y * second.y;
+	}
+
 	/// Computes the square of the given vector's
 	/// length.
 	template<typename T>
 	auto vecLengthSqr(sf::Vector2<T> vec)
 	{
-		return vec.x * vec.x + vec.y * vec.y;
+		return vecDot(vec, vec);
 	}
 
 	/// Computes the length of the given vector.
