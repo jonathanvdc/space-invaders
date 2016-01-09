@@ -3,7 +3,7 @@
 # for this puropose.
 
 cd src
-mkdir build -p
+mkdir -p build
 cd build
 cmake ..
 make -j2
