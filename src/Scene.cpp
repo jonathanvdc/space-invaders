@@ -22,13 +22,11 @@
 
 using namespace si;
 
-Scene::Scene(const std::string& name)
-	: Scene(name, sf::Color::Black)
-{ }
-
-Scene::Scene(const std::string& name, sf::Color backgroundColor)
-	: name(name), game(), renderer(backgroundColor), controller(),
-	  sceneEvents(), associatedView(), flags()
+Scene::Scene(
+	const std::string& name, sf::Vector2u dimensions,
+	sf::Color backgroundColor)
+	: name(name), dimensions(dimensions), game(), renderer(backgroundColor),
+	  controller(), sceneEvents(), associatedView(), flags()
 {
 	// Create an event handler that removes the
 	// associated view when the model is removed.
@@ -135,6 +133,12 @@ void Scene::setFlag(const std::string& name, bool value)
 std::string Scene::getName() const
 {
 	return this->name;
+}
+
+/// Gets recommended dimensions for this scene's render target.
+sf::Vector2u Scene::getDimensions() const
+{
+	return this->dimensions;
 }
 
 /// Gets this scene's game.

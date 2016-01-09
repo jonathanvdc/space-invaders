@@ -313,6 +313,18 @@ namespace si
 			/// value is returned as a result.
 			static int getIntAttribute(const tinyxml2::XMLElement* node, const char* name, int defaultValue);
 
+			/// Gets the value of the unsigned integer attribute with the
+			/// given name in the given XML node.
+			/// If no such attribute can be found, the given default
+			/// value is returned as a result.
+			static unsigned int getUIntAttribute(const tinyxml2::XMLElement* node, const char* name, unsigned int defaultValue);
+
+			/// Tries to interpret the given integer attribute value as an
+			/// unsigned integer. If it is negative, then an exception
+			/// is thrown. A parent node and an attribute name are also
+			/// given to provide a more accurate exception message.
+			static unsigned int asUInt(const tinyxml2::XMLElement* node, const char* name, int value);
+
 			/// Gets the value of the floating-point attribute with the
 			/// given name in the given XML node.
 			/// If no such attribute can be found, an

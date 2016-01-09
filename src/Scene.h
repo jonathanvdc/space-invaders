@@ -24,15 +24,13 @@ namespace si
 	class Scene final
 	{
 	public:
-		/// Creates a new scene, with a
-		/// black background color, and
-		/// the given name.
-		Scene(const std::string& name);
-
-		/// Creates a new scene, with the
-		/// given background color, and the
-		/// given name.
-		Scene(const std::string& name, sf::Color backgroundColor);
+		/// Creates a new scene, with the given background color, and the
+		/// given name. The scene also recommends the given dimensions
+		/// for its render target.
+		Scene(
+			const std::string& name,
+			sf::Vector2u dimensions = sf::Vector2u(800, 800),
+			sf::Color backgroundColor = sf::Color::Black);
 
 		Scene(const Scene& other) = delete;
 
@@ -85,6 +83,9 @@ namespace si
 		/// Gets this scene's name.
 		std::string getName() const;
 
+		/// Gets recommended dimensions for this scene's render target.
+		sf::Vector2u getDimensions() const;
+
 		/// Gets this scene's game.
 		si::model::Game& getGame();
 
@@ -122,6 +123,8 @@ namespace si
 		void updateEvents(duration_t timeDelta);
 
 		std::string name;
+		sf::Vector2u dimensions;
+
 		si::model::Game game;
 		si::view::GameRenderer renderer;
 		si::controller::GameController controller;

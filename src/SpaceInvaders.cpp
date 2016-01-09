@@ -19,7 +19,9 @@
 /// render the game.
 void playGame(si::Scene& scene)
 {
-	sf::RenderWindow w(sf::VideoMode(800, 600), scene.getName());
+	auto dims = scene.getDimensions();
+
+	sf::RenderWindow w(sf::VideoMode(dims.x, dims.y), scene.getName());
 
 	(void)si::Stopwatch::instance.delta();
 

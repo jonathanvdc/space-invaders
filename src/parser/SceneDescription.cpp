@@ -361,21 +361,26 @@ std::map<std::string, Factory<si::view::IRenderable_ptr>> SceneDescription::read
 /// Reads the scene described by this document.
 std::unique_ptr<Scene> SceneDescription::readScene() const
 {
-	auto name = getAttribute(this->doc.RootElement(), NameAttributeName);
+	auto rootElem = this->doc.RootElement();
+
+	auto name = getAttribute(rootElem, NameAttributeName);
+	sf::Vector2u screenSize(
+		getUIntAttribute(rootElem, WidthAttributeName, 800),
+		getUIntAttribute(rootElem, HeightAttributeName, 800));
 
 	// Start by reading all resources and assets (renderable view elements).
 	auto resources = this->readResources();
 	SceneAssets assets = { this->readRenderables(resources), resources.sounds, resources.music };
 
-	auto scene = std::make_unique<Scene>(name);
+	auto scene = std::make_unique<Scene>(name, screenSize);
 
 	// Find and parse the player node, then add it to the
 	// scene.
-	auto playerNode = getSingleChild(this->doc.RootElement(), PlayerNodeName);
+	auto playerNode = getSingleChild(rootElem, PlayerNodeName);
 	addPlayerToScene(playerNode, assets, *scene);
 
 	// Lookup the (optional) background table.
-	auto backgroundNode = getSingleChild(this->doc.RootElement(), BackgroundTableNodeName, true);
+	auto backgroundNode = getSingleChild(rootElem, BackgroundTableNodeName, true);
 	if (backgroundNode != nullptr)
 	{
 		for (auto child = backgroundNode->FirstChildElement();
@@ -388,7 +393,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 	}
 
 	// Lookup the (optional) decor table.
-	auto decorNode = getSingleChild(this->doc.RootElement(), DecorTableNodeName, true);
+	auto decorNode = getSingleChild(rootElem, DecorTableNodeName, true);
 	if (decorNode != nullptr)
 	{
 		for (auto child = decorNode->FirstChildElement();
@@ -401,7 +406,7 @@ std::unique_ptr<Scene> SceneDescription::readScene() const
 	}
 
 	// Parse the timeline node, if any.
-	auto timelineNode = getSingleChild(this->doc.RootElement(), TimelineNodeName, true);
+	auto timelineNode = getSingleChild(rootElem, TimelineNodeName, true);
 	if (timelineNode != nullptr)
 	{
 		// We found a timeline. Awesome!
@@ -1124,6 +1129,31 @@ int SceneDescription::getIntAttribute(const tinyxml2::XMLElement* node, const ch
 	default:
 		return result;
 	}
+}
+
+/// Gets the value of the unsigned integer attribute with the
+/// given name in the given XML node.
+/// If no such attribute can be found, the given default
+/// value is returned as a result.
+unsigned int SceneDescription::getUIntAttribute(const tinyxml2::XMLElement* node, const char* name, unsigned int defaultValue)
+{
+	return asUInt(node, name, getIntAttribute(node, name, static_cast<int>(defaultValue)));
+}
+
+/// Tries to interpret the given integer attribute value as an
+/// unsigned integer. If it is negative, then an exception
+/// is thrown. A parent node and an attribute name are also
+/// given to provide a more accurate exception message.
+unsigned int SceneDescription::asUInt(const tinyxml2::XMLElement* node, const char* name, int value)
+{
+	if (value < 0)
+	{
+		throw SceneDescriptionException(
+			"Negative integer values are not permitted for '" +
+			std::string(name) + "' attributes of '" +
+			node->Name() + "' nodes '.");
+	}
+	return static_cast<unsigned int>(value);
 }
 
 /// Gets the value of the floating-point attribute with the
