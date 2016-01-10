@@ -102,7 +102,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="Here they come. Good luck!" font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="May the force be with you." font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -118,7 +118,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="The death star has been destroyed! You win!" font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="You did it! The force is strong with this one!" font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -126,7 +126,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="First wave incoming." font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="Where is Yoda when you need him?" font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -134,7 +134,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="Second wave. Watch out now." font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="Stormtrooper extravaganza." font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -142,7 +142,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="Third wave. Get ready." font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="More force needed... or a cold beer." font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -150,7 +150,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="Fourth wave. You can do it!" font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="Watch out! C3P0 has joined the dark side." font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -432,7 +432,12 @@
                                 <Background>
                                     <Main>
                                         <Spawn>
-                                            <Obstacle mass="200" radius="0.05" health="60" posX="0.8" posY="0.1" asset="death-star" />
+                                            <Obstacle mass="200" radius="0.05" health="60" posX="0.8" posY="0.1" asset="death-star" >
+                                                <DestroyedEffect asset="explosion" duration="2.5" />
+                                                <Destroyed>
+                                                    <Sound sound="you-died" />
+                                                </Destroyed>
+                                            </Obstacle>
                                         </Spawn>
                                     </Main>
                                     <Extra>
