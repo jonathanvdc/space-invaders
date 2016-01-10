@@ -80,6 +80,14 @@
                 </Box>
             </Group>
         </Box>
+        <Box id="comment-aliens-escaped" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.3" height="0.6" posX="0.2" width="0.6">
+                    <Text text="The aliens have landed. All is lost." font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
+        </Box>
         <Box id="comment-you-survived" width="0.8" height="0.2" posY="0.4" posX="0.1">
             <Group>
                 <Sprite texture="text-background-tex" />
@@ -181,6 +189,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -202,6 +218,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
@@ -210,6 +234,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
@@ -218,6 +250,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
@@ -226,6 +266,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -247,6 +295,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="2">
@@ -255,6 +311,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -268,6 +332,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -281,6 +353,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -303,6 +383,14 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="aliens-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
                                         <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="yellow-martian" >
@@ -311,6 +399,14 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="aliens-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
@@ -324,6 +420,14 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="aliens-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
@@ -337,6 +441,14 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="aliens-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
@@ -357,6 +469,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" rows="1" columns="10">
@@ -365,6 +485,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.2" rows="1" columns="10">
@@ -373,6 +501,14 @@
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
+                                            <Controllers>
+                                                <OnLeave>
+                                                    <Concurrent>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                        <SetFlag flag="aliens-escaped" value="true" />
+                                                    </Concurrent>
+                                                </OnLeave>
+                                            </Controllers>
                                         </Ship>
                                         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                             <Created>
@@ -393,6 +529,14 @@
                                         <Destroyed>
                                             <Sound sound="you-died" />
                                         </Destroyed>
+                                        <Controllers>
+                                            <OnLeave>
+                                                <Concurrent>
+                                                    <SetFlag flag="game-active" value="false" />
+                                                    <SetFlag flag="aliens-escaped" value="true" />
+                                                </Concurrent>
+                                            </OnLeave>
+                                        </Controllers>
                                     </Ship>
                                     <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
                                         <Created>
@@ -410,7 +554,14 @@
                 </Timeline>
             </Then>
             <Else>
-                <Show asset="comment-you-died" />
+                <Condition predicate="aliens-escaped">
+                    <Then>
+                        <Show asset="comment-aliens-escaped" />
+                    </Then>
+                    <Else>
+                        <Show asset="comment-you-died" />
+                    </Else>
+                </Condition>
             </Else>
         </Condition>
     </Timeline>
