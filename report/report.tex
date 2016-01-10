@@ -8,7 +8,7 @@
 \usepackage[obeyspaces]{url}
 \usepackage[multiple]{footmisc}
 
-\author{Jonathan Van der Cruysse}
+\author{Jonathan Van der Cruysse - rolnummer s0142476 \\ Universiteit Antwerpen}
 \title{Rapport: Project Gevorderd Programmeren}
 
 \begin{document}
@@ -31,20 +31,26 @@ van het originele spel.
 
 Met het begrip \emph{hackable} bedoel ik dat elke gebruiker arbitrair
 complexe sc\`enes kan opbouwen -- en die daarna spelen --, zonder een 
-letter aan de programmacode te veranderen. Dit beperkt zich niet enkel
-tot het cosmetische of een initi\"ele opstelling van invaders: het is 
-mogelijk een volledige \emph{timeline} op te stellen, die precies
+letter aan de programmacode te veranderen. 
+Dit betreft onder meer cosmetische elementen: in een handomdraai
+kunnen achtergronden, muziek, tussenteksten, \emph{sounds}, \emph{sprites}
+en andere elementen toegevoegd, vervangen en vrij opgesteld worden.
+Daarnaast kan ook een \emph{timeline} opgebouwd worden, die precies
 bepaalt wat er gebeurt, in chronologische volgorde. 
 Zelfs gebeurtenissen zoals een spel `winnen' of `verliezen' worden 
 vertolkt door zo'n \emph{timeline}. In die zin is
 het programma zelf eerder gelijkend op een vorm van \emph{engine}, die 
-scenario's tot uitvoering brengt.
+scenario's tot uitvoering brengt. Dezelfde \emph{engine} kan gebruikt
+worden om verschillende spelmodellen uit te rollen, van eenvoudige
+\emph{turkey-shoots} tot meer complexe \emph{indie games}.
 
 Voor bewegingen beroept het spel zich op Newton's eerste wet: 
 \emph{entities} die eenmaal in beweging gebracht zijn, zullen niet
 uit zichzelf tot stilstand komen. Alle \emph{entities} zijn hier gevoelig
 aan. Zo kunnen ook projectielen afgebogen worden door een object dat 
-zwaartekracht (of anti-zwaartekracht) uitstraalt.
+zwaartekracht (of anti-zwaartekracht) uitstraalt. Het afvuren van
+projectielen heeft desgewenst ook een invloed op de inertie van het
+schip dat ze afvuurt.
 
 De setting van het spel in de ruimte hangt grotendeels samen met het 
 voorgenoemde principe. Door het ontbreken van fenomenen zoals wrijving
@@ -85,8 +91,9 @@ door een \classname{PathController}.
 (directory: \path{src/controller/})
 
 \item \textbf{Timeline:} Naast de klassieke \emph{model-view-controller} 
-combinatie steunt dit spel ook op de vierde pilaar van de \emph{timeline}, die 
-bestaat uit \emph{events} die tijdens het spel (chronologisch) aan bod komen, en
+combinatie steunt dit spel ook op de vierde pijler van de \emph{timeline}, 
+die bestaat uit \emph{events} die tijdens het spel (chronologisch) aan 
+bod komen, en
 volledige controle over de sc\`ene hebben. Het toevoegen van \emph{invaders} of 
 obstakels, en daarnaast ook het tonen van UI-elementen zoals tekst, zijn
 typische use-cases voor \emph{events}.
@@ -153,7 +160,7 @@ schepen worden door een \classname{ShipEntity} voorgesteld.
 Het verschil tussen de twee zit hem immers in de \emph{controllers} die aan 
 de schepen toegewezen worden. Dit vindt ook zijn weerklank in 
 \emph{scene descriptions}: het is mogelijk om bepaalde \emph{controllers}, 
-zoals een \classname{GravityController} aan eenderwelke entity toe te 
+zoals een \classname{GravityController} aan eender welke entity toe te 
 voegen. Typische toepassingen hiervan zijn een 
 \emph{`gravity well'}, `magnetische kogels' en een `schild' dat 
 \emph{entities} afstoot.
@@ -162,7 +169,7 @@ voegen. Typische toepassingen hiervan zijn een
 Dit project steunt op de \texttt{SFML} \emph{library} -- en gaat ervan uit
 dat deze als \emph{package} aanwezig is --, en includeert 
 \texttt{tinyxml2}. Dat laatste wordt door \url{CMakeLists.txt} als 
-gecompileerd, en gelinkt met de \emph{executable}.
+\emph{static library} gecompileerd, en gelinkt met de \emph{executable}.
 
 \section{Uitbreidingen}
 
@@ -204,7 +211,7 @@ de sc\`ene verlaat, of een bepaalde sectie van de sc\`ene binnengaat.
 \begin{itemize}
 	
 \item \textbf{Condities en flags:} Bepaalde \emph{timeline events} kunnen
-conditioneel gemaakt worden: \'e\'en van twee \emph{timelines} worden 
+conditioneel gemaakt worden: \'e\'en van twee \emph{timelines} wordt 
 uitgevoerd op basis van een \emph{boolean flag}. 
 Mogelijk interessant is dat deze conditie op elke frame 
 opnieuw ge\"evalueerd wordt. Deze aanpak blijkt in praktijk 
