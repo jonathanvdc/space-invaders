@@ -15,6 +15,7 @@
         <Texture id="background-tex" path="level1/backgrounds/background-space.jpg" />
     </Textures>
     <Music>
+        <Music id="music-ufo" path="level1/sounds/UFO.wav" />
         <Music id="music-level1" path="level1/sounds/music-level1.wav" />
     </Music>
     <Sounds>
@@ -116,9 +117,14 @@
         <Condition predicate="game-active" >
             <Then>
                 <Timeline>
-                    <Deadline duration="2.0">
-                        <Show asset="comment-easy-start"/>
-                    </Deadline>
+                    <Background>
+                        <Main>
+                            <Music music="music-ufo" />
+                        </Main>
+                        <Extra>
+                            <Show asset="comment-easy-start"/>
+                        </Extra>
+                    </Background>
                     <Background>
                         <Extra>
                             <Loop>
