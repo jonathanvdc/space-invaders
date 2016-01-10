@@ -8,9 +8,9 @@
         <Texture id="invader3-tex" path="level2/assets/invader3.png" />
         <Texture id="invader4-tex" path="level2/assets/invader4.png" />
         <Texture id="invader5-tex" path="level2/assets/invader5.png" />
-        <Texture id="yellow-martian-tex" path="level2/assets/yellow-martian.png" />
+        <Texture id="stormtrooper-red-tex" path="level3/assets/stormtrooper-red.png" />
         <Texture id="stormtrooper-white-tex" path="level3/assets/stormtrooper-white.png" />
-        <Texture id="kaboum-tex" path="level2/effects/kaboum-level2.png" />
+        <Texture id="kaboum-tex" path="level3/effects/kaboum3.png" />
         <Texture id="background-tex" path="level3/background/background-space2.png" />
         <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
@@ -25,8 +25,8 @@
         <Sound id="level-success" path="level1/sounds/victory.wav" />
     </Sounds>
     <Assets>
-        <Box id="yellow-martian">
-            <AnimatedSprite texture="yellow-martian-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="stormtrooper-red">
+            <Sprite texture="stormtrooper-red-tex" />
         </Box>
         <Box id="stormtrooper-white">
             <Sprite texture="stormtrooper-white-tex" />
@@ -57,7 +57,7 @@
             </Group>
         </Box>
         <Box id="explosion">
-            <AnimatedSprite texture="kaboum-tex" frameCount="37" cycleDuration="2.0" />
+            <AnimatedSprite texture="kaboum-tex" frameCount="43" cycleDuration="2.0" />
         </Box>
         <Sprite id="background-image" texture="background-tex" />
         <Box id="comment-easy-start" width="0.8" height="0.2" posY="0.4" posX="0.1">
@@ -196,7 +196,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="yellow-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="stormtrooper-red" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -241,7 +241,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="2">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="yellow-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormtrooper-red" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -296,7 +296,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="yellow-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormtrooper-red" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -343,7 +343,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave rows="1" columns="10">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="yellow-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="stormtrooper-red" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
