@@ -92,8 +92,13 @@ obstakels, en daarnaast ook het tonen van UI-elementen zoals tekst, zijn
 typische use-cases voor \emph{events}.
 (directory: \path{src/timeline/})
 
-\item \textbf{Parser:} Deze component wordt gebruikt om het spel te initializeren
-met data uit een XML \emph{scene description} bestand.
+\item \textbf{Parser:} Deze component wordt gebruikt om het spel te 
+initializeren met data uit een XML \emph{scene description} bestand.
+
+Indien dit syntactische of semantische fouten bevat, vangt
+de parser ze op door middel van een \emph{exception}, die door het
+\emph{entry point} van het programma omgezet wordt in console-uitvoer
+voor de gebruiker.
 (directory: \path{src/parser/})
 
 \item \textbf{Top-level helpers:} Helper klassen die nuttig zijn voor de 
