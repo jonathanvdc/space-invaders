@@ -111,8 +111,6 @@
     <Background>
         <Asset asset="background-image" />
     </Background>
-    <Decor>
-    </Decor>
     <Timeline>
         <SetFlag flag="game-active" value="true" />
         <Condition predicate="game-active" >
