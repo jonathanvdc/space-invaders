@@ -989,8 +989,8 @@ EventFactory SceneDescription::parseTimelineEvent(
 	}
 	else if (nodeName == BackgroundNodeName)
 	{
-		auto mainEvent = parseTimelineEvent(getSingleChild(node, MainNodeName), assets);
-		auto extraEvent = parseTimelineEvent(getSingleChild(node, ExtraNodeName), assets);
+		auto mainEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, MainNodeName)), assets);
+		auto extraEvent = parseTimelineEvent(getSingleChild(getSingleChild(node, ExtraNodeName)), assets);
 		return [=]()
 		{
 			return std::make_shared<si::timeline::BackgroundEvent>(mainEvent(), extraEvent());

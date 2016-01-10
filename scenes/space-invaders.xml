@@ -118,188 +118,192 @@
                     <Deadline duration="2.0">
                         <Show asset="comment-easy-start"/>
                     </Deadline>
-                    <Concurrent>
-                        <Loop>
-                            <Music music="music-level1"/>
-                        </Loop>
-                        <Timeline>
-                            <Deadline duration="2.0">
-                                <Wait />
-                            </Deadline>
-                            <Concurrent>
-                                <Wave posX="0.5" rows="1" columns="1">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="enemy1-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                            </Concurrent>
-                            <Concurrent>
-                                <Sound sound="wave-success" />
-                                <Deadline duration="3">
-                                    <Show asset="comment-well-done"/>
+                    <Background>
+                        <Extra>
+                            <Loop>
+                                <Music music="music-level1"/>
+                            </Loop>
+                        </Extra>
+                        <Main>
+                            <Timeline>
+                                <Deadline duration="2.0">
+                                    <Wait />
                                 </Deadline>
-                            </Concurrent>
-                            <Concurrent>
-                                <Wave posX="0.5" rows="1" columns="1">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufo" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufob" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufog" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.2" rows="2" columns="5">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufoo" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                            </Concurrent>
-                            <Concurrent>
-                                <Sound sound="wave-success" />
-                                <Deadline duration="3">
-                                    <Show asset="comment-wave-two"/>
-                                </Deadline>
-                            </Concurrent>
-                            <Concurrent>
-                                <Wave posX="0.5" rows="1" columns="1">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufo" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufob" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufog" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.2" rows="2" columns="5">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufoo" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                            </Concurrent>
-                            <Concurrent>
-                                <Sound sound="wave-success" />
-                                <Deadline duration="3">
-                                    <Show asset="comment-wave-three"/>
-                                </Deadline>
-                            </Concurrent>
-                            <Concurrent>
-                                <Wave posX="0.5" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                                <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
-                                        <DestroyedEffect asset="explosion" duration="2.0" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                                <Wave posY="0.2" rows="2" columns="5">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
-                                </Wave>
-                            </Concurrent>
-                            <Concurrent>
-                                <Sound sound="wave-success" />
-                                <Deadline duration="3">
-                                    <Show asset="comment-wave-four"/>
-                                </Deadline>
-                            </Concurrent>
-                            <Concurrent>
-                                <Wave rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufob" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                                <Wave posY="0.1" rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufop" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                </Wave>
-                                <Wave posY="0.2" rows="1" columns="10">
-                                    <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufod" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
-                                </Wave>
-                            </Concurrent>
-                        </Timeline>
-                    </Concurrent>
+                                <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="1">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="enemy1-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Sound sound="wave-success" />
+                                    <Deadline duration="3">
+                                        <Show asset="comment-well-done"/>
+                                    </Deadline>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="1">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufog" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.2" rows="2" columns="5">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufoo" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Sound sound="wave-success" />
+                                    <Deadline duration="3">
+                                        <Show asset="comment-wave-two"/>
+                                    </Deadline>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="1">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufog" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.2" rows="2" columns="5">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufoo" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Sound sound="wave-success" />
+                                    <Deadline duration="3">
+                                        <Show asset="comment-wave-three"/>
+                                    </Deadline>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Wave posX="0.5" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.25" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.0" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.1" posX="0.75" rows="1" columns="4">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                    <Wave posY="0.2" rows="2" columns="5">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                    </Wave>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Sound sound="wave-success" />
+                                    <Deadline duration="3">
+                                        <Show asset="comment-wave-four"/>
+                                    </Deadline>
+                                </Concurrent>
+                                <Concurrent>
+                                    <Wave rows="1" columns="10">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufob" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.1" rows="1" columns="10">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufop" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                    </Wave>
+                                    <Wave posY="0.2" rows="1" columns="10">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufod" >
+                                            <DestroyedEffect asset="explosion" duration="2.5" />
+                                            <Destroyed>
+                                                <Sound sound="you-died" />
+                                            </Destroyed>
+                                        </Ship>
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
+                                    </Wave>
+                                </Concurrent>
+                            </Timeline>
+                        </Main>
+                    </Background>
                     <Sound sound="level-success" />
                     <Permanent>
                         <Show asset="comment-you-survived" />
