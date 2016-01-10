@@ -5,12 +5,11 @@
     <Textures>
         <Texture id="starship-tex" path="level2/assets/starship-red.png" />
         <Texture id="projectile-tex" path="level1/assets/projectile.png" />
-        <Texture id="ufoo-tex" path="level2/assets/invader3.png" />
-        <Texture id="ufop-tex" path="level2/assets/invader4.png" />
-        <Texture id="ufod-tex" path="level2/assets/invader5.png" />
-        <Texture id="ufog-tex" path="level2/assets/white-martian.png" />
-        <Texture id="ufob-tex" path="level2/assets/yellow-martian.png" />
-        <Texture id="ufo-tex" path="level2/assets/white-martian.png" />
+        <Texture id="invader3-tex" path="level2/assets/invader3.png" />
+        <Texture id="invader4-tex" path="level2/assets/invader4.png" />
+        <Texture id="invader5-tex" path="level2/assets/invader5.png" />
+        <Texture id="yellow-martian-tex" path="level2/assets/yellow-martian.png" />
+        <Texture id="white-martian-tex" path="level2/assets/white-martian.png" />
         <Texture id="kaboum-tex" path="level2/effects/explosion-level2.png" />
         <Texture id="background-tex" path="level2/background/space-invaders-background.jpg" />
     </Textures>
@@ -19,30 +18,26 @@
     </Music>
     <Sounds>
         <Sound id="you-died" path="level1/sounds/you-just-died.wav" />
-        <Sound id="enemy1-died" path="level1/sounds/piuwww.wav" />
         <Sound id="photon" path="level1/sounds/photon.wav" />
         <Sound id="laser" path="level1/sounds/laser.wav" />
         <Sound id="wave-success" path="level1/sounds/cheers.wav" />
         <Sound id="level-success" path="level1/sounds/victory.wav" />
     </Sounds>
     <Assets>
-        <Box id="ufo">
-            <AnimatedSprite texture="ufo-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="yellow-martian">
+            <AnimatedSprite texture="yellow-martian-tex" frameCount="2" cycleDuration="1.0" />
         </Box>
-        <Box id="ufob">
-            <AnimatedSprite texture="ufob-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="white-martian">
+            <AnimatedSprite texture="white-martian-tex" frameCount="2" cycleDuration="1.0" />
         </Box>
-        <Box id="ufog">
-            <AnimatedSprite texture="ufog-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="invader5">
+            <AnimatedSprite texture="invader5-tex" frameCount="2" cycleDuration="1.0" />
         </Box>
-        <Box id="ufod">
-            <AnimatedSprite texture="ufod-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="invader3">
+            <AnimatedSprite texture="invader3-tex" frameCount="2" cycleDuration="1.0" />
         </Box>
-        <Box id="ufoo">
-            <AnimatedSprite texture="ufoo-tex" frameCount="2" cycleDuration="1.0" />
-        </Box>
-        <Box id="ufop">
-            <AnimatedSprite texture="ufop-tex" frameCount="2" cycleDuration="1.0" />
+        <Box id="invader4">
+            <AnimatedSprite texture="invader4-tex" frameCount="2" cycleDuration="1.0" />
         </Box>
         <Box id="starship">
             <Group>
@@ -97,6 +92,9 @@
             <Controllers>
                 <Gravity G="0.00001" falloff="2" />
             </Controllers>
+            <Created>
+                <Sound sound="photon" />
+            </Created>
         </Projectile>
         <Destroyed>
             <Concurrent>
@@ -130,13 +128,18 @@
                                     <Wait />
                                 </Deadline>
                                 <Concurrent>
-                                    <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                    <Wave posX="0.5" rows="1" columns="3">
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
-                                                <Sound sound="enemy1-died" />
+                                                <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                            <Created>
+                                                <Sound sound="laser" />
+                                            </Created>
+                                        </Projectile>
                                     </Wave>
                                 </Concurrent>
                                 <Concurrent>
@@ -147,7 +150,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -155,31 +158,33 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="yellow-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireInterval="5.0" fireIntervalDeviation="2.0" asset="invader3" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                            <Created>
+                                                <Sound sound="laser" />
+                                            </Created>
+                                        </Projectile>
                                     </Wave>
                                 </Concurrent>
                                 <Concurrent>
@@ -190,7 +195,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -198,7 +203,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="yellow-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -207,7 +212,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -216,7 +221,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="invader3" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -233,7 +238,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -241,7 +246,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="yellow-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -250,7 +255,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufog" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="white-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -259,7 +264,7 @@
                                         <!--<Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />-->
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="ufoo" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireIntervalDeviation="0.2" asset="invader3" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -276,7 +281,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave rows="1" columns="10">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufob" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="yellow-martian" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -284,7 +289,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" rows="1" columns="10">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufop" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="invader4" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -292,13 +297,17 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.2" rows="1" columns="10">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="ufod" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="2.0" fireIntervalDeviation="0.2" asset="invader5" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                            <Created>
+                                                <Sound sound="laser" />
+                                            </Created>
+                                        </Projectile>
                                     </Wave>
                                 </Concurrent>
                             </Timeline>

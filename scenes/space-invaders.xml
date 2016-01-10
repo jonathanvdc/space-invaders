@@ -97,6 +97,9 @@
             <Controllers>
                 <Gravity G="0.00001" falloff="2" />
             </Controllers>
+            <Created>
+                <Sound sound="photon" />
+            </Created>
         </Projectile>
         <Destroyed>
             <Concurrent>
@@ -298,7 +301,11 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" />
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                            <Created>
+                                                <Sound sound="laser" />
+                                            </Created>
+                                        </Projectile>
                                     </Wave>
                                 </Concurrent>
                             </Timeline>
