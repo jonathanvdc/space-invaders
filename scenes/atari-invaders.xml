@@ -4,14 +4,14 @@
     </Fonts>
     <Textures>
         <Texture id="starship-tex" path="level2/assets/starship-red.png" />
-        <Texture id="projectile-tex" path="level1/assets/projectile.png" />
+        <Texture id="projectile-tex" path="level2/effects/kogelke-up.png" />
         <Texture id="invader3-tex" path="level2/assets/invader3.png" />
         <Texture id="invader4-tex" path="level2/assets/invader4.png" />
         <Texture id="invader5-tex" path="level2/assets/invader5.png" />
         <Texture id="yellow-martian-tex" path="level2/assets/yellow-martian.png" />
         <Texture id="white-martian-tex" path="level2/assets/white-martian.png" />
         <Texture id="kaboum-tex" path="level2/effects/kaboum-level2.png" />
-        <Texture id="background-tex" path="level2/background/space-invaders-background.jpg" />
+        <Texture id="background-tex" path="level1/backgrounds/background-evilplanet.jpg" />
         <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
     <Music>
@@ -57,9 +57,6 @@
         <Box id="projectile">
             <Group>
                 <Sprite texture="projectile-tex" />
-                <Box posX="0.45" width="0.07">
-                    <RibbonParticle r="0.9" g="0.2" b="0.3" />
-                </Box>
             </Group>
         </Box>
         <Box id="explosion">
