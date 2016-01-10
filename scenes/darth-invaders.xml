@@ -5,6 +5,7 @@
     <Textures>
         <Texture id="starship-tex" path="level3/assets/R2.png" />
         <Texture id="projectile-tex" path="level2/effects/kogelke-up.png" />
+        <Texture id="sith-projectile-tex" path="level2/effects/kogelke.png" />
         <Texture id="django-tex" path="level3/assets/django.png" />
         <Texture id="vader-tex" path="level3/assets/vader.png" />
         <Texture id="c3po-tex" path="level3/assets/C3P0.png" />
@@ -66,6 +67,14 @@
                 <Sprite texture="projectile-tex" />
                 <Box posX="0.5" posY="0.4" width="0.006">
                     <RibbonParticle r="0.9" g="0.6" b="0.0" />
+                </Box>
+            </Group>
+        </Box>
+        <Box id="sith-projectile">
+            <Group>
+                <Sprite texture="sith-projectile-tex" />
+                <Box posX="0.45" posY="0.4" width="0.05">
+                    <RibbonParticle r="1.0" g="0.2" b="0.0" />
                 </Box>
             </Group>
         </Box>
@@ -190,7 +199,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -235,7 +244,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -264,7 +273,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -277,7 +286,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -290,7 +299,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -319,7 +328,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -332,7 +341,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -345,7 +354,7 @@
                                                 <Sound sound="you-died" />
                                             </Destroyed>
                                         </Ship>
-                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                        <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                             <Created>
                                                 <Sound sound="laser" />
                                             </Created>
@@ -414,7 +423,7 @@
                                                     </OnLeave>
                                                 </Controllers>
                                             </Ship>
-                                            <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                            <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="sith-projectile" >
                                                 <Created>
                                                     <Sound sound="laser" />
                                                 </Created>
