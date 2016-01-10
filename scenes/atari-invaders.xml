@@ -10,7 +10,7 @@
         <Texture id="invader5-tex" path="level2/assets/invader5.png" />
         <Texture id="yellow-martian-tex" path="level2/assets/yellow-martian.png" />
         <Texture id="white-martian-tex" path="level2/assets/white-martian.png" />
-        <Texture id="kaboum-tex" path="level2/effects/explosion-level2.png" />
+        <Texture id="kaboum-tex" path="level2/effects/kaboum-level2.png" />
         <Texture id="background-tex" path="level2/background/space-invaders-background.jpg" />
         <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
@@ -63,7 +63,7 @@
             </Group>
         </Box>
         <Box id="explosion">
-            <AnimatedSprite texture="kaboum-tex" frameCount="5" cycleDuration="1.0" />
+            <AnimatedSprite texture="kaboum-tex" frameCount="37" cycleDuration="2.0" />
         </Box>
         <Sprite id="background-image" texture="background-tex" />
         <Box id="comment-easy-start" width="0.8" height="0.2" posY="0.4" posX="0.1">
@@ -385,7 +385,7 @@
                                     </Deadline>
                                 </Concurrent>
                                 <Wave posY="0.2" rows="1" columns="10">
-                                    <Ship mass="200" radius="0.05" health="5" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="invader5" >
+                                    <Ship mass="200" radius="0.05" health="30" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="invader5" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
