@@ -12,6 +12,7 @@
         <Texture id="white-martian-tex" path="level2/assets/white-martian.png" />
         <Texture id="kaboum-tex" path="level2/effects/explosion-level2.png" />
         <Texture id="background-tex" path="level2/background/space-invaders-background.jpg" />
+        <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
     <Music>
         <Music id="music-level1" path="level1/sounds/music-level1.wav" />
@@ -65,26 +66,61 @@
             <AnimatedSprite texture="kaboum-tex" frameCount="5" cycleDuration="1.0" />
         </Box>
         <Sprite id="background-image" texture="background-tex" />
-        <Box id="comment-easy-start" width="0.4" height="0.4" posY="0.4" posX="0.3">
-            <Text text="Starting always looks easy. Get him!" font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-easy-start" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="Here they come. Good luck!" font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-you-died" width="0.4" height="0.4" posY="0.4" posX="0.3">
-            <Text text="Oops. You died" font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-you-died" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="Ouch! You died." font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-you-survived" width="0.4" height="0.4" posY="0.4" posX="0.3">
-            <Text text="You survived. Good job!" font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-you-survived" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="You survived. Good job!" font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-well-done" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="First wave coming. Return to the bottom of the screen!" font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-well-done" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="First wave incoming." font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-wave-two" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="Second wave. Watch out: these guys will be twice as fast." font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-wave-two" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="Second wave. Watch out now." font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-wave-three" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="Third wave. Invaders may start to wobble." font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-wave-three" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="Third wave. Get ready." font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
-        <Box id="comment-wave-four" width="0.8" height="0.4" posY="0.4" posX="0.1">
-            <Text text="Fourth wave. Armed invaders incoming!" font="font" r="0.2" g="0.8" b="0.2" />
+        <Box id="comment-wave-four" width="0.8" height="0.2" posY="0.4" posX="0.1">
+            <Group>
+                <Sprite texture="text-background-tex" />
+                <Box posY="0.4" height="0.6" posX="0.25" width="0.5">
+                    <Text text="Fourth wave. Good" font="font" r="0.3" g="0.1" b="0.4" />
+                </Box>
+            </Group>
         </Box>
     </Assets>
     <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
