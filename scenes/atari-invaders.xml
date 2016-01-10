@@ -15,6 +15,7 @@
         <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
     <Music>
+        <Music id="music-ufo" path="level1/sounds/UFO.wav" />
         <Music id="music-level1" path="level1/sounds/music-level1.wav" />
     </Music>
     <Sounds>
@@ -154,9 +155,14 @@
         <Condition predicate="game-active" >
             <Then>
                 <Timeline>
-                    <Deadline duration="2.0">
-                        <Show asset="comment-easy-start"/>
-                    </Deadline>
+                    <Background>
+                        <Main>
+                            <Music music="music-ufo" />
+                        </Main>
+                        <Extra>
+                            <Show asset="comment-easy-start"/>
+                        </Extra>
+                    </Background>
                     <Background>
                         <Extra>
                             <Loop>
@@ -191,7 +197,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="white-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="invader4" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -236,7 +242,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="white-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireIntervalDeviation="0.2" asset="invader3" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -291,7 +297,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" asset="white-martian" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" asset="invader5" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
