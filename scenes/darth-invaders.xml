@@ -3,7 +3,7 @@
         <Font id="font" path="consola.ttf" />
     </Fonts>
     <Textures>
-        <Texture id="starship-tex" path="level3/assets/R2.png" />
+        <Texture id="r2d2-tex" path="level3/assets/R2.png" />
         <Texture id="projectile-tex" path="level2/effects/kogelke-up.png" />
         <Texture id="sith-projectile-tex" path="level2/effects/kogelke.png" />
         <Texture id="django-tex" path="level3/assets/django.png" />
@@ -11,6 +11,9 @@
         <Texture id="c3po-tex" path="level3/assets/C3P0.png" />
         <Texture id="stormtrooper-red-tex" path="level3/assets/stormtrooper-red.png" />
         <Texture id="stormtrooper-white-tex" path="level3/assets/stormtrooper-white.png" />
+        <Texture id="stormy-tex" path="level3/assets/stormy.png" />
+        <Texture id="supertrooper-tex" path="level3/assets/supertrooper.png" />
+        <Texture id="newtrooper-tex" path="level3/assets/newtrooper.png" />
         <Texture id="death-star-tex" path="level3/assets/deathstar.png" />
         <Texture id="kaboum-tex" path="level3/effects/kaboum3.png" />
         <Texture id="projectile-kaboum-tex" path="level3/effects/kaboum5-8frames.png" />
@@ -36,6 +39,15 @@
         <Box id="stormtrooper-white">
             <Sprite texture="stormtrooper-white-tex" />
         </Box>
+        <Box id="stormy">
+            <Sprite texture="stormy-tex" />
+        </Box>
+        <Box id="supertrooper">
+            <Sprite texture="supertrooper-tex" />
+        </Box>
+        <Box id="newtrooper">
+            <Sprite texture="newtrooper-tex" />
+        </Box>
         <Box id="c3po">
             <Sprite texture="c3po-tex" />
         </Box>
@@ -46,20 +58,15 @@
             <Sprite texture="death-star-tex" />
         </Box>
         <Box id="vader">
-            <Group>
-                <Sprite texture="vader-tex" />
-                <Box posX="0.45" posY="0.4" width="0.008">
-                    <RibbonParticle r="0.8" g="0.2" b="0.1" />
-                </Box>
-            </Group>
+            <Sprite texture="vader-tex" />
         </Box>
-        <Box id="starship">
+        <Box id="r2d2">
             <Group>
-                <Sprite texture="starship-tex" />
-                <Box posX="0.2" posY="0.4" width="0.004">
+                <Sprite texture="r2d2-tex" />
+                <Box posX="0.1" posY="0.5" width="0.006">
                     <RibbonParticle r="0.0" g="0.6" b="0.8" />
                 </Box>
-                <Box posX="0.8" posY="0.4" width="0.004">
+                <Box posX="0.9" posY="0.5" width="0.006">
                     <RibbonParticle r="0.0" g="0.6" b="0.8" />
                 </Box>
             </Group>
@@ -156,7 +163,7 @@
             </Group>
         </Box>
     </Assets>
-    <Player mass="200" radius="0.025" health="20" posY="0.9" asset="starship" accel="0.2" velY="-0.05" fireInterval="0.2">
+    <Player mass="200" radius="0.025" health="20" posY="0.9" asset="r2d2" accel="0.2" velY="-0.05" fireInterval="0.2">
         <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile">
             <Controllers>
                 <Gravity G="0.00001" falloff="2" />
@@ -232,7 +239,7 @@
                                 </Concurrent>
                                 <Concurrent>
                                     <Wave posX="0.5" rows="1" columns="1">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="c3po" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireIntervalDeviation="0.2" asset="supertrooper" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -256,7 +263,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireInterval="5.0" fireIntervalDeviation="2.0" asset="django" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.02" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormy" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -298,7 +305,7 @@
                                         </Projectile>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="2">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormtrooper-white" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormy" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -311,7 +318,7 @@
                                         </Projectile>
                                     </Wave>
                                     <Wave posY="0.2" rows="2" columns="5">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="django" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.0" velY="0.04" fireInterval="5.0" fireIntervalDeviation="2.0" asset="supertrooper" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -340,7 +347,7 @@
                                         </Ship>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.25" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormtrooper-red" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="newtrooper" >
                                             <DestroyedEffect asset="explosion" duration="2.0" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -353,7 +360,7 @@
                                         </Projectile>
                                     </Wave>
                                     <Wave posY="0.1" posX="0.75" rows="1" columns="4">
-                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormtrooper-white" >
+                                        <Ship mass="200" radius="0.025" health="5" velX="0.2" velY="0.05" fireInterval="5.0" fireIntervalDeviation="2.0" asset="stormy" >
                                             <DestroyedEffect asset="explosion" duration="2.5" />
                                             <Destroyed>
                                                 <Sound sound="you-died" />
@@ -425,7 +432,7 @@
                                 <Background>
                                     <Main>
                                         <Spawn>
-                                            <Obstacle mass="200" radius="0.05" health="30" posX="0.8" posY="0.1" asset="death-star" />
+                                            <Obstacle mass="200" radius="0.05" health="60" posX="0.8" posY="0.1" asset="death-star" />
                                         </Spawn>
                                     </Main>
                                     <Extra>
