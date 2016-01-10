@@ -42,14 +42,14 @@
         <Box id="starship">
             <Group>
                 <Sprite texture="starship-tex" />
-                <Box posX="0.5" posY="0.4" width="0.004">
+                <Box posX="0.4825" posY="0.5" width="0.004">
                     <RibbonParticle r="1.0" g="1.0" b="0.0" />
                 </Box>
                 <Box posX="0.1" posY="0.4" width="0.004">
-                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                    <RibbonParticle r="1.0" g="0.6" b="0.0" />
                 </Box>
                 <Box posX="0.9" posY="0.4" width="0.004">
-                    <RibbonParticle r="1.0" g="1.0" b="0.0" />
+                    <RibbonParticle r="1.0" g="0.6" b="0.0" />
                 </Box>
             </Group>
         </Box>
