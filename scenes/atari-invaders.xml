@@ -11,7 +11,7 @@
         <Texture id="yellow-martian-tex" path="level2/assets/yellow-martian.png" />
         <Texture id="white-martian-tex" path="level2/assets/white-martian.png" />
         <Texture id="kaboum-tex" path="level2/effects/kaboum-level2.png" />
-        <Texture id="background-tex" path="level1/backgrounds/background-evilplanet.jpg" />
+        <Texture id="background-tex" path="level2/background/background-evilplanet.jpg" />
         <Texture id="text-background-tex" path="level2/background/text-background.png" />
     </Textures>
     <Music>
