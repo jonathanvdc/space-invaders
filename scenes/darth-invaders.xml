@@ -96,7 +96,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="You survived. Good job!" font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="The death star has been destroyed! You win!" font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -136,7 +136,7 @@
             <Group>
                 <Sprite texture="text-background-tex" />
                 <Box posY="0.4" height="0.6" posX="0.2" width="0.6">
-                    <Text text="Destroy the death star." font="font" r="0.3" g="0.1" b="0.4" />
+                    <Text text="Destroy the death star before Darth Vader escapes!" font="font" r="0.3" g="0.1" b="0.4" />
                 </Box>
             </Group>
         </Box>
@@ -395,19 +395,33 @@
                                         <Show asset="comment-boss-fight"/>
                                     </Deadline>
                                 </Concurrent>
-                                <Wave posY="0.2" rows="1" columns="1">
-                                    <Ship mass="200" radius="0.05" health="30" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="vader" >
-                                        <DestroyedEffect asset="explosion" duration="2.5" />
-                                        <Destroyed>
-                                            <Sound sound="you-died" />
-                                        </Destroyed>
-                                    </Ship>
-                                    <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
-                                        <Created>
-                                            <Sound sound="laser" />
-                                        </Created>
-                                    </Projectile>
-                                </Wave>
+                                <Background>
+                                    <Main>
+                                        <Spawn>
+                                            <Obstacle mass="200" radius="0.05" health="30" posX="0.8" posY="0.1" asset="death-star" />
+                                        </Spawn>
+                                    </Main>
+                                    <Extra>
+                                        <Wave posY="0.2" rows="1" columns="1">
+                                            <Ship mass="200" radius="0.05" health="300" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="vader" >
+                                                <DestroyedEffect asset="explosion" duration="2.5" />
+                                                <Destroyed>
+                                                    <Sound sound="you-died" />
+                                                </Destroyed>
+                                                <Controllers>
+                                                    <OnLeave>
+                                                        <SetFlag flag="game-active" value="false" />
+                                                    </OnLeave>
+                                                </Controllers>
+                                            </Ship>
+                                            <Projectile mass="10" radius="0.005" velX="0.2" velY="0.2" asset="projectile" >
+                                                <Created>
+                                                    <Sound sound="laser" />
+                                                </Created>
+                                            </Projectile>
+                                        </Wave>
+                                    </Extra>
+                                </Background>
                             </Timeline>
                         </Main>
                     </Background>

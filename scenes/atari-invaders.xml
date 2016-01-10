@@ -382,7 +382,7 @@
                                     </Deadline>
                                 </Concurrent>
                                 <Wave posY="0.2" rows="1" columns="1">
-                                    <Ship mass="200" radius="0.05" health="30" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="invader5" >
+                                    <Ship mass="200" radius="0.05" health="100" velX="0.2" velY="0.05" fireInterval="1.0" fireIntervalDeviation="0.2" asset="invader5" >
                                         <DestroyedEffect asset="explosion" duration="2.5" />
                                         <Destroyed>
                                             <Sound sound="you-died" />
