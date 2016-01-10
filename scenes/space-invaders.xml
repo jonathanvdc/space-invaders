@@ -14,9 +14,9 @@
         <Texture id="kaboum-tex" path="level1/effects/kaboum.png" />
         <Texture id="background-tex" path="level1/backgrounds/background-space.jpg" />
     </Textures>
-    <!--<Music>
-        <Music id="music-level1" path="music-level1.wav" />
-    </Music>-->
+    <Music>
+        <Music id="music-level1" path="level1/sounds/music-level1.wav" />
+    </Music>
     <Sounds>
         <Sound id="you-died" path="level1/sounds/you-just-died.wav" />
         <Sound id="enemy1-died" path="level1/sounds/piuwww.wav" />
@@ -119,9 +119,9 @@
                         <Show asset="comment-easy-start"/>
                     </Deadline>
                     <Concurrent>
-                        <!--<Loop>
+                        <Loop>
                             <Music music="music-level1"/>
-                        </Loop>-->
+                        </Loop>
                         <Timeline>
                             <Deadline duration="2.0">
                                 <Wait />

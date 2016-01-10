@@ -27,9 +27,13 @@ bool LoopedEvent::update(Scene& target, duration_t timeDelta)
     if (!this->innerEvent->update(target, timeDelta))
     {
         this->innerEvent->end(target);
-        this->iterationCount++;
-        if (!this->isInfiniteLoop())
+        if (this->isInfiniteLoop())
         {
+            this->innerEvent->start(target);
+        }
+        else
+        {
+            this->iterationCount++;
             if (this->maxIterationCount > this->iterationCount)
                 this->innerEvent->start(target);
             else // Maximal number of iterations has been reached.
